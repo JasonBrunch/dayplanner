@@ -8,6 +8,10 @@ function Home() {
   const [activityTitle, setActivityTitle] = useState("");
   const [activityColor, setActivityColor] = useState("green");
 
+  const [wakeTime, setWakeTime] = useState("06:00"); // Default wake time
+  const [sleepTime, setSleepTime] = useState("22:00"); // Default sleep time
+
+
   const handleAddActivity = () => {
     // Call updateActivity and pass the current schedule and new activity details
     const updatedSchedule = updateActivity(
@@ -27,40 +31,51 @@ function Home() {
     // Add more mappings as needed
   };
 
-  return (
-    <div className="flex">
-      {/* Schedule Container */}
-      {/*Schedule frame*/}
-      <div className=" flex flex-col  w-3/4 p-8 bg-gray-200">
+// Helper function to check if a given hour is within wake and sleep times
+const isWithinAwakeHours = (hour) => {
+  const wakeHour = parseInt(wakeTime.split(":")[0], 10);
+  const sleepHour = parseInt(sleepTime.split(":")[0], 10);
+  return hour >= wakeHour && hour < sleepHour;
+};
+
+const handleWakeTimeChange = (e) => {
+  setWakeTime(e.target.value);
+};
+
+// Handler for sleep time change
+const handleSleepTimeChange = (e) => {
+  setSleepTime(e.target.value);
+};
+
+return (
+  <div className="flex">
+    {/* Schedule Container */}
+    <div className="flex flex-col w-3/4 p-8 bg-gray-200">
       <h1 className="py-4">TODAYS SCHEDULE</h1>
-        <div className="flex flex-col items-center w-full">
-          {Array.from({ length: 24 }, (_, hour) => (
-            <div key={hour} className="flex w-full border-t  border-black">
-              {/* Hour Display */}
-              <div className="py-2 px-6 text-center border-r border-gray-500 ">
+      <div className="flex flex-col items-center w-full">
+        {Array.from({ length: 24 }, (_, hour) => (
+          isWithinAwakeHours(hour) && (
+            <div key={hour} className="flex w-full border-t border-black">
+              <div className="py-2 px-6 text-center border-r border-gray-500">
                 {hour.toString().padStart(2, "0")}:00
               </div>
-
-              {/* Minute Cells */}
               <div className="flex flex-1">
                 {daySchedule
                   .filter((slot) => slot.hour === hour)
                   .map((slot, index) => (
                     <div
                       key={index}
-                      className={`flex-1  ${
-                        colorMapping[slot.color] || ""
-                      }`}
-                    >
-                      {/* No text, only color */}
-                    </div>
+                      className={`flex-1 ${slot.activity ? colorMapping[slot.activity.color] : ""}`}
+                    />
                   ))}
               </div>
             </div>
-          ))}
-        </div>
+          )
+        ))}
       </div>
-      {/* Inputs and Button Container */}
+    </div>
+
+    {/* Inputs and Button Container */}
       <div className="w-1/4">
         <div className="w-full h-40 bg-customBlue flex items-center px-10 ">
           <h2 className="text-white">
@@ -78,6 +93,20 @@ function Home() {
             />
           </div>
           <div className=" px-2 lg:px-10 flex flex-col">
+          {/* Wake Time Input */}
+          <input
+            type="time"
+            value={wakeTime}
+            onChange={handleWakeTimeChange}
+            className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4"
+          />
+          {/* Sleep Time Input */}
+          <input
+            type="time"
+            value={sleepTime}
+            onChange={handleSleepTimeChange}
+            className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4"
+          />
             <input
               type="text"
               value={activityTitle}

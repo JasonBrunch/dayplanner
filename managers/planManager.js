@@ -8,46 +8,42 @@ export function getCurrentDate(){
 
 export function initializeSchedule() {
     let schedule = [];
-    let title = "free"; 
-    let defaultColor = "green"; 
-    
     for (let hour = 0; hour < 24; hour++) {
-        for (let minute = 0; minute < 60; minute++) {
-            let timeSlot = {
-                hour: hour,
-                minute: minute,
-                activity: title,
-                isStart: false,
-                isEnd: false,
-                color: defaultColor
-            };
-            schedule.push(timeSlot);
-        }
+      for (let minute = 0; minute < 60; minute += 5) { // Assuming 5-minute slots
+        let timeSlot = {
+          hour: hour,
+          minute: minute,
+          activity: null
+        };
+        schedule.push(timeSlot);
+      }
     }
-
     return schedule;
-}
+  }
 
-export function updateActivity(schedule, startTime, endTime, activityName, color) {
-    // Create a copy of the schedule
+  export function updateActivity(schedule, startTime, endTime, activityName, color) {
     let updatedSchedule = [...schedule];
-
+  
     const [startHour, startMinute] = startTime.split(':').map(Number);
     const [endHour, endMinute] = endTime.split(':').map(Number);
     let startIndex = startHour * 60 + startMinute;
     let endIndex = endHour * 60 + endMinute;
-
-    // Only iterate through the relevant portion of the schedule
-    for (let i = startIndex; i < endIndex; i++) {
-        let slot = updatedSchedule[i];
+  
+    for (let i = 0; i < updatedSchedule.length; i++) {
+      let slotHour = updatedSchedule[i].hour;
+      let slotMinute = updatedSchedule[i].minute;
+      let slotIndex = slotHour * 60 + slotMinute;
+  
+      if (slotIndex >= startIndex && slotIndex < endIndex) {
         updatedSchedule[i] = {
-            ...slot,
-            activity: activityName,
-            color: color,
-            isStart: i === startIndex,
-            isEnd: i === endIndex - 1
+          ...updatedSchedule[i],
+          activity: {
+            name: activityName,
+            color: color
+          }
         };
+      }
     }
-
+  
     return updatedSchedule;
-}
+  }
