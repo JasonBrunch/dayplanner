@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { initializeSchedule, updateActivity, createActivity } from "@/managers/planManager";
+import { initializeSchedule, updateActivity, createActivity, removeActivity } from "@/managers/planManager";
 
 function Home() {
   const [daySchedule, setDaySchedule] = useState(initializeSchedule());
@@ -30,6 +30,7 @@ function Home() {
   
       return (newStartIndex < activityEndIndex && newEndIndex > activityStartIndex);
     });
+    
   
     if (overlap) {
       console.log("Cannot add activity. There is an overlap with an existing activity.");
@@ -41,6 +42,13 @@ function Home() {
     const updatedSchedule = updateActivity(daySchedule, newActivity);
     setDaySchedule(updatedSchedule);
   };
+
+  const handleRemoveActivity = (activityToRemove) => {
+    const { updatedSchedule, updatedActivities } = removeActivity(daySchedule, activities, activityToRemove);
+    setDaySchedule(updatedSchedule);
+    setActivities(updatedActivities);
+  };
+
   const colorMapping = {
     green: "bg-green-500",
     red: "bg-red-500",
@@ -93,16 +101,13 @@ return (
     </div>
 
     {/* Inputs and Button Container */}
-      <div className="w-1/4">
-        <div className="w-full h-40 bg-customBlue flex items-center px-10 ">
-          <h2 className="text-white">
-            Add <br />
-            Activity
-          </h2>
+      <div className="w-1/4 shadow">
+        <div className="w-full h-20 bg-customBlue flex items-center px-10 ">
+          
         </div>
 
         <div className="bg-gray-100 relative overflow-hidden h-full">
-          <div style={{ height: "80px", width: "100%" }}>
+          <div style={{ height: "50px", width: "100%" }}>
             <img
               src="/wave.svg"
               alt="Wave"
@@ -111,6 +116,8 @@ return (
           </div>
           <div className=" px-2 lg:px-10 flex flex-col">
           {/* Wake Time Input */}
+          <h2>Set Wake Hours</h2>
+          <h3>Wake</h3>
           <input
             type="time"
             value={wakeTime}
@@ -118,12 +125,14 @@ return (
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4"
           />
           {/* Sleep Time Input */}
+          <h3>Sleep</h3>
           <input
             type="time"
             value={sleepTime}
             onChange={handleSleepTimeChange}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4"
           />
+          <h2>Add Activities</h2>
             <input
               type="text"
               value={activityTitle}
@@ -166,16 +175,22 @@ return (
 
          {/* Container for displaying activities */}
     <div className="px-2 lg:px-10 flex flex-col">
-      <h2>Activities</h2>
-      <ul>
-        {activities.map((activity, index) => (
-          <li 
-          key={index} 
-         className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4">
-            {activity.title} - {activity.startTime} to {activity.endTime}
-          </li>
-        ))}
-      </ul>
+<h2>Activities</h2>
+<ul>
+  {activities.map((activity, index) => (
+    <li key={index} className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 flex justify-between items-center">
+      <span>
+        {activity.title} - {activity.startTime} to {activity.endTime}
+      </span>
+      <button 
+        onClick={() => handleRemoveActivity(activity)} 
+        className="text-red-500 hover:text-red-700"
+      >
+        X
+      </button>
+    </li>
+  ))}
+</ul>
     </div>
 
 

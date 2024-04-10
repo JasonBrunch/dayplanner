@@ -53,3 +53,27 @@ export function updateActivity(schedule, activity) {
       color: color
     };
   }
+
+  // Function to remove an activity
+export function removeActivity(schedule, activities, activityToRemove) {
+  // Remove the activity from the activities array
+  const updatedActivities = activities.filter(activity => activity !== activityToRemove);
+
+  // Convert activity start and end times to indexes
+  const [startHour, startMinute] = activityToRemove.startTime.split(':').map(Number);
+  const [endHour, endMinute] = activityToRemove.endTime.split(':').map(Number);
+  let startIndex = startHour * 60 + startMinute;
+  let endIndex = endHour * 60 + endMinute;
+
+  // Update the schedule to set the activity to null for the timeslots of the removed activity
+  let updatedSchedule = schedule.map(slot => {
+    let slotIndex = slot.hour * 60 + slot.minute;
+    if (slotIndex >= startIndex && slotIndex < endIndex && slot.activity === activityToRemove) {
+      return createTimeSlot(slot.hour, slot.minute); // Resets to a timeslot with no activity
+    } else {
+      return slot;
+    }
+  });
+
+  return { updatedSchedule, updatedActivities };
+}
