@@ -2,7 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Class for heading1 using Articulat CF Demi Bold */
+.heading1 {
+  font-family: "articulat-cf", sans-serif;
+  font-weight: 700; /* Demi Bold */
+  font-style: normal;
+  color:chocolate;
+}
+.heading2{
+font-family: "articulat-cf", sans-serif;
+font-weight: 400;
+font-style: normal;
+color:rgb(151, 20, 177);
+}
+.heading3{
+    font-family: "articulat-cf", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color:rgb(255, 155, 4);
+}
 
+/* Other Font Styles */
 
+/* Articulat CF Normal */
+/* Use this for standard text styling */
+/* font-family: "articulat-cf", sans-serif;
+   font-weight: 400; 
+   font-style: normal; */
 
+/* Articulat CF Normal Oblique */
+/* Use this for italicized text styling */
+/* font-family: "articulat-cf", sans-serif;
+   font-weight: 400; 
+   font-style: italic; */
 
+/* Articulat CF Heavy */
+/* Use this for heavy emphasis text styling */
+/* font-family: "articulat-heavy-cf", sans-serif;
+   font-weight: 900; 
+   font-style: normal; */
+
+/* Articulat CF Heavy Oblique */
+/* Use this for heavy emphasis italicized text styling */
+/* font-family: "articulat-heavy-cf", sans-serif;
+   font-weight: 900; 
+   font-style: italic; */
