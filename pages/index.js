@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { initializeSchedule, updateActivity } from "@/managers/planManager";
+import { initializeSchedule, updateActivity, createActivity } from "@/managers/planManager";
 
 function Home() {
   const [daySchedule, setDaySchedule] = useState(initializeSchedule());
+  const [activities, setActivities] = useState([]);
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("00:00");
   const [activityTitle, setActivityTitle] = useState("");
@@ -13,15 +14,31 @@ function Home() {
 
 
   const handleAddActivity = () => {
-    // Call updateActivity and pass the current schedule and new activity details
-    const updatedSchedule = updateActivity(
-      daySchedule,
-      startTime,
-      endTime,
-      activityTitle,
-      activityColor
-    );
-    // Update the daySchedule state with the new schedule
+    const newActivity = createActivity(startTime, endTime, activityTitle, activityColor);
+  
+    // Check for overlaps
+    const overlap = activities.some(activity => {
+      const [activityStartHour, activityStartMinute] = activity.startTime.split(':').map(Number);
+      const [activityEndHour, activityEndMinute] = activity.endTime.split(':').map(Number);
+      const [newStartHour, newStartMinute] = newActivity.startTime.split(':').map(Number);
+      const [newEndHour, newEndMinute] = newActivity.endTime.split(':').map(Number);
+  
+      const activityStartIndex = activityStartHour * 60 + activityStartMinute;
+      const activityEndIndex = activityEndHour * 60 + activityEndMinute;
+      const newStartIndex = newStartHour * 60 + newStartMinute;
+      const newEndIndex = newEndHour * 60 + newEndMinute;
+  
+      return (newStartIndex < activityEndIndex && newEndIndex > activityStartIndex);
+    });
+  
+    if (overlap) {
+      console.log("Cannot add activity. There is an overlap with an existing activity.");
+      return; // Prevent adding the overlapping activity
+    }
+  
+    // If no overlap, add the activity
+    setActivities([...activities, newActivity]);
+    const updatedSchedule = updateActivity(daySchedule, newActivity);
     setDaySchedule(updatedSchedule);
   };
   const colorMapping = {
@@ -146,6 +163,23 @@ return (
               Add Activity
             </button>
           </div>
+
+         {/* Container for displaying activities */}
+    <div className="px-2 lg:px-10 flex flex-col">
+      <h2>Activities</h2>
+      <ul>
+        {activities.map((activity, index) => (
+          <li 
+          key={index} 
+         className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4">
+            {activity.title} - {activity.startTime} to {activity.endTime}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+
+
         </div>
       </div>
     </div>
