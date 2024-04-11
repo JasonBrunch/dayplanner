@@ -116,8 +116,8 @@ function Home() {
   return (
     <div div className="flex flex-col md:flex-row">
       {/* Schedule Container */}
-      <div className="flex flex-col w-full md:w-3/4 p-4 md:p-8 bg-gray-200 h-screen">
-        <h1 className="py-4 heading1">TODAYS SCHEDULE</h1>
+      <div className="flex flex-col w-full md:w-3/4 p-4 md:p-8 bg-gray-200 ">
+      <h1 className="pb-1 pt-4 heading1">{"TODAY'S SCHEDULE"}</h1>
         <div className="flex flex-col items-center w-full">
           {Array.from(
             { length: 24 },
