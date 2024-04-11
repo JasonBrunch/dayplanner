@@ -5,6 +5,7 @@ import {
   updateActivity,
   createActivity,
   removeActivity,
+
 } from "@/managers/planManager";
 
 function Home() {
@@ -23,6 +24,13 @@ function Home() {
   const toggleColorPicker = () => {
     setShowColorPicker(!showColorPicker);
   };
+
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    weekday: 'long', // long name of the day
+    year: 'numeric', // numeric year
+    month: 'long', // long name of the month
+    day: 'numeric' // numeric day of the month
+  });
 
   const handleAddActivity = () => {
     console.log("Selected color:", activityColor);
@@ -82,13 +90,15 @@ function Home() {
   };
 
   const colorMapping = (colorHex) => ({
-    backgroundColor: colorHex
+    backgroundColor: colorHex,
   });
 
-  // Helper function to check if a given hour is within wake and sleep times
+  // Updated isWithinAwakeHours function for 30-hour format
   const isWithinAwakeHours = (hour) => {
     const wakeHour = parseInt(wakeTime.split(":")[0], 10);
-    const sleepHour = parseInt(sleepTime.split(":")[0], 10);
+    const sleepHour =
+      parseInt(sleepTime.split(":")[0], 10) +
+      (sleepTime.split(":")[0] < wakeTime.split(":")[0] ? 30 : 0); // Adjust for next day if needed
     return hour >= wakeHour && hour < sleepHour;
   };
 
@@ -113,19 +123,59 @@ function Home() {
     return title;
   };
 
+  const generateTimeOptions = () => {
+    let options = [];
+    for (let hour = 0; hour < 30; hour++) {
+      for (let minute = 0; minute < 60; minute += 15) {
+        const timeString = `${hour.toString().padStart(2, "0")}:${minute
+          .toString()
+          .padStart(2, "0")}`;
+        options.push(
+          <option key={timeString} value={timeString}>
+            {convertTo12HourFormat(timeString)}
+          </option>
+        );
+      }
+    }
+    return options;
+  };
+
+  function convertTo12HourFormat(time) {
+    let [hour, minute] = time.split(":").map(Number);
+    const isPM = hour >= 12 && hour < 24;
+    hour = hour % 12;
+    hour = hour === 0 ? 12 : hour; // Convert 0 hour to 12 for 12-hour format
+
+    return `${hour.toString().padStart(2, "0")}:${minute
+      .toString()
+      .padStart(2, "0")} ${isPM ? "PM" : "AM"}`;
+  }
+
+  const handleActivityStartTimeChange = (e) => {
+    setStartTime(e.target.value);
+  };
+
+  const handleActivityEndTimeChange = (e) => {
+    setEndTime(e.target.value);
+  };
+
   return (
-    <div div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row">
       {/* Schedule Container */}
-      <div className="flex flex-col w-full md:w-3/4 p-4 md:p-8 bg-gray-200 ">
-      <h1 className="pb-1 pt-4 heading1">{"TODAY'S SCHEDULE"}</h1>
+      <div className="flex flex-col w-full md:w-3/4 p-4 md:p-8 bg-gray-200">
+        <div className="flex justify-between items-end pb-1 pt-4"><h1 className=" heading1">{"TODAY'S SCHEDULE"}</h1>
+        <h2>{currentDate}</h2></div>
         <div className="flex flex-col items-center w-full">
-          {Array.from(
-            { length: 24 },
-            (_, hour) =>
+          {Array.from({ length: 30 }, (_, hour) => {
+            const hourFormatted = convertTo12HourFormat(
+              `${hour.toString().padStart(2, "0")}:00`
+            );
+
+            return (
               isWithinAwakeHours(hour) && (
                 <div key={hour} className="flex w-full border-t border-black">
                   <div className="py-2 px-6 text-center border-r border-gray-500">
-                    {hour.toString().padStart(2, "0")}:00
+                    {hourFormatted}
                   </div>
                   <div className="flex flex-1 relative">
                     {daySchedule
@@ -134,7 +184,11 @@ function Home() {
                         <div
                           key={index}
                           className="flex-1"
-                          style={slot.activity ? colorMapping(slot.activity.color) : {}}
+                          style={
+                            slot.activity
+                              ? colorMapping(slot.activity.color)
+                              : {}
+                          }
                         />
                       ))}
                     {activities
@@ -145,19 +199,20 @@ function Home() {
                         return activityStartHour === hour;
                       })
                       .map((activity, index) => {
-                        const displayTitle = getDisplayTitle(activity); // Use getDisplayTitle for abbreviated title
+                        const displayTitle = getDisplayTitle(activity);
                         return (
                           <div
                             key={index}
                             className="absolute text-sm whitespace-nowrap overflow-hidden"
                             style={{
                               width: "150%",
-                              left: `${(new Date(
-                                `2021-01-01 ${activity.startTime}`
-                              ).getMinutes() /
-                                60) *
+                              left: `${
+                                (new Date(
+                                  `2021-01-01 ${activity.startTime}`
+                                ).getMinutes() /
+                                  60) *
                                 100
-                                }%`,
+                              }%`,
                             }}
                           >
                             {displayTitle}
@@ -167,7 +222,8 @@ function Home() {
                   </div>
                 </div>
               )
-          )}
+            );
+          })}
         </div>
       </div>
 
@@ -189,69 +245,79 @@ function Home() {
             <div className="flex gap-4">
               <div className="w-1/2">
                 <h3 className="heading3">Wake</h3>
-                <input
-                  type="time"
+                <select
                   value={wakeTime}
                   onChange={handleWakeTimeChange}
                   className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-                />
+                >
+                  {generateTimeOptions()}
+                </select>
               </div>
               <div className="w-1/2">
                 <h3 className="heading3">Sleep</h3>
-                <input
-                  type="time"
+                <select
                   value={sleepTime}
                   onChange={handleSleepTimeChange}
                   className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-                />
+                >
+                  {generateTimeOptions()}
+                </select>
               </div>
-              {/* Sleep Time Input */}
             </div>
             <hr className="border-t border-gray-400 my-4" />
             <h2 className="heading2 pb-2">Add Activities</h2>
-            <input
-              type="text"
-              value={activityTitle}
-              placeholder="Activity Title"
-              onChange={(e) => setActivityTitle(e.target.value)}
-              className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4"
-            />
-            <div className="flex gap-4">
-              <div className="w-1/2">
-                <h3 className="heading3">Start</h3>
+
+            <div className="flex  gap-4">
+              <div className=" w-full">
+                <h3 className="heading3">Title</h3>
                 <input
-                  type="time"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                  className=" bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+                  type="text"
+                  value={activityTitle}
+                  placeholder="Enter activity title"
+                  onChange={(e) => setActivityTitle(e.target.value)}
+                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
                 />
               </div>
-              <div className="w-1/2">
-                <h3 className="heading3">End</h3>
-                <input
-                  type="time"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                  className=" bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-                />
+
+              {/* Color Picker Dropdown */}
+              <div>
+                <h3 className="heading3">Color</h3>
+                <button
+                  onClick={toggleColorPicker}
+                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 lg:w-12 lg:h-11"
+                  style={{ backgroundColor: activityColor }}
+                ></button>
+                {showColorPicker && (
+                  <GithubPicker
+                    color={activityColor}
+                    onChangeComplete={(color) => setActivityColor(color.hex)}
+                  />
+                )}
               </div>
             </div>
 
-            {/* Color Picker Dropdown */}
-            <h3 className="heading3">Color</h3>
-            <button
-              onClick={toggleColorPicker}
-              className="bg-white shadow-md rounded px-2 pt-2 pb-3 lg:w-10 lg:h-8"
-              style={{ backgroundColor: activityColor }}
-            >
-              
-            </button>
-            {showColorPicker && (
-              <GithubPicker
-                color={activityColor}
-                onChangeComplete={(color) => setActivityColor(color.hex)}
-              />
-            )}
+            <div className="flex gap-4">
+              <div className="w-1/2">
+                <h3 className="heading3">Start</h3>
+                <select
+                  value={startTime}
+                  onChange={handleActivityStartTimeChange}
+                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+                >
+                  {generateTimeOptions()}
+                </select>
+              </div>
+              <div className="w-1/2">
+                <h3 className="heading3">End</h3>
+                <select
+                  value={endTime}
+                  onChange={handleActivityEndTimeChange}
+                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+                >
+                  {generateTimeOptions()}
+                </select>
+              </div>
+            </div>
 
             <button
               onClick={handleAddActivity}
@@ -263,7 +329,7 @@ function Home() {
 
           {/* Container for displaying activities */}
           <div className="px-2 lg:px-10 flex flex-col">
-            <hr className="border-t border-gray-300 my-4" />
+            <hr className="border-t border-gray-400 my-4" />
             <h2 className="heading2">Activities</h2>
             <ul>
               {activities.map((activity, index) => (
