@@ -73,12 +73,9 @@ function Home() {
     setActivities(updatedActivities);
   };
 
-  const colorMapping = {
-    green: "bg-green-500",
-    red: "bg-red-500",
-    blue: "bg-blue-500",
-    // Add more mappings as needed
-  };
+  const colorMapping = (colorHex) => ({
+    backgroundColor: colorHex
+  });
 
   // Helper function to check if a given hour is within wake and sleep times
   const isWithinAwakeHours = (hour) => {
@@ -128,10 +125,8 @@ function Home() {
                       .map((slot, index) => (
                         <div
                           key={index}
-                          className={`flex-1 ${slot.activity
-                              ? colorMapping[slot.activity.color]
-                              : ""
-                            }`}
+                          className="flex-1"
+                          style={slot.activity ? colorMapping(slot.activity.color) : {}}
                         />
                       ))}
                     {activities
@@ -241,11 +236,8 @@ function Home() {
               onChange={(e) => setActivityColor(e.target.value)}
               className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
             >
-              {Object.keys(colorMapping).map((color) => (
-                <option key={color} value={color}>
-                  {color.charAt(0).toUpperCase() + color.slice(1)}
-                </option>
-              ))}
+              <option value="#ff6347">Red</option> {/* Example hex color for red */}
+              <option value="#4682b4">Blue</option> {/* Example hex color for blue */}
             </select>
             <button
               onClick={handleAddActivity}
