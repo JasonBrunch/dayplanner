@@ -11,15 +11,17 @@
 }
 .heading2{
 font-family: "articulat-cf", sans-serif;
-font-weight: 400;
+font-weight: 800;
 font-style: normal;
-color:rgb(151, 20, 177);
+color:rgb(34, 34, 34);
+font-size: large;
 }
 .heading3{
     font-family: "articulat-cf", sans-serif;
     font-weight: 400;
     font-style: normal;
-    color:rgb(255, 155, 4);
+    color:rgb(78, 78, 78);
+    font-size:small
 }
 
 /* Other Font Styles */

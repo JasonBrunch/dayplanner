@@ -128,11 +128,10 @@ function Home() {
                       .map((slot, index) => (
                         <div
                           key={index}
-                          className={`flex-1 ${
-                            slot.activity
+                          className={`flex-1 ${slot.activity
                               ? colorMapping[slot.activity.color]
                               : ""
-                          }`}
+                            }`}
                         />
                       ))}
                     {activities
@@ -150,13 +149,12 @@ function Home() {
                             className="absolute text-sm whitespace-nowrap overflow-hidden"
                             style={{
                               width: "150%",
-                              left: `${
-                                (new Date(
-                                  `2021-01-01 ${activity.startTime}`
-                                ).getMinutes() /
+                              left: `${(new Date(
+                                `2021-01-01 ${activity.startTime}`
+                              ).getMinutes() /
                                   60) *
                                 100
-                              }%`,
+                                }%`,
                             }}
                           >
                             {displayTitle}
@@ -182,9 +180,9 @@ function Home() {
               style={{ width: "100%", height: "auto", display: "block" }}
             />
           </div>
-          <div className=" px-2 lg:px-10 flex flex-col">
+          <div className=" px-2 lg:px-10 flex flex-col bg-blue-200 mt-8">
             {/* Wake Time Input */}
-            <h2 className="heading2">Set Wake Hours</h2>
+            <h2 className="heading2 pb-2">Set Wake Hours</h2>
             <div className="flex gap-4">
               <div className="w-1/2">
                 <h3 className="heading3">Wake</h3>
@@ -206,8 +204,8 @@ function Home() {
               </div>
               {/* Sleep Time Input */}
             </div>
-            <hr className="border-t border-gray-300 my-4" />
-            <h2 className="heading2">Add Activities</h2>
+            <hr className="border-t border-gray-400 my-4" />
+            <h2 className="heading2 pb-2">Add Activities</h2>
             <input
               type="text"
               value={activityTitle}
@@ -216,7 +214,7 @@ function Home() {
               className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4"
             />
             <div className="flex gap-4">
-              <div>
+              <div className="w-1/2">
                 <h3 className="heading3">Start</h3>
                 <input
                   type="time"
@@ -225,7 +223,7 @@ function Home() {
                   className=" bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
                 />
               </div>
-              <div>
+              <div className="w-1/2">
                 <h3 className="heading3">End</h3>
                 <input
                   type="time"
@@ -237,10 +235,11 @@ function Home() {
             </div>
 
             {/* Color Selection Dropdown */}
+            <h3 className="heading3">Color</h3>
             <select
               value={activityColor}
               onChange={(e) => setActivityColor(e.target.value)}
-              className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4"
+              className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
             >
               {Object.keys(colorMapping).map((color) => (
                 <option key={color} value={color}>
@@ -258,7 +257,7 @@ function Home() {
 
           {/* Container for displaying activities */}
           <div className="px-2 lg:px-10 flex flex-col">
-          <hr className="border-t border-gray-300 my-4" />
+            <hr className="border-t border-gray-300 my-4" />
             <h2 className="heading2">Activities</h2>
             <ul>
               {activities.map((activity, index) => (
