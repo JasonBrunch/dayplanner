@@ -6,7 +6,8 @@ class MyDocument extends Document {
       <Html>
         <Head>
           {/* Adobe Fonts Link */}
-          <link rel="stylesheet" href="https://use.typekit.net/unv7ina.css" />
+        
+          <link rel="stylesheet" href="https://use.typekit.net/unv7ina.css"/>
         </Head>
         <body>
           <Main />

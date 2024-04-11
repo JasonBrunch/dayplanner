@@ -114,9 +114,9 @@ function Home() {
   };
 
   return (
-    <div className="flex">
+    <div div className="flex flex-col md:flex-row">
       {/* Schedule Container */}
-      <div className="flex flex-col w-3/4 p-8 bg-gray-200 h-screen">
+      <div className="flex flex-col w-full md:w-3/4 p-4 md:p-8 bg-gray-200 h-screen">
         <h1 className="py-4 heading1">TODAYS SCHEDULE</h1>
         <div className="flex flex-col items-center w-full">
           {Array.from(
@@ -172,7 +172,7 @@ function Home() {
       </div>
 
       {/* Inputs and Button Container */}
-      <div className="w-1/4 shadow h-screen">
+      <div className="w-full md:w-1/4 shadow h-screen">
         <div className="w-full h-10 bg-customBlue flex items-center px-10 "></div>
 
         <div className="bg-gray-100 relative overflow-hidden h-full">

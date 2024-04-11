@@ -2,14 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Class for heading1 using Articulat CF Demi Bold */
+
 .heading1 {
-  font-family: "articulat-cf", sans-serif;
-  font-weight: 700; /* Demi Bold */
-  font-style: normal;
-  color:chocolate;
-  font-size:x-large;
+   font-family: "highgate", sans-serif;
+   font-weight: 200;
+   font-style: normal;
+  color:rgb(20, 20, 20);
+  font-size:  42px;
 }
+
 .heading2{
 font-family: "articulat-cf", sans-serif;
 font-weight: 800;
@@ -50,3 +51,6 @@ font-size: large;
 /* font-family: "articulat-heavy-cf", sans-serif;
    font-weight: 900; 
    font-style: italic; */
+
+   /*font-family: "rocinante-titling-variable", sans-serif;
+font-variation-settings: "slnt" 0, "wght" 613;*/
