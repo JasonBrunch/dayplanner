@@ -140,6 +140,27 @@ function Home() {
     return options;
   };
 
+  const generateActivityTimeOptions = () => {
+    let options = [];
+    const wakeHour = parseInt(wakeTime.split(":")[0], 10);
+    const wakeMinute = parseInt(wakeTime.split(":")[1], 10);
+    const sleepHour = parseInt(sleepTime.split(":")[0], 10) + (sleepTime.split(":")[0] < wakeTime.split(":")[0] ? 30 : 0);
+    const sleepMinute = parseInt(sleepTime.split(":")[1], 10);
+
+    // Starting from wake hour to sleep hour
+    for (let hour = wakeHour; hour !== sleepHour; hour = (hour + 1) % 30) {
+      let startMinute = hour === wakeHour ? wakeMinute : 0;
+      let endMinute = hour === (sleepHour % 30) ? sleepMinute : 60;
+      for (let minute = startMinute; minute < endMinute; minute += 15) {
+        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        options.push(
+          <option key={timeString} value={timeString}>{convertTo12HourFormat(timeString)}</option>
+        );
+      }
+    }
+    return options;
+  };
+
   function convertTo12HourFormat(time) {
     let [hour, minute] = time.split(":").map(Number);
     const isPM = hour >= 12 && hour < 24;
@@ -304,7 +325,7 @@ function Home() {
                   onChange={handleActivityStartTimeChange}
                   className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
                 >
-                  {generateTimeOptions()}
+                  {generateActivityTimeOptions()}
                 </select>
               </div>
               <div className="w-1/2">
@@ -314,7 +335,7 @@ function Home() {
                   onChange={handleActivityEndTimeChange}
                   className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
                 >
-                  {generateTimeOptions()}
+                  {generateActivityTimeOptions()}
                 </select>
               </div>
             </div>
