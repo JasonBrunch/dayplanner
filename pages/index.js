@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { GithubPicker } from "react-color";
 import {
   initializeSchedule,
   updateActivity,
@@ -12,12 +13,19 @@ function Home() {
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("00:00");
   const [activityTitle, setActivityTitle] = useState("");
-  const [activityColor, setActivityColor] = useState("green");
+  const [activityColor, setActivityColor] = useState("#ff6347");
 
   const [wakeTime, setWakeTime] = useState("06:00"); // Default wake time
   const [sleepTime, setSleepTime] = useState("22:00"); // Default sleep time
 
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
+  const toggleColorPicker = () => {
+    setShowColorPicker(!showColorPicker);
+  };
+
   const handleAddActivity = () => {
+    console.log("Selected color:", activityColor);
     const newActivity = createActivity(
       startTime,
       endTime,
@@ -147,7 +155,7 @@ function Home() {
                               left: `${(new Date(
                                 `2021-01-01 ${activity.startTime}`
                               ).getMinutes() /
-                                  60) *
+                                60) *
                                 100
                                 }%`,
                             }}
@@ -175,7 +183,7 @@ function Home() {
               style={{ width: "100%", height: "auto", display: "block" }}
             />
           </div>
-          <div className=" px-2 lg:px-10 flex flex-col bg-blue-200 mt-8">
+          <div className=" px-2 lg:px-10 flex flex-col mt-8">
             {/* Wake Time Input */}
             <h2 className="heading2 pb-2">Set Wake Hours</h2>
             <div className="flex gap-4">
@@ -229,19 +237,25 @@ function Home() {
               </div>
             </div>
 
-            {/* Color Selection Dropdown */}
+            {/* Color Picker Dropdown */}
             <h3 className="heading3">Color</h3>
-            <select
-              value={activityColor}
-              onChange={(e) => setActivityColor(e.target.value)}
-              className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+            <button
+              onClick={toggleColorPicker}
+              className="bg-white shadow-md rounded px-2 pt-2 pb-3 lg:w-10 lg:h-8"
+              style={{ backgroundColor: activityColor }}
             >
-              <option value="#ff6347">Red</option> {/* Example hex color for red */}
-              <option value="#4682b4">Blue</option> {/* Example hex color for blue */}
-            </select>
+              
+            </button>
+            {showColorPicker && (
+              <GithubPicker
+                color={activityColor}
+                onChangeComplete={(color) => setActivityColor(color.hex)}
+              />
+            )}
+
             <button
               onClick={handleAddActivity}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md mt-4"
             >
               Add Activity
             </button>
