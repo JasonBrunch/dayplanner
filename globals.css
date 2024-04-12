@@ -25,6 +25,18 @@ font-size: large;
     color:rgb(78, 78, 78);
     font-size:small
 }
+.activityText{
+   font-family: "articulat-cf", sans-serif;
+   font-weight: 400;
+   font-style: normal;
+    color:rgb(4, 4, 4);
+    font-size:medium;
+
+}
+.highlight {
+   background-color: #000000; /* Choose a color that fits your UI theme */
+   border: 1px solid #33e4ff; /* Optional: adds a border around the highlighted slot */
+ }
 
 /* Other Font Styles */
 

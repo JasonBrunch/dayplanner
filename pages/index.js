@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { GithubPicker } from "react-color";
+import Image from "next/image";
+
+import ActivityDisplay from "@/components/activityDisplay";
+import AddActivityUI from "@/components/addActivityUI";
+import WakeTimeUI from "@/components/wakeTimeUI";
+import ScheduleDisplay from "@/components/scheduleDisplay";
+import { currentDate } from "@/utilities/utilities";
 import {
   initializeSchedule,
   updateActivity,
   createActivity,
   removeActivity,
-
 } from "@/managers/planManager";
 
 function Home() {
@@ -15,25 +20,25 @@ function Home() {
   const [endTime, setEndTime] = useState("00:00");
   const [activityTitle, setActivityTitle] = useState("");
   const [activityColor, setActivityColor] = useState("#ff6347");
+  const [wakeTime, setWakeTime] = useState("08:00"); // Default wake time
+  const [sleepTime, setSleepTime] = useState("24:00"); // Default sleep time
 
-  const [wakeTime, setWakeTime] = useState("06:00"); // Default wake time
-  const [sleepTime, setSleepTime] = useState("22:00"); // Default sleep time
-
-  const [showColorPicker, setShowColorPicker] = useState(false);
-
-  const toggleColorPicker = () => {
-    setShowColorPicker(!showColorPicker);
+  const handleWakeTimeChange = (e) => {
+    setWakeTime(e.target.value);
   };
 
-  const currentDate = new Date().toLocaleDateString("en-US", {
-    weekday: 'long', // long name of the day
-    year: 'numeric', // numeric year
-    month: 'long', // long name of the month
-    day: 'numeric' // numeric day of the month
-  });
+  const handleSleepTimeChange = (e) => {
+    setSleepTime(e.target.value);
+  };
+  const handleActivityStartTimeChange = (e) => {
+    setStartTime(e.target.value);
+  };
+
+  const handleActivityEndTimeChange = (e) => {
+    setEndTime(e.target.value);
+  };
 
   const handleAddActivity = () => {
-    console.log("Selected color:", activityColor);
     const newActivity = createActivity(
       startTime,
       endTime,
@@ -77,6 +82,11 @@ function Home() {
     setActivities([...activities, newActivity]);
     const updatedSchedule = updateActivity(daySchedule, newActivity);
     setDaySchedule(updatedSchedule);
+
+    // Reset input fields
+    setActivityTitle(""); // Resets title
+    setStartTime(endTime); // Resets start time
+    setEndTime("00:00"); // Resets end time
   };
 
   const handleRemoveActivity = (activityToRemove) => {
@@ -100,15 +110,6 @@ function Home() {
       parseInt(sleepTime.split(":")[0], 10) +
       (sleepTime.split(":")[0] < wakeTime.split(":")[0] ? 30 : 0); // Adjust for next day if needed
     return hour >= wakeHour && hour < sleepHour;
-  };
-
-  const handleWakeTimeChange = (e) => {
-    setWakeTime(e.target.value);
-  };
-
-  // Handler for sleep time change
-  const handleSleepTimeChange = (e) => {
-    setSleepTime(e.target.value);
   };
 
   const getDisplayTitle = (activity) => {
@@ -144,17 +145,23 @@ function Home() {
     let options = [];
     const wakeHour = parseInt(wakeTime.split(":")[0], 10);
     const wakeMinute = parseInt(wakeTime.split(":")[1], 10);
-    const sleepHour = parseInt(sleepTime.split(":")[0], 10) + (sleepTime.split(":")[0] < wakeTime.split(":")[0] ? 30 : 0);
+    const sleepHour =
+      parseInt(sleepTime.split(":")[0], 10) +
+      (sleepTime.split(":")[0] < wakeTime.split(":")[0] ? 30 : 0);
     const sleepMinute = parseInt(sleepTime.split(":")[1], 10);
 
     // Starting from wake hour to sleep hour
     for (let hour = wakeHour; hour !== sleepHour; hour = (hour + 1) % 30) {
       let startMinute = hour === wakeHour ? wakeMinute : 0;
-      let endMinute = hour === (sleepHour % 30) ? sleepMinute : 60;
+      let endMinute = hour === sleepHour % 30 ? sleepMinute : 60;
       for (let minute = startMinute; minute < endMinute; minute += 15) {
-        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        const timeString = `${hour.toString().padStart(2, "0")}:${minute
+          .toString()
+          .padStart(2, "0")}`;
         options.push(
-          <option key={timeString} value={timeString}>{convertTo12HourFormat(timeString)}</option>
+          <option key={timeString} value={timeString}>
+            {convertTo12HourFormat(timeString)}
+          </option>
         );
       }
     }
@@ -172,205 +179,73 @@ function Home() {
       .padStart(2, "0")} ${isPM ? "PM" : "AM"}`;
   }
 
-  const handleActivityStartTimeChange = (e) => {
-    setStartTime(e.target.value);
-  };
-
-  const handleActivityEndTimeChange = (e) => {
-    setEndTime(e.target.value);
-  };
-
   return (
     <div className="flex flex-col md:flex-row">
-      {/* Schedule Container */}
+      {/* Main Schedule Container */}
       <div className="flex flex-col w-full md:w-3/4 p-4 md:p-8 bg-gray-200">
-        <div className="flex justify-between items-end pb-1 pt-4"><h1 className=" heading1">{"TODAY'S SCHEDULE"}</h1>
-        <h2>{currentDate}</h2></div>
-        <div className="flex flex-col items-center w-full">
-          {Array.from({ length: 30 }, (_, hour) => {
-            const hourFormatted = convertTo12HourFormat(
-              `${hour.toString().padStart(2, "0")}:00`
-            );
-
-            return (
-              isWithinAwakeHours(hour) && (
-                <div key={hour} className="flex w-full border-t border-black">
-                  <div className="py-2 px-6 text-center border-r border-gray-500">
-                    {hourFormatted}
-                  </div>
-                  <div className="flex flex-1 relative">
-                    {daySchedule
-                      .filter((slot) => slot.hour === hour)
-                      .map((slot, index) => (
-                        <div
-                          key={index}
-                          className="flex-1"
-                          style={
-                            slot.activity
-                              ? colorMapping(slot.activity.color)
-                              : {}
-                          }
-                        />
-                      ))}
-                    {activities
-                      .filter((activity) => {
-                        const [activityStartHour] = activity.startTime
-                          .split(":")
-                          .map(Number);
-                        return activityStartHour === hour;
-                      })
-                      .map((activity, index) => {
-                        const displayTitle = getDisplayTitle(activity);
-                        return (
-                          <div
-                            key={index}
-                            className="absolute text-sm whitespace-nowrap overflow-hidden"
-                            style={{
-                              width: "150%",
-                              left: `${
-                                (new Date(
-                                  `2021-01-01 ${activity.startTime}`
-                                ).getMinutes() /
-                                  60) *
-                                100
-                              }%`,
-                            }}
-                          >
-                            {displayTitle}
-                          </div>
-                        );
-                      })}
-                  </div>
-                </div>
-              )
-            );
-          })}
+        {/*heading*/}
+        <div className="flex justify-between items-end pb-1 pt-4">
+          <h1 className=" heading1">{"TODAY'S SCHEDULE"}</h1>
+          <h2>{currentDate}</h2>
         </div>
+
+        {/*schedule*/}
+        <ScheduleDisplay
+          daySchedule={daySchedule}
+          activities={activities}
+          isWithinAwakeHours={isWithinAwakeHours}
+          getDisplayTitle={getDisplayTitle}
+          colorMapping={colorMapping}
+          convertTo12HourFormat={convertTo12HourFormat}
+        />
       </div>
 
       {/* Inputs and Button Container */}
-      <div className="w-full md:w-1/4 shadow h-screen">
+      <div className="w-full md:w-1/4 shadow ">
         <div className="w-full h-10 bg-customBlue flex items-center px-10 "></div>
 
         <div className="bg-gray-100 relative overflow-hidden h-full">
           <div style={{ height: "50px", width: "100%" }}>
-            <img
+            <Image
               src="/wave.svg"
               alt="Wave"
-              style={{ width: "100%", height: "auto", display: "block" }}
+              layout="responsive"
+              width={100}
+              height={20}
             />
           </div>
           <div className=" px-2 lg:px-10 flex flex-col mt-8">
-            {/* Wake Time Input */}
-            <h2 className="heading2 pb-2">Set Wake Hours</h2>
-            <div className="flex gap-4">
-              <div className="w-1/2">
-                <h3 className="heading3">Wake</h3>
-                <select
-                  value={wakeTime}
-                  onChange={handleWakeTimeChange}
-                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-                >
-                  {generateTimeOptions()}
-                </select>
-              </div>
-              <div className="w-1/2">
-                <h3 className="heading3">Sleep</h3>
-                <select
-                  value={sleepTime}
-                  onChange={handleSleepTimeChange}
-                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-                >
-                  {generateTimeOptions()}
-                </select>
-              </div>
-            </div>
+            <WakeTimeUI
+              wakeTime={wakeTime}
+              sleepTime={sleepTime}
+              handleWakeTimeChange={handleWakeTimeChange}
+              handleSleepTimeChange={handleSleepTimeChange}
+              generateTimeOptions={generateTimeOptions}
+            />
+
             <hr className="border-t border-gray-400 my-4" />
-            <h2 className="heading2 pb-2">Add Activities</h2>
 
-            <div className="flex  gap-4">
-              <div className=" w-full">
-                <h3 className="heading3">Title</h3>
-                <input
-                  type="text"
-                  value={activityTitle}
-                  placeholder="Enter activity title"
-                  onChange={(e) => setActivityTitle(e.target.value)}
-                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-                />
-              </div>
-
-              {/* Color Picker Dropdown */}
-              <div>
-                <h3 className="heading3">Color</h3>
-                <button
-                  onClick={toggleColorPicker}
-                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 lg:w-12 lg:h-11"
-                  style={{ backgroundColor: activityColor }}
-                ></button>
-                {showColorPicker && (
-                  <GithubPicker
-                    color={activityColor}
-                    onChangeComplete={(color) => setActivityColor(color.hex)}
-                  />
-                )}
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="w-1/2">
-                <h3 className="heading3">Start</h3>
-                <select
-                  value={startTime}
-                  onChange={handleActivityStartTimeChange}
-                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-                >
-                  {generateActivityTimeOptions()}
-                </select>
-              </div>
-              <div className="w-1/2">
-                <h3 className="heading3">End</h3>
-                <select
-                  value={endTime}
-                  onChange={handleActivityEndTimeChange}
-                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-                >
-                  {generateActivityTimeOptions()}
-                </select>
-              </div>
-            </div>
-
-            <button
-              onClick={handleAddActivity}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md mt-4"
-            >
-              Add Activity
-            </button>
+            <AddActivityUI
+              activityTitle={activityTitle}
+              setActivityTitle={setActivityTitle}
+              activityColor={activityColor}
+              setActivityColor={setActivityColor}
+              startTime={startTime}
+              handleActivityStartTimeChange={handleActivityStartTimeChange}
+              generateActivityTimeOptions={generateActivityTimeOptions}
+              endTime={endTime}
+              handleActivityEndTimeChange={handleActivityEndTimeChange}
+              handleAddActivity={handleAddActivity}
+            />
           </div>
 
           {/* Container for displaying activities */}
           <div className="px-2 lg:px-10 flex flex-col">
             <hr className="border-t border-gray-400 my-4" />
-            <h2 className="heading2">Activities</h2>
-            <ul>
-              {activities.map((activity, index) => (
-                <li
-                  key={index}
-                  className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 flex justify-between items-center"
-                >
-                  <span>
-                    {activity.title} - {activity.startTime} to{" "}
-                    {activity.endTime}
-                  </span>
-                  <button
-                    onClick={() => handleRemoveActivity(activity)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    X
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <ActivityDisplay
+              activities={activities}
+              handleRemoveActivity={handleRemoveActivity}
+            />
           </div>
         </div>
       </div>
