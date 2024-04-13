@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 import ActivityDisplay from "@/components/activityDisplay";
@@ -6,6 +6,7 @@ import AddActivityUI from "@/components/addActivityUI";
 import WakeTimeUI from "@/components/wakeTimeUI";
 import ScheduleDisplay from "@/components/scheduleDisplay";
 import { currentDate } from "@/utilities/utilities";
+
 import {
   initializeSchedule,
   updateActivity,
@@ -14,7 +15,7 @@ import {
 } from "@/managers/planManager";
 
 function Home() {
-  const [daySchedule, setDaySchedule] = useState(initializeSchedule());
+  const [daySchedule, setDaySchedule] = useState(() => initializeScheduleWithCurrentTime());
   const [activities, setActivities] = useState([]);
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("00:00");
@@ -22,6 +23,31 @@ function Home() {
   const [activityColor, setActivityColor] = useState("#ff6347");
   const [wakeTime, setWakeTime] = useState("08:00"); // Default wake time
   const [sleepTime, setSleepTime] = useState("24:00"); // Default sleep time
+
+  // Initialize schedule with current time consideration
+  function initializeScheduleWithCurrentTime() {
+    const initialSchedule = initializeSchedule();
+    return initialSchedule.map(slot => ({
+      ...slot,
+      currentMinute: isCurrentMinute(slot.hour, slot.minute)
+    }));
+  }
+
+  function isCurrentMinute(hour, minute) {
+    const now = new Date();
+    return now.getHours() === hour && now.getMinutes() === minute;
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setDaySchedule(prevSchedule => prevSchedule.map(slot => ({
+        ...slot,
+        currentMinute: now.getHours() === slot.hour && now.getMinutes() === slot.minute
+      })));
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleWakeTimeChange = (e) => {
     setWakeTime(e.target.value);
@@ -187,6 +213,7 @@ function Home() {
         <div className="flex justify-between items-end pb-1 pt-4">
           <h1 className=" heading1">{"TODAY'S SCHEDULE"}</h1>
           <h2>{currentDate}</h2>
+   
         </div>
 
         {/*schedule*/}

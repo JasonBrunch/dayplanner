@@ -26,7 +26,11 @@ export function updateActivity(schedule, activity) {
     let slotIndex = slotHour * 60 + slotMinute;
 
     if (slotIndex >= startIndex && slotIndex < endIndex) {
-      updatedSchedule[i] = createTimeSlot(slotHour, slotMinute, activity);
+      // Preserve currentMinute flag while updating the slot with new activity
+      updatedSchedule[i] = {
+        ...createTimeSlot(slotHour, slotMinute, activity),
+        currentMinute: updatedSchedule[i].currentMinute
+      };
     }
   }
 
@@ -37,7 +41,8 @@ export function updateActivity(schedule, activity) {
     return {
       hour: hour,
       minute: minute,
-      activity: activity
+      activity: activity,
+      currentMinute: false
     };
   }
 
@@ -50,7 +55,7 @@ export function updateActivity(schedule, activity) {
     };
   }
 
-  // Function to remove an activity
+// Function to remove an activity
 export function removeActivity(schedule, activities, activityToRemove) {
   // Remove the activity from the activities array
   const updatedActivities = activities.filter(activity => activity !== activityToRemove);
@@ -65,7 +70,11 @@ export function removeActivity(schedule, activities, activityToRemove) {
   let updatedSchedule = schedule.map(slot => {
     let slotIndex = slot.hour * 60 + slot.minute;
     if (slotIndex >= startIndex && slotIndex < endIndex && slot.activity === activityToRemove) {
-      return createTimeSlot(slot.hour, slot.minute); // Resets to a timeslot with no activity
+      // Resets to a timeslot with no activity while preserving the currentMinute flag
+      return {
+        ...createTimeSlot(slot.hour, slot.minute),
+        currentMinute: slot.currentMinute
+      };
     } else {
       return slot;
     }
