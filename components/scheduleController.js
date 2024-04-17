@@ -22,7 +22,7 @@ function ScheduleController() {
   const [activityTitle, setActivityTitle] = useState("");
   const [activityColor, setActivityColor] = useState("#ff6347");
   const [wakeTime, setWakeTime] = useState("08:00"); // Default wake time
-  const [sleepTime, setSleepTime] = useState("24:00"); // Default sleep time
+  const [sleepTime, setSleepTime] = useState("00:00"); // Default sleep time
 
   // Initialize schedule with current time consideration
   function initializeScheduleWithCurrentTime() {
@@ -134,7 +134,7 @@ function ScheduleController() {
     const wakeHour = parseInt(wakeTime.split(":")[0], 10);
     const sleepHour =
       parseInt(sleepTime.split(":")[0], 10) +
-      (sleepTime.split(":")[0] < wakeTime.split(":")[0] ? 30 : 0); // Adjust for next day if needed
+      (sleepTime.split(":")[0] < wakeTime.split(":")[0] ? 24 : 0); // Adjust for next day if needed
     return hour >= wakeHour && hour < sleepHour;
   };
 
@@ -150,49 +150,6 @@ function ScheduleController() {
     return title;
   };
 
-  const generateTimeOptions = () => {
-    let options = [];
-    for (let hour = 0; hour < 30; hour++) {
-      for (let minute = 0; minute < 60; minute += 15) {
-        const timeString = `${hour.toString().padStart(2, "0")}:${minute
-          .toString()
-          .padStart(2, "0")}`;
-        options.push(
-          <option key={timeString} value={timeString}>
-            {convertTo12HourFormat(timeString)}
-          </option>
-        );
-      }
-    }
-    return options;
-  };
-
-  const generateActivityTimeOptions = () => {
-    let options = [];
-    const wakeHour = parseInt(wakeTime.split(":")[0], 10);
-    const wakeMinute = parseInt(wakeTime.split(":")[1], 10);
-    const sleepHour =
-      parseInt(sleepTime.split(":")[0], 10) +
-      (sleepTime.split(":")[0] < wakeTime.split(":")[0] ? 30 : 0);
-    const sleepMinute = parseInt(sleepTime.split(":")[1], 10);
-
-    // Starting from wake hour to sleep hour
-    for (let hour = wakeHour; hour !== sleepHour; hour = (hour + 1) % 30) {
-      let startMinute = hour === wakeHour ? wakeMinute : 0;
-      let endMinute = hour === sleepHour % 30 ? sleepMinute : 60;
-      for (let minute = startMinute; minute < endMinute; minute += 15) {
-        const timeString = `${hour.toString().padStart(2, "0")}:${minute
-          .toString()
-          .padStart(2, "0")}`;
-        options.push(
-          <option key={timeString} value={timeString}>
-            {convertTo12HourFormat(timeString)}
-          </option>
-        );
-      }
-    }
-    return options;
-  };
 
   function convertTo12HourFormat(time) {
     let [hour, minute] = time.split(":").map(Number);
@@ -232,22 +189,14 @@ function ScheduleController() {
         <div className="w-full h-10 bg-customBlue flex items-center px-10 "></div>
 
         <div className="bg-gray-100 relative overflow-hidden h-full">
-          <div style={{ height: "50px", width: "100%" }}>
-            <Image
-              src="/wave.svg"
-              alt="Wave"
-              layout="responsive"
-              width={100}
-              height={20}
-            />
-          </div>
+  
           <div className=" px-2 lg:px-10 flex flex-col mt-8">
             <WakeTimeUI
               wakeTime={wakeTime}
               sleepTime={sleepTime}
               handleWakeTimeChange={handleWakeTimeChange}
               handleSleepTimeChange={handleSleepTimeChange}
-              generateTimeOptions={generateTimeOptions}
+        
             />
 
             <hr className="border-t border-gray-400 my-4" />
@@ -259,7 +208,7 @@ function ScheduleController() {
               setActivityColor={setActivityColor}
               startTime={startTime}
               handleActivityStartTimeChange={handleActivityStartTimeChange}
-              generateActivityTimeOptions={generateActivityTimeOptions}
+           
               endTime={endTime}
               handleActivityEndTimeChange={handleActivityEndTimeChange}
               handleAddActivity={handleAddActivity}

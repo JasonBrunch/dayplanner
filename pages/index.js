@@ -8,6 +8,7 @@ function Home() {
     // Assuming you have a way to check authentication status
     // Redirect if not authenticated:
     router.push('/loginPage');
+    //router.push('/dashboard');
   }, [router]);
 
   return (

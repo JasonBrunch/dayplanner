@@ -8,7 +8,6 @@ function AddActivityUI({
   setActivityColor,
   startTime,
   handleActivityStartTimeChange,
-  generateActivityTimeOptions,
   endTime,
   handleActivityEndTimeChange,
   handleAddActivity,
@@ -27,16 +26,15 @@ function AddActivityUI({
   return (
     <>
       <h2 className="heading2 pb-2">Add Activities</h2>
-
-      <div className="flex  gap-4">
-        <div className=" w-full">
+      <div className="flex gap-4">
+        <div className="w-full">
           <h3 className="heading3">Title</h3>
           <input
             type="text"
             value={activityTitle}
-            placeholder="Enter activity title"
             onChange={(e) => setActivityTitle(e.target.value)}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+            placeholder="Enter activity title"
           />
         </div>
 
@@ -47,7 +45,7 @@ function AddActivityUI({
             onClick={toggleColorPicker}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 lg:w-12 lg:h-11"
             style={{ backgroundColor: activityColor }}
-          ></button>
+          />
           {showColorPicker && (
             <GithubPicker
               color={activityColor}
@@ -60,23 +58,21 @@ function AddActivityUI({
       <div className="flex gap-4">
         <div className="w-1/2">
           <h3 className="heading3">Start</h3>
-          <select
+          <input
+            type="time"
             value={startTime}
             onChange={handleActivityStartTimeChange}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-          >
-            {generateActivityTimeOptions()}
-          </select>
+          />
         </div>
         <div className="w-1/2">
           <h3 className="heading3">End</h3>
-          <select
+          <input
+            type="time"
             value={endTime}
             onChange={handleActivityEndTimeChange}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-          >
-            {generateActivityTimeOptions()}
-          </select>
+          />
         </div>
       </div>
 

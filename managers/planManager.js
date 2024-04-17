@@ -4,7 +4,7 @@ import React from "react";
 
 export function initializeSchedule() {
   let schedule = [];
-  for (let hour = 0; hour < 30; hour++) {
+  for (let hour = 0; hour < 24; hour++) {
     for (let minute = 0; minute < 60; minute++) {
       schedule.push(createTimeSlot(hour, minute));
     }

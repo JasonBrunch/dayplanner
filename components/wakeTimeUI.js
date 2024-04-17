@@ -4,8 +4,7 @@ function WakeTimeUI({
   wakeTime,
   sleepTime,
   handleWakeTimeChange,
-  handleSleepTimeChange, 
-  generateTimeOptions,
+  handleSleepTimeChange
 }) {
   return (
     <>
@@ -13,23 +12,21 @@ function WakeTimeUI({
       <div className="flex gap-4">
         <div className="w-1/2">
           <h3 className="heading3">Wake</h3>
-          <select
+          <input
+            type="time"
             value={wakeTime}
             onChange={handleWakeTimeChange}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-          >
-            {generateTimeOptions()}
-          </select>
+          />
         </div>
         <div className="w-1/2">
           <h3 className="heading3">Sleep</h3>
-          <select
+          <input
+            type="time"
             value={sleepTime}
             onChange={handleSleepTimeChange}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
-          >
-            {generateTimeOptions()}
-          </select>
+          />
         </div>
       </div>
     </>

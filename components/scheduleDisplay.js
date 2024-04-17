@@ -5,7 +5,7 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours, getDispl
   
   // Render each hour if it's within the defined awake hours
   const renderSchedule = () => {
-    return Array.from({ length: 30 }, (_, hour) => {
+    return Array.from({ length: 24 }, (_, hour) => {
       const hourFormatted = convertTo12HourFormat(`${hour.toString().padStart(2, "0")}:00`);
 
       if (!isWithinAwakeHours(hour)) return null;
