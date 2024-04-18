@@ -5,9 +5,12 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 
+import { useUser } from "@/context/userContext";
+
 function LoginPage() {
   const router = useRouter();
-  const [loginError, setLoginError] = React.useState('');
+  const { login } = useUser();
+  const [loginError, setLoginError] = React.useState("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -16,6 +19,7 @@ function LoginPage() {
 
     const response = await loginUser(email, password);
     if (response.success) {
+      login(response.data.user); // Store user data in context
       console.log("Login Response: ", response.data);
       router.push("/dashboard");
     } else {
@@ -23,7 +27,6 @@ function LoginPage() {
       setLoginError(response.message);
     }
   };
-
   return (
     <div className="font-sans text-gray-800 max-w-7xl mx-auto h-screen">
       <div className="grid md:grid-cols-2 items-center gap-8 h-full">
@@ -36,7 +39,9 @@ function LoginPage() {
             </p>
           </div>
           <div>
-            <label className="text-lg mb-3 block" htmlFor="email">Email</label>
+            <label className="text-lg mb-3 block" htmlFor="email">
+              Email
+            </label>
             <input
               id="email"
               name="email"
@@ -47,7 +52,9 @@ function LoginPage() {
             />
           </div>
           <div className="mt-6">
-            <label className="text-lg mb-3 block" htmlFor="password">Password</label>
+            <label className="text-lg mb-3 block" htmlFor="password">
+              Password
+            </label>
             <input
               id="password"
               name="password"
@@ -67,23 +74,24 @@ function LoginPage() {
           </div>
           <p className="text-sm mt-10 text-center">
             Dont have an account?
-            <Link href="/registerPage"
-              className="text-blue-600 font-semibold hover:underline ml-1">
-                Register here
-              
+            <Link
+              href="/registerPage"
+              className="text-blue-600 font-semibold hover:underline ml-1"
+            >
+              Register here
             </Link>
           </p>
         </form>
-        <div className="h-full md:py-6 flex items-center relative">
-          <Image
-            src="/photo.webp"
-            className="rounded-md lg:w-4/5 md:w-11/12 z-50 relative"
-            alt="Dining Experience"
-            width={100}
-            height={100}
-            priority
-          />
-        </div>
+        <div className="mx-auto max-w-md overflow-hidden">
+  <Image
+    src="/photo.webp"
+    alt="Dining Experience"
+
+    width={1920} // Original width of the image for high quality
+    height={1080} // Original height of the image for high quality
+    priority
+  />
+</div>
       </div>
     </div>
   );
