@@ -83,15 +83,14 @@ function LoginPage() {
           </p>
         </form>
         <div className="mx-auto max-w-md overflow-hidden">
-  <Image
-    src="/photo.webp"
-    alt="Dining Experience"
-
-    width={1920} // Original width of the image for high quality
-    height={1080} // Original height of the image for high quality
-    priority
-  />
-</div>
+          <Image
+            src="/photo.webp"
+            alt="Dining Experience"
+            width={1920} // Original width of the image for high quality
+            height={1080} // Original height of the image for high quality
+            priority
+          />
+        </div>
       </div>
     </div>
   );

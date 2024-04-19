@@ -8,6 +8,7 @@ export const loginUser = async (email, password) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
+      credentials: 'include'  // Ensure cookies are sent and received
     });
     const data = await response.json();  // Attempt to parse JSON
     if (response.ok) {
