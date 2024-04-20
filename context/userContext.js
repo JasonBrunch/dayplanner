@@ -6,6 +6,7 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     const login = useCallback((userData) => {
+        console.log("User data in login:", userData);  // Log to confirm the structure
         setUser(userData);
     }, []);
 

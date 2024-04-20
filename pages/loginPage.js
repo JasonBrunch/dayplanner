@@ -18,9 +18,11 @@ function LoginPage() {
     const password = event.target.password.value;
 
     const response = await loginUser(email, password);
+    console.log("Login response:", response); 
     if (response.success) {
+      console.log("ATTEMPTING TO LOGIN WITH THIS OBJECT:", response.data.user);
       login(response.data.user); // Store user data in context
-      console.log("Login Response: ", response.data);
+      
       router.push("/dashboard");
     } else {
       console.error("Login Error: ", response.message);

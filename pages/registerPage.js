@@ -32,14 +32,19 @@ function RegisterPage() {
     if (!validateForm()) return; // Prevent form submission if validation fails
 
     try {
-      await registerUser(email, password);
-      console.log("Registration successful");
-      router.push("/dashboard");  // Redirect to dashboard after registration
+        const result = await registerUser(email, password);
+        if (result.success) {
+            console.log("Registration successful", result.data); // Log the user data to verify its structure and content
+            router.push("/dashboard");  // Redirect to dashboard after registration
+        } else {
+            console.error("Registration Error: ", result.message);
+            setErrors(prevErrors => ({ ...prevErrors, form: result.message }));
+        }
     } catch (error) {
-      console.error("Registration Error: ", error);
-      setErrors(prevErrors => ({ ...prevErrors, form: error.message || 'Registration failed' }));
+        console.error("Registration Error: ", error);
+        setErrors(prevErrors => ({ ...prevErrors, form: error.message || 'Registration failed' }));
     }
-  };
+};
 
   return (
     <div className="font-sans text-gray-800 max-w-7xl mx-auto h-screen">
