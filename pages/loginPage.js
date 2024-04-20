@@ -85,6 +85,7 @@ function LoginPage() {
           </p>
         </form>
         <div className="mx-auto max-w-md overflow-hidden">
+        {/*
           <Image
             src="/photo.webp"
             alt="Dining Experience"
@@ -92,6 +93,7 @@ function LoginPage() {
             height={1080} // Original height of the image for high quality
             priority
           />
+          */}
         </div>
       </div>
     </div>

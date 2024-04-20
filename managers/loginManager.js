@@ -33,6 +33,7 @@ export const registerUser = async (email, password) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
+      credentials: 'include'  // Ensure cookies are sent and received
     });
 
     const data = await response.json();
