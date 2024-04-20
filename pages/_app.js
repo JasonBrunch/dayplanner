@@ -15,7 +15,7 @@ const ComponentWithUser = ({ Component, ...props }) => {
     const { login } = useUser();  // Use the 'login' function for both login and refresh
 
     useEffect(() => {
-        /*
+        
         const fetchUser = async () => {
             console.log("Attempting to fetch user data via /refresh");
 
@@ -43,7 +43,7 @@ const ComponentWithUser = ({ Component, ...props }) => {
         };
 
         fetchUser();
-    */}, [login]);
+    }, [login]);
 
     return <Component {...props} />;
 }

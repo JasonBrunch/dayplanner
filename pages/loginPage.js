@@ -20,8 +20,8 @@ function LoginPage() {
     const response = await loginUser(email, password);
     console.log("Login response:", response); 
     if (response.success) {
-      console.log("ATTEMPTING TO LOGIN WITH THIS OBJECT:", response.data.user);
-      login(response.data.user); // Store user data in context
+      console.log("ATTEMPTING TO LOGIN WITH THIS OBJECT:", response.data);
+      login(response.data); // Store user data in context
       
       router.push("/dashboard");
     } else {
