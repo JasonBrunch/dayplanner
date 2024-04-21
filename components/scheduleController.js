@@ -6,6 +6,7 @@ import AddActivityUI from "@/components/addActivityUI";
 import WakeTimeUI from "@/components/wakeTimeUI";
 import ScheduleDisplay from "@/components/scheduleDisplay";
 import { currentDate } from "@/utilities/utilities";
+import { useUser } from "@/context/userContext";
 
 import {
   initializeSchedule,
@@ -15,8 +16,9 @@ import {
 } from "@/managers/planManager";
 
 function ScheduleController() {
+  const { user } = useUser(); // Retrieve the user object from the User Context
   const [daySchedule, setDaySchedule] = useState(() => initializeScheduleWithCurrentTime());
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState(user?.activities || []);
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("00:00");
   const [activityTitle, setActivityTitle] = useState("");
@@ -37,6 +39,12 @@ function ScheduleController() {
     const now = new Date();
     return now.getHours() === hour && now.getMinutes() === minute;
   }
+
+  useEffect(() => {
+    if (user?.activities) {
+      setActivities(user.activities); // Update the activities state when the user context changes
+    }
+  }, [user]); // React when user data changes
 
   useEffect(() => {
     const interval = setInterval(() => {
