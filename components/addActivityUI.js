@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import { GithubPicker } from "react-color";
 
-function AddActivityUI({
-  activityTitle,
-  setActivityTitle,
-  activityColor,
-  setActivityColor,
-  startTime,
-  handleActivityStartTimeChange,
-  endTime,
-  handleActivityEndTimeChange,
-  handleAddActivity,
-}) {
+function AddActivityUI({ handleAddActivity }) {
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [startTime, setStartTime] = useState("00:00");
+  const [endTime, setEndTime] = useState("00:00");
+  const [activityTitle, setActivityTitle] = useState("");
+  const [activityColor, setActivityColor] = useState("#ff6347");
 
   const toggleColorPicker = () => {
     setShowColorPicker(!showColorPicker);
@@ -21,6 +15,17 @@ function AddActivityUI({
   const handleColorChangeComplete = (color) => {
     setActivityColor(color.hex);
     setShowColorPicker(false); // Close the color picker after selection
+  };
+
+  const handleSubmit = () => {
+    const activityData = {
+      startTime,
+      endTime,
+      activityTitle,
+      activityColor,
+    };
+
+    handleAddActivity(activityData); // Pass the activity data to the parent
   };
 
   return (
@@ -61,7 +66,7 @@ function AddActivityUI({
           <input
             type="time"
             value={startTime}
-            onChange={handleActivityStartTimeChange}
+            onChange={(e) => setStartTime(e.target.value)}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
           />
         </div>
@@ -70,14 +75,14 @@ function AddActivityUI({
           <input
             type="time"
             value={endTime}
-            onChange={handleActivityEndTimeChange}
+            onChange={(e) => setEndTime(e.target.value)}
             className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
           />
         </div>
       </div>
 
       <button
-        onClick={handleAddActivity}
+        onClick={handleSubmit} // Use a custom function to call `handleAddActivity`
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md mt-4"
       >
         Add Activity
