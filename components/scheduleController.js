@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useUser } from "@/context/userContext";
 
 import ActivityDisplay from "@/components/activityDisplay";
 import AddActivityUI from "@/components/addActivityUI";
 import WakeTimeUI from "@/components/wakeTimeUI";
 import ScheduleDisplay from "@/components/scheduleDisplay";
 import { currentDate } from "@/utilities/utilities";
-import { useUser } from "@/context/userContext";
+
 
 import {
   initializeSchedule,
@@ -17,23 +18,43 @@ import {
 
 function ScheduleController() {
   const { user } = useUser(); // Retrieve the user object from the User Context
-  const [daySchedule, setDaySchedule] = useState(() => initializeScheduleWithCurrentTime());
+ 
   const [activities, setActivities] = useState(user?.activities || []);
+  
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("00:00");
   const [activityTitle, setActivityTitle] = useState("");
   const [activityColor, setActivityColor] = useState("#ff6347");
   const [wakeTime, setWakeTime] = useState("08:00"); // Default wake time
   const [sleepTime, setSleepTime] = useState("00:00"); // Default sleep time
+ const [daySchedule, setDaySchedule] = useState(() =>
+    initializeScheduleWithCurrentTime(activities)
+  );
 
-  // Initialize schedule with current time consideration
-  function initializeScheduleWithCurrentTime() {
-    const initialSchedule = initializeSchedule();
-    return initialSchedule.map(slot => ({
-      ...slot,
-      currentMinute: isCurrentMinute(slot.hour, slot.minute)
-    }));
-  }
+// Initialize schedule with activities and current time consideration
+function initializeScheduleWithCurrentTime(activities) {
+  // Initialize the base schedule
+  const initialSchedule = initializeSchedule();
+
+  // Map activities to the initial schedule
+  initialSchedule.forEach((slot) => {
+    const activity = activities.find((act) => {
+      const [startHour, startMinute] = act.startTime.split(":").map(Number);
+      const [endHour, endMinute] = act.endTime.split(":").map(Number);
+
+      const slotIndex = slot.hour * 60 + slot.minute;
+      const activityStartIndex = startHour * 60 + startMinute;
+      const activityEndIndex = endHour * 60 + endMinute;
+
+      return slotIndex >= activityStartIndex && slotIndex < activityEndIndex;
+    });
+
+    // Assign the corresponding activity to the slot
+    slot.activity = activity || null;
+  });
+
+  return initialSchedule;
+}
 
   function isCurrentMinute(hour, minute) {
     const now = new Date();
@@ -43,6 +64,8 @@ function ScheduleController() {
   useEffect(() => {
     if (user?.activities) {
       setActivities(user.activities); // Update the activities state when the user context changes
+      // Reinitialize the daySchedule with the new activities
+      setDaySchedule(initializeScheduleWithCurrentTime(user.activities));
     }
   }, [user]); // React when user data changes
 
@@ -72,70 +95,105 @@ function ScheduleController() {
     setEndTime(e.target.value);
   };
 
-  const handleAddActivity = () => {
-    const newActivity = createActivity(
-      startTime,
-      endTime,
-      activityTitle,
-      activityColor
-    );
+const handleAddActivity = async () => {
+    const newActivity = createActivity(startTime, endTime, activityTitle, activityColor);
 
-    // Check for overlaps
     const overlap = activities.some((activity) => {
-      const [activityStartHour, activityStartMinute] = activity.startTime
-        .split(":")
-        .map(Number);
-      const [activityEndHour, activityEndMinute] = activity.endTime
-        .split(":")
-        .map(Number);
-      const [newStartHour, newStartMinute] = newActivity.startTime
-        .split(":")
-        .map(Number);
-      const [newEndHour, newEndMinute] = newActivity.endTime
-        .split(":")
-        .map(Number);
+      const activityStart = activity.startTime.split(":").map(Number);
+      const activityEnd = activity.endTime.split(":").map(Number);
+      const newStart = newActivity.startTime.split(":").map(Number);
+      const newEnd = newActivity.endTime.split(":").map(Number);
 
-      const activityStartIndex = activityStartHour * 60 + activityStartMinute;
-      const activityEndIndex = activityEndHour * 60 + activityEndMinute;
-      const newStartIndex = newStartHour * 60 + newStartMinute;
-      const newEndIndex = newEndHour * 60 + newEndMinute;
+      const activityStartIndex = activityStart[0] * 60 + activityStart[1];
+      const activityEndIndex = activityEnd[0] * 60 + activityEnd[1];
+      const newStartIndex = newStart[0] * 60 + newStart[1];
+      const newEndIndex = newEnd[0] * 60 + newEnd[1];
 
-      return (
-        newStartIndex < activityEndIndex && newEndIndex > activityStartIndex
-      );
+      return newStartIndex < activityEndIndex && newEndIndex > activityStartIndex;
     });
 
     if (overlap) {
-      console.log(
-        "Cannot add activity. There is an overlap with an existing activity."
-      );
-      return; // Prevent adding the overlapping activity
+      console.log("Cannot add activity. There is an overlap with an existing activity.");
+      return;
     }
 
-    // If no overlap, add the activity
-    setActivities([...activities, newActivity]);
-    const updatedSchedule = updateActivity(daySchedule, newActivity);
-    setDaySchedule(updatedSchedule);
+    if (user) {
+      try {
+        const response = await fetch("http://localhost:3001/addActivity", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id, // Use the user ID from the context
+            activity: newActivity,
+          }),
+        });
 
-    // Reset input fields
-    setActivityTitle(""); // Resets title
-    setStartTime(endTime); // Resets start time
-    setEndTime("00:00"); // Resets end time
+        const result = await response.json();
+
+        if (response.ok) {
+          setActivities(result.activities);
+
+          const updatedSchedule = updateActivity(daySchedule, newActivity);
+          setDaySchedule(updatedSchedule);
+
+          setActivityTitle(""); 
+          setStartTime("00:00"); 
+          setEndTime("00:00");
+        } else {
+          console.error("Failed to add activity:", result.message);
+        }
+      } catch (error) {
+        console.error("Error during addActivity API call:", error);
+      }
+    }
   };
 
-  const handleRemoveActivity = (activityToRemove) => {
-    const { updatedSchedule, updatedActivities } = removeActivity(
-      daySchedule,
-      activities,
-      activityToRemove
-    );
-    setDaySchedule(updatedSchedule);
-    setActivities(updatedActivities);
+  const handleRemoveActivity = async (activityToRemove) => {
+    if (!activityToRemove || !activityToRemove._id) {
+      console.error("Activity to remove is invalid or does not have an ID.");
+      return;
+    }
+  
+    const userId = user?.id; // Get the current user's ID from context
+    const activityId = activityToRemove._id.toString(); // Get the activity's unique ID
+  
+    try {
+      // Send a POST request to remove the activity from the backend
+      const response = await fetch("http://localhost:3001/removeActivity", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId, // Include the user ID in the request
+          activityId, // Include the activity ID to remove
+        }),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        // Update the activities and schedule on the frontend
+        setActivities(result.activities); // Set the updated activities array
+  
+        const { updatedSchedule } = removeActivity(
+          daySchedule,
+          activities,
+          activityToRemove
+        );
+  
+        setDaySchedule(updatedSchedule); // Set the updated schedule
+      } else {
+        console.error("Failed to remove activity:", result.message);
+      }
+    } catch (error) {
+      console.error("Error during removeActivity API call:", error);
+    }
   };
 
-  const colorMapping = (colorHex) => ({
-    backgroundColor: colorHex,
-  });
+
 
   // Updated isWithinAwakeHours function for 30-hour format
   const isWithinAwakeHours = (hour) => {
@@ -187,7 +245,6 @@ function ScheduleController() {
           activities={activities}
           isWithinAwakeHours={isWithinAwakeHours}
           getDisplayTitle={getDisplayTitle}
-          colorMapping={colorMapping}
           convertTo12HourFormat={convertTo12HourFormat}
         />
       </div>

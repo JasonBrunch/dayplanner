@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 
-const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours, getDisplayTitle, colorMapping, convertTo12HourFormat }) => {
+const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours, getDisplayTitle,  convertTo12HourFormat }) => {
   
   // Render each hour if it's within the defined awake hours
   const renderSchedule = () => {
+
+    const colorMapping = (colorHex) => ({
+      backgroundColor: colorHex,
+    });
     return Array.from({ length: 24 }, (_, hour) => {
       const hourFormatted = convertTo12HourFormat(`${hour.toString().padStart(2, "0")}:00`);
 
