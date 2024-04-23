@@ -1,8 +1,30 @@
 import React, { useState, useEffect } from 'react';
 
 
-const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours, getDisplayTitle,  convertTo12HourFormat }) => {
+const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
   
+  const getDisplayTitle = (activity) => {
+    const { startTime, endTime, title } = activity;
+    const duration =
+      new Date(`2021-01-01 ${endTime}`) - new Date(`2021-01-01 ${startTime}`);
+    const durationMinutes = duration / 60000; // Convert milliseconds to minutes
+
+    if (durationMinutes < 15 && title.length > 15) {
+      return `${title.substring(0, 15)}...`; // Abbreviate title
+    }
+    return title;
+  };
+
+  function convertTo12HourFormat(time) {
+    let [hour, minute] = time.split(":").map(Number);
+    const isPM = hour >= 12 && hour < 24;
+    hour = hour % 12;
+    hour = hour === 0 ? 12 : hour; // Convert 0 hour to 12 for 12-hour format
+
+    return `${hour.toString().padStart(2, "0")}:${minute
+      .toString()
+      .padStart(2, "0")} ${isPM ? "PM" : "AM"}`;
+  }
   // Render each hour if it's within the defined awake hours
   const renderSchedule = () => {
 

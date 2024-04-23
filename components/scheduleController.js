@@ -15,45 +15,14 @@ import {
 
 function ScheduleController() {
   const { user } = useUser(); // Retrieve the user object from the User Context
-  const [modalOpen, setModalOpen] = useState(false);
+  const [activityModalOpen, setActivityModalOpen] = useState(false);
+  const [wakeTimeModalOpen, setWakeTimeModalOpen] = useState(false);
   const [activities, setActivities] = useState(user?.activities || []);
   const [wakeTime, setWakeTime] = useState("09:00"); // Default wake time
   const [sleepTime, setSleepTime] = useState("00:00"); // Default sleep time
   const [daySchedule, setDaySchedule] = useState(() =>
     initializeScheduleWithCurrentTime(activities)
   );
-
-  //modal controls
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
-  // Initialize schedule with activities and current time consideration
-  function initializeScheduleWithCurrentTime(activities) {
-    // Initialize the base schedule
-    let schedule = [];
-    for (let hour = 0; hour < 24; hour++) {
-      for (let minute = 0; minute < 60; minute++) {
-        schedule.push(createTimeSlot(hour, minute));
-      }
-    }
-    // Map activities to the initial schedule
-    schedule.forEach((slot) => {
-      const activity = activities.find((act) => {
-        const [startHour, startMinute] = act.startTime.split(":").map(Number);
-        const [endHour, endMinute] = act.endTime.split(":").map(Number);
-
-        const slotIndex = slot.hour * 60 + slot.minute;
-        const activityStartIndex = startHour * 60 + startMinute;
-        const activityEndIndex = endHour * 60 + endMinute;
-
-        return slotIndex >= activityStartIndex && slotIndex < activityEndIndex;
-      });
-
-      // Assign the corresponding activity to the slot
-      slot.activity = activity || null;
-    });
-
-    return schedule;
-  }
 
   useEffect(() => {
     if (user?.activities) {
@@ -64,7 +33,8 @@ function ScheduleController() {
   }, [user]); // React when user data changes
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Helper function to highlight the current minute
+    const updateCurrentMinute = () => {
       const now = new Date();
       setDaySchedule((prevSchedule) =>
         prevSchedule.map((slot) => ({
@@ -73,21 +43,53 @@ function ScheduleController() {
             now.getHours() === slot.hour && now.getMinutes() === slot.minute,
         }))
       );
-    }, 60000);
+    };
+
+    // Update current minute on initial load
+    updateCurrentMinute();
+
+    // Update every minute
+    const interval = setInterval(updateCurrentMinute, 60000);
+
+    // Cleanup interval on unmount
     return () => clearInterval(interval);
   }, []);
 
-  const handleWakeTimeChange = (e) => {
-    setWakeTime(e.target.value);
-  };
+  // Functions to control modals
+  const openActivityModal = () => setActivityModalOpen(true);
+  const closeActivityModal = () => setActivityModalOpen(false);
+  const openWakeTimeModal = () => setWakeTimeModalOpen(true);
+  const closeWakeTimeModal = () => setWakeTimeModalOpen(false);
 
-  const handleSleepTimeChange = (e) => {
-    setSleepTime(e.target.value);
-  };
+  // Initialize schedule with activities and current time consideration
+  function initializeScheduleWithCurrentTime(activities) {
+    // Initialize the base schedule
+    let schedule = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute++) {
+        schedule.push(createTimeSlot(hour, minute));
+      }
+    }
+
+    // Map activities to the initial schedule
+    schedule.forEach((slot) => {
+      const activity = activities.find((act) => {
+        const [startHour, startMinute] = act.startTime.split(":").map(Number);
+        const [endHour, endMinute] = act.endTime.split(":").map(Number);
+        const slotIndex = slot.hour * 60 + slot.minute;
+        const activityStartIndex = startHour * 60 + startMinute;
+        const activityEndIndex = endHour * 60 + endMinute;
+
+        return slotIndex >= activityStartIndex && slotIndex < activityEndIndex;
+      });
+      // Assign the corresponding activity to the slot
+      slot.activity = activity || null;
+    });
+    return schedule;
+  }
 
   const handleAddActivity = async (activityData) => {
     const { startTime, endTime, activityTitle, activityColor } = activityData;
-
     const newActivity = createActivity(
       startTime,
       endTime,
@@ -214,31 +216,16 @@ function ScheduleController() {
     return hour >= wakeHour && hour < sleepHour;
   };
 
-  const getDisplayTitle = (activity) => {
-    const { startTime, endTime, title } = activity;
-    const duration =
-      new Date(`2021-01-01 ${endTime}`) - new Date(`2021-01-01 ${startTime}`);
-    const durationMinutes = duration / 60000; // Convert milliseconds to minutes
-
-    if (durationMinutes < 15 && title.length > 15) {
-      return `${title.substring(0, 15)}...`; // Abbreviate title
-    }
-    return title;
-  };
-
-  function convertTo12HourFormat(time) {
-    let [hour, minute] = time.split(":").map(Number);
-    const isPM = hour >= 12 && hour < 24;
-    hour = hour % 12;
-    hour = hour === 0 ? 12 : hour; // Convert 0 hour to 12 for 12-hour format
-
-    return `${hour.toString().padStart(2, "0")}:${minute
-      .toString()
-      .padStart(2, "0")} ${isPM ? "PM" : "AM"}`;
-  }
-
   return (
     <div className="flex flex-col md:flex-row">
+      
+    
+
+
+
+
+
+
       {/* Main Schedule Container */}
       <div className="flex flex-col w-full md:w-3/4 p-4 md:p-8 bg-gray-200">
         {/*heading*/}
@@ -252,8 +239,6 @@ function ScheduleController() {
           daySchedule={daySchedule}
           activities={activities}
           isWithinAwakeHours={isWithinAwakeHours}
-          getDisplayTitle={getDisplayTitle}
-          convertTo12HourFormat={convertTo12HourFormat}
         />
       </div>
 
@@ -261,40 +246,43 @@ function ScheduleController() {
       <div className="w-full md:w-1/4 shadow ">
         <div className="w-full h-10 bg-customBlue flex items-center px-10 "></div>
 
-        <div className="bg-gray-100 relative overflow-hidden h-full">
-          <div className=" px-2 lg:px-10 flex flex-col mt-8">
-            <WakeTimeUI
-              wakeTime={wakeTime}
-              sleepTime={sleepTime}
-              handleWakeTimeChange={handleWakeTimeChange}
-              handleSleepTimeChange={handleSleepTimeChange}
-            />
+        {/* Open Modals */}
+        <button
+          className="mx-auto my-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+          onClick={openActivityModal}
+        >
+          Add Activity
+        </button>
 
-            <hr className="border-t border-gray-400 my-4" />
+        <button
+          className="mx-auto my-4 px-4 py-2 text-white bg-green-500 rounded hover:bg-green-700"
+          onClick={openWakeTimeModal}
+        >
+          Set Wake Time
+        </button>
 
-            <AddActivityUI handleAddActivity={handleAddActivity} />
-          </div>
-          <div>
-            {/* Button to open the modal */}
-            <button
-              className="mx-auto my-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-              onClick={openModal}
-            >
-              Create Activity
-            </button>
+        {/* Activity Modal */}
+        <Modal isOpen={activityModalOpen} onClose={closeActivityModal}>
+          <AddActivityUI handleAddActivity={handleAddActivity} />
+        </Modal>
 
-            {/* Render the modal, passing the `isOpen` and `onClose` props */}
-            <Modal isOpen={modalOpen} onClose={closeModal} />
-          </div>
+        {/* Wake Time Modal */}
+        <Modal isOpen={wakeTimeModalOpen} onClose={closeWakeTimeModal}>
+          <WakeTimeUI
+            wakeTime={wakeTime}
+            sleepTime={sleepTime}
+            handleWakeTimeChange={(e) => setWakeTime(e.target.value)}
+            handleSleepTimeChange={(e) => setSleepTime(e.target.value)}
+          />
+        </Modal>
 
-          {/* Container for displaying activities */}
-          <div className="px-2 lg:px-10 flex flex-col">
-            <hr className="border-t border-gray-400 my-4" />
-            <ActivityDisplay
-              activities={activities}
-              handleRemoveActivity={handleRemoveActivity}
-            />
-          </div>
+        {/* Container for displaying activities */}
+        <div className="flex flex-col">
+          <hr className="border-t border-gray-400 my-4" />
+          <ActivityDisplay
+            activities={activities}
+            handleRemoveActivity={handleRemoveActivity}
+          />
         </div>
       </div>
     </div>

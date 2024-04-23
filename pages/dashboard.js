@@ -1,16 +1,70 @@
-// pages/dashboard.js
-
-import React from 'react';
-import ScheduleController from '@/components/scheduleController'; 
-import Header from '@/components/header';
-import { useUser } from '@/context/userContext';
+import React, { useState } from "react";
+import ScheduleController from "@/components/scheduleController";
+import ToDoListController from "@/components/toDoListController";
+import Header from "@/components/header";
+import { useUser } from "@/context/userContext";
+import Image from "next/image";
 
 function Dashboard() {
-  const {user} = useUser();
+  const { user } = useUser(); // Get the current user context
+  const [currentView, setCurrentView] = useState("schedule"); // Default to the Schedule view
+
+  // A function to determine which view to show based on the current view state
+  const renderView = () => {
+    switch (currentView) {
+      case "schedule":
+        return <ScheduleController />;
+      case "toDoList":
+        return <ToDoListController />;
+      // Additional cases for future views can be added here
+      default:
+        return <ScheduleController />; // Default view
+    }
+  };
+
   return (
-    <div>
-      <Header userName={user ? user.email : 'Guest'} />
-      <ScheduleController />
+    <div className="flex flex-col h-screen">
+      {/* Header at the top */}
+      <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
+        <Header userName={user ? user.email : "Guest"} />
+      </div>
+
+      {/* Main content with a sidebar on the left and variable content on the right */}
+      <div className="flex flex-row flex-grow">
+        {/* Sidebar with buttons */}
+        <div className="w-16 bg-gray-800 flex flex-col items-center">
+          {/* Schedule button */}
+          <button
+            className="hover:bg-gray-300 p-2 rounded shadow"
+            onClick={() => setCurrentView("schedule")} // Set view to schedule
+          >
+            <Image
+              src="/scheduleIcon.svg"
+              alt="Schedule Icon"
+              width={24}
+              height={24}
+            />
+          </button>
+
+          {/* To Do List button */}
+          <button
+            className="hover:bg-gray-300 p-2 rounded shadow"
+            onClick={() => setCurrentView("toDoList")} // Set view to to-do list
+          >
+            <Image
+              src="/toDoListIcon.svg"
+              alt="To Do List Icon"
+              width={24}
+              height={24}
+            />
+          </button>
+        </div>
+
+        {/* Main content area */}
+        <div className="flex-grow bg-gray-100">
+          {renderView()} {/* Render the current view */}
+        </div>
+      </div>
     </div>
   );
 }
