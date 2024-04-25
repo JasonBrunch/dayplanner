@@ -7,10 +7,6 @@ import WakeTimeUI from "@/components/wakeTimeUI";
 import ScheduleDisplay from "@/components/scheduleDisplay";
 import { currentDate } from "@/utilities/utilities";
 
-import {
-  createTimeSlot,
-  updateActivity,
-} from "@/managers/planManager";
 
 function ScheduleController() {
   const { user } = useUser(); // Retrieve the user object from the User Context
@@ -32,45 +28,48 @@ function ScheduleController() {
   }, [user]); // React when user data changes
 
   useEffect(() => {
-    // Helper function to highlight the current minute
     const updateCurrentMinute = () => {
       const now = new Date();
-      setDaySchedule((prevSchedule) =>
-        prevSchedule.map((slot) => ({
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+  
+      // Only update the current minute in the schedule without reinitializing it entirely
+      setDaySchedule((prevSchedule) => {
+        return prevSchedule.map((slot) => ({
           ...slot,
-          currentMinute:
-            now.getHours() === slot.hour && now.getMinutes() === slot.minute,
-        }))
-      );
+          currentMinute: slot.hour === currentHour && slot.minute === currentMinute,
+        }));
+      });
     };
-
-    // Update current minute on initial load
+  
+    // Update the current minute on load
     updateCurrentMinute();
-
+  
     // Update every minute
     const interval = setInterval(updateCurrentMinute, 60000);
-
-    // Cleanup interval on unmount
+  
+    // Cleanup interval on unmount to prevent memory leaks
     return () => clearInterval(interval);
-  }, []);
+  }, []); // No dependencies, so it only sets up once
 
-  // Functions to control modals
-  const openActivityModal = () => setActivityModalOpen(true);
-  const closeActivityModal = () => setActivityModalOpen(false);
-  const openWakeTimeModal = () => setWakeTimeModalOpen(true);
-  const closeWakeTimeModal = () => setWakeTimeModalOpen(false);
-
-  // Initialize schedule with activities and current time consideration
   function initializeScheduleWithCurrentTime(activities) {
-    // Initialize the base schedule
-    let schedule = [];
+    const schedule = [];
+  
+    // Current time variables
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentSlotIndex = currentHour * 60 + currentMinute;
+  
+    // Initialize the schedule and set the current time slot
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute++) {
-        schedule.push(createTimeSlot(hour, minute));
+        const isCurrentMinute = (hour * 60 + minute) === currentSlotIndex;
+        schedule.push(createTimeSlot(hour, minute, null, isCurrentMinute));
       }
     }
-
-    // Map activities to the initial schedule
+  
+    // Map activities to the schedule
     schedule.forEach((slot) => {
       const activity = activities.find((act) => {
         const [startHour, startMinute] = act.startTime.split(":").map(Number);
@@ -78,14 +77,28 @@ function ScheduleController() {
         const slotIndex = slot.hour * 60 + slot.minute;
         const activityStartIndex = startHour * 60 + startMinute;
         const activityEndIndex = endHour * 60 + endMinute;
-
+  
         return slotIndex >= activityStartIndex && slotIndex < activityEndIndex;
       });
-      // Assign the corresponding activity to the slot
-      slot.activity = activity || null;
+  
+      slot.activity = activity || null; // Assign the activity to the slot
     });
+  
     return schedule;
   }
+  
+  function createTimeSlot(hour, minute, activity = null, isCurrentMinute = false) {
+    return {
+      hour,
+      minute,
+      activity,
+      currentMinute: isCurrentMinute,
+    };
+  }
+
+
+
+
   function createActivity(startTime, endTime, title, color, description) {
     return {
       startTime: startTime,
@@ -95,6 +108,55 @@ function ScheduleController() {
       description: description
     };
   }
+
+  function updateActivity(schedule, activity) {
+    let updatedSchedule = [...schedule];
+  
+    const [startHour, startMinute] = activity.startTime.split(':').map(Number);
+    const [endHour, endMinute] = activity.endTime.split(':').map(Number);
+    let startIndex = startHour * 60 + startMinute;
+    let endIndex = endHour * 60 + endMinute;
+  
+    for (let i = 0; i < updatedSchedule.length; i++) {
+      let slotHour = updatedSchedule[i].hour;
+      let slotMinute = updatedSchedule[i].minute;
+      let slotIndex = slotHour * 60 + slotMinute;
+  
+      if (slotIndex >= startIndex && slotIndex < endIndex) {
+        // Preserve currentMinute flag while updating the slot with new activity
+        updatedSchedule[i] = {
+          ...createTimeSlot(slotHour, slotMinute, activity),
+          currentMinute: updatedSchedule[i].currentMinute
+        };
+      }
+    }
+  
+    return updatedSchedule;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+ 
+
+  // Functions to control modals
+  const openActivityModal = () => setActivityModalOpen(true);
+  const closeActivityModal = () => setActivityModalOpen(false);
+  const openWakeTimeModal = () => setWakeTimeModalOpen(true);
+  const closeWakeTimeModal = () => setWakeTimeModalOpen(false);
+
+
   const handleAddActivity = async (activityData) => {
     const { startTime, endTime, activityTitle, activityColor, activityDescription } = activityData;
     const newActivity = createActivity(

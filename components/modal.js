@@ -32,7 +32,7 @@ const Modal = ({ isOpen, onClose, children }) => {
           ×
         </button>
         {children} {/* This is where your form or other content will go */}
-        <h2>TESTING MODAL</h2>
+       
       </div>
     </div>,
     document.body // Render the modal at the top level of the DOM
