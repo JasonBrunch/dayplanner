@@ -7,6 +7,7 @@ function AddActivityUI({ handleAddActivity }) {
   const [endTime, setEndTime] = useState("00:00");
   const [activityTitle, setActivityTitle] = useState("");
   const [activityColor, setActivityColor] = useState("#ff6347");
+  const [activityDescription, setActivityDescription] = useState("");
 
   const toggleColorPicker = () => {
     setShowColorPicker(!showColorPicker);
@@ -23,6 +24,7 @@ function AddActivityUI({ handleAddActivity }) {
       endTime,
       activityTitle,
       activityColor,
+      activityDescription,
     };
 
     handleAddActivity(activityData); // Pass the activity data to the parent
@@ -59,6 +61,21 @@ function AddActivityUI({ handleAddActivity }) {
           )}
         </div>
       </div>
+        
+      
+      <div className="w-full">
+          <h3 className="heading3">Description</h3>
+          <input
+            type="text"
+            value={activityDescription}
+            onChange={(e) => setActivityDescription(e.target.value)}
+            className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+            placeholder="Enter activity description"
+          />
+        </div>
+
+
+
 
       <div className="flex gap-4">
         <div className="w-1/2">

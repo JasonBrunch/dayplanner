@@ -52,9 +52,9 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
                 </button>
               </div>
               {isOpen && (
-                <div className="mt-4">
+                <div className="mt-4 w-full">
                   <p>
-                    Description: {/* Add additional information here */}
+                    Description: {activity.description}
                   </p>
                 </div>
               )}

@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useUser } from "@/context/userContext";
 
-// Define the ToDoListController component
 function ToDoListController() {
-  // Initialize dummy data for the To-Do List
-  const [toDoList, setToDoList] = useState([
-    { id: 1, task: "Buy groceries", completed: false },
-    { id: 2, task: "Walk the dog", completed: true },
-    { id: 3, task: "Finish the project", completed: false },
-  ]);
+  const { user } = useUser(); // Retrieve the user context
+  const [toDoList, setToDoList] = useState([]);
+  const [newTask, setNewTask] = useState(""); // State for the new task
 
-  // Function to toggle task completion status
+  useEffect(() => {
+    if (user && user.toDoList) {
+      setToDoList(user.toDoList); // Initialize with user data
+    }
+  }, [user]);
+
   const toggleCompletion = (id) => {
     setToDoList((prevList) =>
       prevList.map((item) =>
@@ -18,53 +20,93 @@ function ToDoListController() {
     );
   };
 
-  // Function to remove a task from the list
-  const removeTask = (id) => {
-    setToDoList((prevList) => prevList.filter((item) => item.id !== id));
+  const removeTask = async (id) => {
+    try {
+      const response = await fetch("http://localhost:3001/removeToDoItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: user.id, toDoItemId: id }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        setToDoList(result.toDoList);
+      } else {
+        console.error("Error removing task:", result.message);
+      }
+    } catch (err) {
+      console.error("Network error:", err);
+    }
   };
 
-  // Function to add a new task to the list (for future use)
-  const addTask = (task) => {
-    const newId = toDoList.length > 0 ? toDoList[toDoList.length - 1].id + 1 : 1;
-    setToDoList([...toDoList, { id: newId, task, completed: false }]);
+  const addTask = async () => {
+    if (newTask.trim() === "") return;
+
+    try {
+      const response = await fetch("http://localhost:3001/addToDoItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          toDoItem: { task: newTask, completed: false },
+        }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        setToDoList(result.toDoList);
+        setNewTask(""); // Clear the input
+      } else {
+        console.error("Error adding task:", result.message);
+      }
+    } catch (err) {
+      console.error("Network error:", err);
+    }
   };
 
   return (
-    <div>
-      <h1 className="heading1">To Do List</h1>
+    <div className="px-6 py-3 bg-gray-200 h-full">
+      <h1 className="heading1 pt-4 pb-2">TO-DO LIST</h1>
 
-      {/* Display the To-Do List */}
-      <ul className="list-disc ml-6">
-        {toDoList.map((item) => (
-          <li key={item.id} className="flex justify-between items-center">
-            {/* Display task and completion status */}
-            <span
-              onClick={() => toggleCompletion(item.id)}
-              className={`cursor-pointer ${
-                item.completed ? "line-through text-gray-500" : ""
-              }`}
-            >
-              {item.task}
-            </span>
-
-            {/* Remove task button */}
-            <button
-              className="text-red-500 hover:text-red-700"
-              onClick={() => removeTask(item.id)}
-            >
-              Remove
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      {/* Example of adding a task (for future use) */}
-      <button
-        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded"
-        onClick={() => addTask("New Task")}
+      <ul className="list-disc">
+  {toDoList.map((item) => (
+    <li key={item._id} className="flex justify-between items-center"> {/* Use _id as the key */}
+      <span
+        onClick={() => toggleCompletion(item._id)}
+        className={`cursor-pointer ${item.completed ? "line-through text-gray-500" : ""}`}
       >
-        Add Task
+        {item.task}
+      </span>
+      <button
+        className="text-red-500 hover:text-red-700"
+        onClick={() => removeTask(item._id)}
+      >
+        Remove
       </button>
+    </li>
+  ))}
+</ul>
+
+      <div className="flex items-center mt-2">
+        <input
+          type="text"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          placeholder="Enter new task"
+          className="appearance-none bg-transparent border-b-2 w-full py-2 text-gray-700 leading-tight border-gray-400 focus:outline-none focus:border-blue-500"
+        />
+
+        <button
+          className="ml-4 bg-transparent border border-gray-700 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-200"
+          onClick={addTask}
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 }

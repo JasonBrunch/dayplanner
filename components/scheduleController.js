@@ -10,7 +10,6 @@ import { currentDate } from "@/utilities/utilities";
 import {
   createTimeSlot,
   updateActivity,
-  createActivity,
 } from "@/managers/planManager";
 
 function ScheduleController() {
@@ -87,14 +86,23 @@ function ScheduleController() {
     });
     return schedule;
   }
-
+  function createActivity(startTime, endTime, title, color, description) {
+    return {
+      startTime: startTime,
+      endTime: endTime,
+      title: title,
+      color: color,
+      description: description
+    };
+  }
   const handleAddActivity = async (activityData) => {
-    const { startTime, endTime, activityTitle, activityColor } = activityData;
+    const { startTime, endTime, activityTitle, activityColor, activityDescription } = activityData;
     const newActivity = createActivity(
       startTime,
       endTime,
       activityTitle,
-      activityColor
+      activityColor,
+      activityDescription
     );
 
     const overlap = activities.some((activity) => {

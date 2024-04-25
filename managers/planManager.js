@@ -39,12 +39,5 @@ export function createTimeSlot(hour, minute, activity = null) {
 }
 
 
-  export function createActivity(startTime, endTime, title, color) {
-    return {
-      startTime: startTime,
-      endTime: endTime,
-      title: title,
-      color: color
-    };
-  }
+
 
