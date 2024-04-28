@@ -1,14 +1,30 @@
 import React, { useState } from 'react';
 import ScheduleController from '@/components/scheduleController';
 import ToDoListController from '@/components/toDoListController';
-import Header from '@/components/header';
 import { useUser } from '@/context/userContext';
 import Image from 'next/image';
 
 function Dashboard() {
-  const { user } = useUser(); // Get the current user context
+  const { user, login } = useUser(); // Get the current user context
   const [currentView, setCurrentView] = useState('schedule'); // Default to the Schedule view
 
+  const refreshUserState = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/refresh", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        login(data.user); // Update the user context with new data
+      } else {
+        console.error("Failed to fetch user data:", res.statusText);
+      }
+    } catch (error) {
+      console.error("Error refreshing user data:", error);
+    }
+  };
   // Construct the user icon path with the backend URL to ensure it's correct
   const userIcon = user
     ? `http://localhost:3001${user.userIcon}` // Use absolute URL
@@ -44,8 +60,11 @@ function Dashboard() {
           {/* Schedule button */}
           <button
             className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
-            onClick={() => setCurrentView('schedule')} // Set view to schedule
-          >
+            onClick={() => {
+            setCurrentView('schedule'); 
+            refreshUserState(); // Refresh user state when switching to the schedule view
+          }}
+        >
             <Image
               src="/scheduleIcon.svg"
               alt="Schedule Icon"
@@ -57,8 +76,11 @@ function Dashboard() {
           {/* To Do List button */}
           <button
             className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
-            onClick={() => setCurrentView('toDoList')} // Set view to to-do list
-          >
+            onClick={() => {
+            setCurrentView('toDoList');
+            refreshUserState(); // Refresh user state when switching to the to-do list view
+          }}
+        >
             <Image
               src="/toDoListIcon.svg"
               alt="To Do List Icon"

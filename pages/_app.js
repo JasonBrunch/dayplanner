@@ -1,50 +1,45 @@
 // pages/_app.js
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import "../globals.css";
 import { UserProvider, useUser } from "@/context/userContext";
 
 function MyApp({ Component, pageProps }) {
-    return (
-        <UserProvider>
-            <ComponentWithUser Component={Component} {...pageProps} />
-        </UserProvider>
-    );
+  return (
+    <UserProvider>
+      <ComponentWithUser Component={Component} {...pageProps} />
+    </UserProvider>
+  );
 }
 
 const ComponentWithUser = ({ Component, ...props }) => {
-    const { login } = useUser();  // Use the 'login' function for both login and refresh
+  const { login } = useUser(); // Use the 'login' function for both login and refresh
 
-    useEffect(() => {
-        
-        const fetchUser = async () => {
-            
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("http://localhost:3001/refresh", {
+          method: "GET",
+          credentials: "include", // Necessary to include cookies
+        });
 
-            try {
-                const res = await fetch('http://localhost:3001/refresh', {
-                    method: 'GET',
-                    credentials: 'include'  // Necessary to include cookies
-                });
+        if (res.ok) {
+          const data = await res.json();
 
-              
+          login(data.user); // Use 'login' to set the user data
+        } else {
+          const errorText = await res.text(); // Read the response text
+          console.error("Failed to refresh token:", errorText);
+          // Handle error, possibly logout user
+        }
+      } catch (error) {
+        console.error("Fetch error:", error.message);
+      }
+    };
 
-                if (res.ok) {
-                    const data = await res.json();
-               
-                    login(data.user);  // Use 'login' to set the user data
-                } else {
-                    const errorText = await res.text();  // Read the response text
-                    console.error('Failed to refresh token:', errorText);
-                    // Handle error, possibly logout user
-                }
-            } catch (error) {
-                console.error("Fetch error:", error.message);
-            }
-        };
+    fetchUser();
+  }, [login]);
 
-        fetchUser();
-    }, [login]);
-
-    return <Component {...props} />;
-}
+  return <Component {...props} />;
+};
 
 export default MyApp;
