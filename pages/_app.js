@@ -17,7 +17,7 @@ const ComponentWithUser = ({ Component, ...props }) => {
     useEffect(() => {
         
         const fetchUser = async () => {
-            console.log("Attempting to fetch user data via /refresh");
+            
 
             try {
                 const res = await fetch('http://localhost:3001/refresh', {
@@ -25,12 +25,11 @@ const ComponentWithUser = ({ Component, ...props }) => {
                     credentials: 'include'  // Necessary to include cookies
                 });
 
-                console.log("Response status:", res.status);
-                console.log("Response headers:", JSON.stringify([...res.headers.entries()]));
+              
 
                 if (res.ok) {
                     const data = await res.json();
-                    console.log("Refresh token success, user data:", data);
+               
                     login(data.user);  // Use 'login' to set the user data
                 } else {
                     const errorText = await res.text();  // Read the response text

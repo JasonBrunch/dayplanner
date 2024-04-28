@@ -38,7 +38,7 @@ export const registerUser = async (email, password) => {
 
     const data = await response.json();
     if (response.ok) {
-      console.log('Registration successful', data);
+
       // Ensure to return both success status and user data
       return { success: true, data: data.user };
     } else {

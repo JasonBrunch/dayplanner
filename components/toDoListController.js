@@ -1,293 +1,319 @@
 import React, { useState, useEffect } from "react";
+import ToDoList from "./toDoList"; // Import the ToDoList component
 import { useUser } from "@/context/userContext";
 import Modal from "./modal";
 
-function ToDoListController() {
-  const { user } = useUser(); // Retrieve the user context
-  const [toDoList, setToDoList] = useState([]);
-  const [newTask, setNewTask] = useState({ default: "" }); // Initialize as an empty object
-  const [newCategory, setNewCategory] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [isCategoryModalOpen, setCategoryModalOpen] = useState(false);
 
+
+const dummyData = 
+[
+    {
+      "listId": 0,
+      "listName": "Daily Tasks",
+      "tasks": [
+        {
+          "id": 0,
+          "name": "Morning Exercise",
+          "dateAdded": "2024-04-01T08:00:00Z",  // Example date
+          "dateCompleted": null,  // Not completed
+          "completed": false  // Task completion status
+        },
+        {
+          "id": 1,
+          "name": "Breakfast",
+          "dateAdded": "2024-04-01T08:30:00Z",
+          "dateCompleted": "2024-04-01T09:00:00Z",
+          "completed": true  // Task completed
+        }
+      ]
+    },
+    {
+      "listId": 1,
+      "listName": "Work Projects",
+      "tasks": [
+        {
+          "id": 2,
+          "name": "Team Meeting",
+          "dateAdded": "2024-04-01T10:00:00Z",
+          "dateCompleted": null,  // Not completed
+          "completed": false
+        },
+        {
+          "id": 3,
+          "name": "Complete Report",
+          "dateAdded": "2024-04-01T11:00:00Z",
+          "dateCompleted": null,
+          "completed": false
+        }
+      ]
+    }
+  ]
+
+
+
+function ToDoListController() {
+  const { user } = useUser();
+  const [lists, setLists] = useState([]); 
+  const [isModalOpen, setIsModalOpen] = useState(false);  // State for modal open/close
+  const [newListName, setNewListName] = useState("");  // State for the new list name
+
+  const [newTaskNames, setNewTaskNames] = useState({});  // State for new task names, with each key being the list ID
+  
+  
+  
+  // Initialize lists when the component mounts or when user changes
   useEffect(() => {
     if (user) {
-      setToDoList(user.toDoList || []);
-      setCategories(user.categories || []); // Include this to update when categories change
+      setLists(user.toDoLists || []); // Initialize lists with user.toDoLists
     }
-  }, [user]); // Add categories as a dependency
+  }, [user]); // Re-run effect if user changes
+  
 
-  const addCategory = async () => {
-    if (newCategory.trim() === "") return; // Validate empty input
+  const handleOpenModal = () => {
+    setIsModalOpen(true);  // Open the modal
+  };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);  // Close the modal
+  };
+
+  const handleAddTask = async (listId, taskName) => {
+    console.log(`Task name is: ${taskName}`);  // Check taskName
+    console.log(`List ID is: ${listId}`);  // Check listId
+    // Ensure the task name is valid
+    if (!taskName || taskName.trim() === "") {
+      console.error("Task name cannot be empty.");
+      return;
+    }
+  
+    // Generate a unique ID for the new task
+    const newTaskId = Date.now(); // Using a date-based unique ID to avoid collisions
+  
+    // Create a new task object
+    const newTask = {
+      id: newTaskId,
+      name: taskName.trim(), // Trim any extra spaces
+      dateAdded: new Date(),
+      completed: false,
+    };
+  
+    // Create an updated list structure with the new task
+    const updatedLists = lists.map((list) => {
+      if (list.listId === listId) {
+        return {
+          ...list,
+          tasks: [...list.tasks, newTask], // Add the new task to the existing tasks
+        };
+      }
+      return list;
+    });
+  
+    // Update the state with the new list structure
+    setLists(updatedLists);
+  
     try {
-      const response = await fetch("http://localhost:3001/addCategory", {
+      // Make a POST request to the backend with the updated to-do lists
+      const response = await fetch("http://localhost:3001/replaceToDoLists", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: user.id,
-          categoryName: newCategory,
+          newToDoLists: updatedLists,
         }),
       });
-
-      const result = await response.json();
+  
       if (response.ok) {
-        const newCategory = result.category;
-        setCategories((prevCategories) => [...prevCategories, newCategory]); // Append new category
-        setNewCategory(""); // Clear the input field
-        setCategoryModalOpen(false); // Close the modal
+        const data = await response.json();
+        setLists(data.toDoLists); // Update the state with the backend data
+        setNewTaskNames((prev) => ({ ...prev, [listId]: "" })); // Reset the task name for this list
+      } else {
+        console.error("Failed to add task:", response.statusText); // Log error message if the request fails
       }
-    } catch (err) {
-      console.error("Error adding category:", err);
+    } catch (error) {
+      console.error("Error while adding a new task:", error); // Log unexpected errors
     }
   };
 
-  const addTask = async (category) => {
-    if (!newTask[category] || newTask[category].trim() === "") return; // Ensure there's a valid task to add
-
+  const handleCreateList = async () => {
+    // Ensure newListName has valid content
+    if (newListName.trim() === "") {
+      console.error("List name cannot be empty.");  // Log an error if the list name is invalid
+      return;  // Prevent further execution if list name is empty
+    }
+  
+    // Generate a unique ID for the new list
+    const newListId = lists.length ? Math.max(...lists.map((list) => list.listId)) + 1 : 0;
+  
+    // Create a new list object
+    const newList = {
+      listId: newListId,
+      listName: newListName,
+      tasks: [],  // Start with an empty task array
+    };
+  
+    // Update the state with the new list
+    const updatedLists = [...lists, newList];  // Add the new list to the existing lists
+  
     try {
-      const response = await fetch("http://localhost:3001/addToDoItem", {
+      // Send the updated lists to the backend
+      const response = await fetch('http://localhost:3001/replaceToDoLists', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,  // The ID of the current user
+          newToDoLists: updatedLists,  // The updated to-do lists
+        }),
+      });
+  
+      if (response.ok) {  // If the POST request is successful
+        const data = await response.json();  // Parse the response data
+        setLists(data.toDoLists);  // Update the component's state with the new data
+        setNewListName("");  // Clear the input field after success
+        handleCloseModal();  // Close the modal after success
+      } else {
+        console.error("Failed to create a new list:", response.statusText);  // Log any error messages
+      }
+    } catch (error) {
+      console.error("Error while creating a new list:", error);  // Log any unexpected errors
+    }
+  };
+
+  const handleItemClick = (listId, taskId) => {
+    const updatedLists = lists.map((list) => {
+      if (list.listId === listId) {
+        const updatedTasks = list.tasks.map((task) => {
+          if (task.id === taskId) {
+            const completed = !task.completed;
+            return {
+              ...task,
+              completed,
+              dateCompleted: completed ? new Date() : null,
+            };
+          }
+          return task;
+        });
+        return { ...list, tasks: updatedTasks };
+      }
+      return list;
+    });
+    setLists(updatedLists);
+  };
+
+  
+
+  const handleRemoveTask = async (listId, taskId) => {
+    console.log(`Removing task. List ID: ${listId}, Task ID: ${taskId}`); 
+    // Create updated lists with the specified task removed
+    const updatedLists = lists.map((list) => {
+      if (list.listId === listId) {
+        const updatedTasks = list.tasks.filter((task) => task.id !== taskId); // Filter out the task
+        return { ...list, tasks: updatedTasks };
+      }
+      return list;
+    });
+  
+    setLists(updatedLists); // Update the state with the new list structure
+  
+    try {
+      // Send the updated lists to the backend
+      const response = await fetch("http://localhost:3001/replaceToDoLists", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: user.id,
-          toDoItem: {
-            task: newTask[category], // Task for the specific category
-            completed: false,
-            category,
-          },
+          newToDoLists: updatedLists,
         }),
       });
-
-      const result = await response.json();
+  
       if (response.ok) {
-        setToDoList(result.toDoList); // Update the to-do list
-        setNewTask((prev) => ({
-          ...prev,
-          [category]: "", // Clear the corresponding category's task
-        }));
+        const data = await response.json();
+        setLists(data.toDoLists); // Update state with the backend response
       } else {
-        console.error("Error adding task:", result.message);
+        console.error("Failed to remove task:", response.statusText); // Handle unsuccessful POST request
       }
-    } catch (err) {
-      console.error("Error adding task:", err);
+    } catch (error) {
+      console.error("Error while removing task:", error); // Handle errors
     }
   };
 
-  const handleTaskInputChange = (category, value) => {
-    setNewTask((prev) => ({
-      ...prev,
-      [category]: value || "", // Default to empty string if undefined
-    }));
-  };
 
-  const toggleCompletion = (itemId) => {
-    setToDoList((prevList) =>
-      prevList.map((item) =>
-        item._id === itemId ? { ...item, completed: !item.completed } : item
-      )
-    );
-  };
-
-  const removeTask = async (itemId) => {
+  const handleRemoveCategory = async (listId) => {
+    // Filter out the list with the given listId
+    const updatedLists = lists.filter((list) => list.listId !== listId);
+  
     try {
-      const response = await fetch("http://localhost:3001/removeToDoItem", {
+      // Send the updated lists to the backend
+      const response = await fetch("http://localhost:3001/replaceToDoLists", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId: user.id, toDoItemId: itemId }),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        setToDoList(result.toDoList);
-      } else {
-        console.error("Error removing task:", result.message);
-      }
-    } catch (err) {
-      console.error("Error removing task:", err);
-    }
-  };
-
-  const groupedToDoLists = toDoList.reduce((acc, item) => {
-    const category = item.category || "default"; // Retrieve category name
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(item);
-    return acc;
-  }, {});
-
-  const toggleCategoryModal = () => {
-    setCategoryModalOpen(!isCategoryModalOpen);
-  };
-  
-  
-  const removeCategory = async (categoryId) => {
-    if (!categoryId) {
-      console.error("Invalid category ID");
-      return; // Handle invalid input
-    }
-  
-    try {
-      const response = await fetch("http://localhost:3001/removeCategory", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: user.id, categoryId }),
+        body: JSON.stringify({
+          userId: user.id,  // The current user's ID
+          newToDoLists: updatedLists,  // The new list structure without the removed list
+        }),
       });
   
-      const result = await response.json();
-      if (response.ok) {
-        console.log("Updated categories:", result.categories); // Debugging info
-        setCategories(result.categories); // Update categories state
-        setToDoList(result.toDoList); // Update to-do list state
+      if (response.ok) {  // If the POST request is successful
+        const data = await response.json();  // Parse the response data
+        setLists(data.toDoLists);  // Update the state with the new data
       } else {
-        console.error("Error removing category:", result.message);
+        console.error("Failed to remove the list:", response.statusText);  // Log error messages
       }
-    } catch (err) {
-      console.error("Error removing category:", err);
+    } catch (error) {
+      console.error("Error while removing the list:", error);  // Log any unexpected errors
     }
   };
+
+  
 
   return (
     <div>
-      <div className="p-8 flex flex-wrap gap-4">
-        {" "}
-        {/* Flex layout with gap */}
-        {/* Default To-Do List */}
-        <div className="w-80 rounded px-6 py-3 bg-gray-200 h-full shadow-lg">
-          <h1 className="flex w-full mt-3 items-center justify-center heading1 pb-2">
-            TO-DO LIST
-          </h1>
+    <button
+    className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700"
+    onClick={handleOpenModal}
+    >
+      Add New List
+    </button>
 
-          <ul className="list-disc">
-            {groupedToDoLists["default"]?.map((item) => (
-              <li key={item._id} className="flex justify-between items-center">
-                <span
-                  onClick={() => toggleCompletion(item._id)}
-                  className={`cursor-pointer ${
-                    item.completed ? "line-through text-gray-500" : ""
-                  }`}
-                >
-                  {item.task}
-                </span>
-                <button
-                  className="text-red-500 hover-text-red-700"
-                  onClick={() => removeTask(item._id)}
-                >
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
+    <div className="flex p-4 gap-4">
+    {lists.map((list) => (
+  <ToDoList
+    key={list.listId}
+    listId={list.listId} // Ensure `listId` is passed
+    listName={list.listName}
+    listData={list.tasks}
+    handleItemClick={(taskId) => handleItemClick(list.listId, taskId)}
+    handleAddTask={(listId, taskName) => handleAddTask(list.listId, taskName)} // Pass `listId` and `taskName`
+    handleRemoveTask={(listId, taskId) => handleRemoveTask(list.listId, taskId)}
+    handleRemoveCategory={() => handleRemoveCategory(list.listId)}
+  />
+))}
+      </div>
 
-          <div className="flex items-center mt-2">
-            <input
-              type="text"
-              value={newTask["default"]}
-              onChange={(e) => handleTaskInputChange("default", e.target.value)}
-              placeholder="Enter new task"
-              className="appearance-none bg-transparent border-b-2 w-full py-2 text-gray-700"
-            />
-
-            <button
-              className="ml-4 bg-transparent border border-gray-700 text-gray-700 px-4 py-2 rounded-full hover-bg-gray-200"
-              onClick={() => addTask("default")}
-            >
-              Save
-            </button>
-          </div>
-        </div>
-        {/* Render additional categories */}
-        {categories?.map((category) => (
-          <div key={category._id} className="w-80 rounded px-6 py-3 bg-gray-200 h-full shadow-lg relative">
-            <h2>{category?.name ?? "Unnamed Category"}</h2>{" "}
-   
-            <button
-              className="absolute top-1 right-1 text-red-500 hover-text-red-700"
-              onClick={() => removeCategory(category._id)}
-              title="Remove Category"
-            >
-              ×
-            </button>
-            <ul className="list-disc">
-              {groupedToDoLists[category]?.map((item) => (
-                <li
-                  key={item._id}
-                  className="flex justify-between items-center"
-                >
-                  <span
-                    onClick={() => toggleCompletion(item._id)}
-                    className={`cursor-pointer ${
-                      item.completed ? "line-through text-gray-500" : ""
-                    }`}
-                  >
-                    {item.task}
-                  </span>
-                  <button
-                    className="text-red-500 hover-text-red-700"
-                    onClick={() => removeTask(item._id)}
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <div className="flex items-center mt-2">
-              <input
-                type="text"
-                value={newTask[category]} // Ensure each category's input has a unique state
-                onChange={(e) =>
-                  handleTaskInputChange(category, e.target.value)
-                }
-                placeholder="Enter new task"
-                className="appearance-none bg-transparent border-b-2 w-full py-2 text-gray-700"
-              />
-
-              <button
-                className="ml-4 bg-transparent border border-gray-700 text-gray-700 px-4 py-2 rounded-full hover-bg-gray-200"
-                onClick={() => addTask(category)}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        ))}
-        {/* Modal for adding a new category */}
-        <Modal isOpen={isCategoryModalOpen} onClose={toggleCategoryModal}>
-          <h2 className="text-lg font-bold">Add New Category</h2>
-
-          <input
-            type="text"
-            placeholder="Enter new category name"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            className="border-b-2 w-full py-2 text-gray-700"
-          />
-
-          <button
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700"
-            onClick={addCategory}
-          >
-            Add
-          </button>
-        </Modal>
-        {/* Button to open category modal */}
+       {/* Modal to create a new list */}
+       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <h2 className="text-xl font-semibold">Create New List</h2>
+        <input
+          type="text"
+          value={newListName}  // Bind to state
+          onChange={(e) => setNewListName(e.target.value)}  // Update state on change
+          placeholder="Enter list name"
+          className="border border-gray-300 rounded py-2 px-4 w-full mt-4"
+        />
         <button
-          className="ml-4 bg-transparent border border-gray-700 text-gray-700 px-4 py-2 rounded-full hover-bg-gray-200"
-          onClick={toggleCategoryModal}
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-blue-700"
+          onClick={handleCreateList}  // Calls the create new list method
         >
-          Add Category
+          Create
         </button>
-      </div>{" "}
-      {/* End of flex div */}
+      </Modal>
     </div>
   );
 }

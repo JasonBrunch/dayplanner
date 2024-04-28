@@ -34,7 +34,7 @@ function RegisterPage() {
     try {
         const result = await registerUser(email, password);
         if (result.success) {
-            console.log("Registration successful", result.data); // Log the user data to verify its structure and content
+          
             router.push("/dashboard");  // Redirect to dashboard after registration
         } else {
             console.error("Registration Error: ", result.message);
