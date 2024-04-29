@@ -1,122 +1,105 @@
 import React, { useState, useEffect } from "react";
-import ToDoList from "./toDoList"; // Import the ToDoList component
-import { useUser } from "@/context/userContext";
 import Modal from "./modal";
 import MealCard from "./mealCard";
 import MealTotal from "./mealTotal";
-
-const dummyData = [
-  {
-    entryID: 0,
-    entryDate: new Date(2024, 3, 28), // April 29, 2024
-    meals: [
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-    ],
-  },
-  {
-    entryID: 1,
-    entryDate: new Date(2024, 3, 29), // April 30, 2024
-    meals: [
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-    ],
-  },
-  {
-    entryID: 2,
-    entryDate: new Date(2024, 4, 1), // May 1, 2024
-    meals: [
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-      {
-        name: "Caesar Salad",
-        calories: 350,
-        protein: 15,
-        carbohydrates: 15,
-        fat: 25,
-      },
-    ],
-  },
-];
+import { useUser } from "../context/userContext";
 
 function MealPrepController() {
   const { user } = useUser();
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal open/close
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [mealData, setMealData] = useState([]);
   const [date, setDate] = useState(new Date());
+  const [dailyMeals, setDailyMeals] = useState([]);
+
   const [mealName, setMealName] = useState("");
   const [mealCalories, setMealCalories] = useState(0);
+  const [mealProtein, setMealProtein] = useState(0);
+  const [mealCarbohydrates, setMealCarbohydrates] = useState(0);
+  const [mealFat, setMealFat] = useState(0);
 
-  // Update mealData when user data changes
+  
   useEffect(() => {
-    console.log("User mealEntries data: ", user?.mealEntries);
-    setMealData(user?.mealEntries || []);
+    if (user && user.mealEntries) {
+      setMealData(user.mealEntries);
+    }
   }, [user]);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true); // Open the modal
+  useEffect(() => {
+    const updatedMeals = mealData.find((entry) =>
+      areDatesEqual(new Date(entry.entryDate), date)
+    );
+    setDailyMeals(updatedMeals ? updatedMeals.meals : []);
+  }, [mealData, date]);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleIncrementDate = () =>
+    setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1));
+  const handleDecrementDate = () =>
+    setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1));
+
+  const createNewMealEntry = (
+    mealName,
+    mealCalories,
+    mealProtein,
+    mealCarbohydrates,
+    mealFat
+  ) => {
+    const activeDate = new Date(date);
+    activeDate.setHours(0, 0, 0, 0);
+    const meal = {
+      name: mealName,
+      calories: Number(mealCalories),
+      protein: Number(mealProtein),
+      carbohydrates: Number(mealCarbohydrates),
+      fat: Number(mealFat),
+    };
+
+    const existingEntryIndex = mealData.findIndex((entry) =>
+      areDatesEqual(new Date(entry.entryDate), activeDate)
+    );
+    if (existingEntryIndex === -1) {
+      const newEntry = createNewMealEntryData(activeDate, meal);
+      handleNewEntry(newEntry);
+    } else {
+      const updatedEntry = addMealToExistingEntry(
+        mealData,
+        existingEntryIndex,
+        meal
+      );
+      handleUpdateEntry(existingEntryIndex, updatedEntry);
+    }
   };
 
-  const handleIncrementDate = () => {
-    setDate(new Date(date.setDate(date.getDate() + 1)));
+  const addMealToExistingEntry = (mealData, entryIndex, meal) => {
+    const updatedMeals = [...mealData[entryIndex].meals, meal];
+    const updatedEntry = { ...mealData[entryIndex], meals: updatedMeals };
+    return updatedEntry;
   };
 
-  const handleDecrementDate = () => {
-    setDate(new Date(date.setDate(date.getDate() - 1)));
+  const createNewMealEntryData = (activeDate, meal) => {
+    return {
+      entryID: mealData.length,
+      entryDate: activeDate,
+      meals: [meal],
+    };
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+  const handleNewEntry = (newEntry) => {
+    const updatedMealData = [...mealData, newEntry];
+    setMealData(updatedMealData);
+    updateMealEntries(updatedMealData);
+  };
+
+  const handleUpdateEntry = (index, updatedEntry) => {
+    const updatedMealData = [
+      ...mealData.slice(0, index),
+      updatedEntry,
+      ...mealData.slice(index + 1),
+    ];
+    setMealData(updatedMealData);
+    updateMealEntries(updatedMealData);
   };
 
   function areDatesEqual(date1, date2) {
@@ -126,73 +109,108 @@ function MealPrepController() {
       date1.getDate() === date2.getDate()
     );
   }
+  const updateMealEntries = async (updatedMealData) => {
+    if (!user) {
+        console.error("No user logged in.");
+        return;
+    }
 
-  function getDailyMealList(searchDate) {
-    console.log("Searching for meals on: ", searchDate.toDateString());
+    try {
+        const response = await fetch("http://localhost:3001/updateMealEntries", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId: user.id,
+                mealEntries: updatedMealData,
+            }),
+        });
 
-    const entry = mealData.find((item) => {
-      const itemDate = new Date(item.entryDate);
-      console.log(
-        `Comparing ${itemDate.toDateString()} to ${searchDate.toDateString()}`
-      );
-      return areDatesEqual(itemDate, searchDate);
-    });
+        if (!response.ok) {
+            const errorData = await response.text();  // Getting response as text to avoid JSON parsing error
+            console.error("Failed to update meal entries:", errorData);
+            throw new Error(`Failed to update: ${response.status} ${errorData}`);
+        }
 
-    console.log("Found entry: ", entry);
-    return entry ? entry.meals : [];
-  }
-
-  const dailyMeals = getDailyMealList(date);
+        const data = await response.json(); // Assuming the server responds with JSON on success
+        console.log("Meal entries updated successfully:", data);
+    } catch (error) {
+        console.error("Error updating meal entries:", error.message);
+    }
+};
 
   return (
     <>
-    <button onClick={handleDecrementDate} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Previous Day
-        </button>
-        <button onClick={handleIncrementDate} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Next Day
-        </button>
-      <button
-        onClick={handleOpenModal}
-        className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700
-    "
-      >
-        NEW MEAL
-      </button>
+      <button onClick={handleDecrementDate}>Previous Day</button>
+      <button onClick={handleIncrementDate}>Next Day</button>
+      <button onClick={handleOpenModal}>NEW MEAL</button>
       <h2>Meals for {date.toDateString()}</h2>
       <div className="flex">
-        <div className="w-1/2  flex flex-col">
+        <div className="w-1/2 flex flex-col">
           {dailyMeals.length > 0 ? (
-            <div className="flex flex-col gap-2">
-              {dailyMeals.map((meal, index) => (
-                <MealCard key={index} meal={meal} /> // Use the MealCard component
-              ))}
-            </div>
+            dailyMeals.map((meal, index) => (
+              <MealCard key={index} meal={meal} />
+            ))
           ) : (
             <p>No meals found for this date.</p>
           )}
         </div>
-        <div className="w-1/2  flex flex-col">
+        <div className="w-1/2 flex flex-col">
           <MealTotal meals={dailyMeals} />
         </div>
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <input
-          type="text"
-          value={"Meal Name"}
-          onChange={(e) => setMealName(e.target.value)}
-          />
+        <div className="flex flex-col">
+          <div>Name</div>
           <input
-          type="number"
-          value={0}
-          onChange={(e) => setMealCalories(e.target.value)}
+            type="text"
+            value={mealName}
+            onChange={(e) => setMealName(e.target.value)}
+            className="border border-gray-400 p-2 rounded-lg"
           />
-        <button
-          onClick={() => {
-            console.log("Adding meal: ", mealName, mealCalories);
-            handleCloseModal();
-          }}
+          <div>Calories</div>
+          <input
+            type="number"
+            value={mealCalories}
+            onChange={(e) => setMealCalories(Number(e.target.value))}
+            className="border border-gray-400 p-2 rounded-lg"
           />
+          <div>Protein</div>
+          <input
+            type="number"
+            value={mealProtein}
+            onChange={(e) => setMealProtein(Number(e.target.value))}
+            className="border border-gray-400 p-2 rounded-lg"
+          />
+          <div>Carbohydrates</div>
+          <input
+            type="number"
+            value={mealCarbohydrates}
+            onChange={(e) => setMealCarbohydrates(Number(e.target.value))}
+            className="border border-gray-400 p-2 rounded-lg"
+          />
+          <div>Fat</div>
+          <input
+            type="number"
+            value={mealFat}
+            onChange={(e) => setMealFat(Number(e.target.value))}
+            className="border border-gray-400 p-2 rounded-lg"
+          />
+          <button
+            onClick={() =>
+              createNewMealEntry(
+                mealName,
+                mealCalories,
+                mealProtein,
+                mealCarbohydrates,
+                mealFat
+              )
+            }
+          >
+            SAVE
+          </button>
+        </div>
       </Modal>
     </>
   );

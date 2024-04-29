@@ -2,15 +2,15 @@ import React from "react";
 
 function MealTotal({ meals }) {
     // Function to calculate total calories from a meals array
+  
     function calculateTotal(meals) {
         let totalCalories = 0;
-        if (Array.isArray(meals)) {
-            meals.forEach(meal => {
-                if (meal && typeof meal.calories === 'number') {
-                    totalCalories += meal.calories;
-                }
-            });
-        }
+        meals.forEach(meal => {
+            const calories = Number(meal.calories); // Convert to number defensively
+            if (!isNaN(calories)) { // Check if the conversion gives a valid number
+                totalCalories += calories;
+            }
+        });
         return totalCalories;
     }
 
