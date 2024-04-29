@@ -3,6 +3,7 @@ import ScheduleController from '@/components/scheduleController';
 import ToDoListController from '@/components/toDoListController';
 import { useUser } from '@/context/userContext';
 import Image from 'next/image';
+import MealPrepController from '@/components/mealPrepController';
 
 function Dashboard() {
   const { user, login } = useUser(); // Get the current user context
@@ -37,6 +38,8 @@ function Dashboard() {
         return <ScheduleController />;
       case 'toDoList':
         return <ToDoListController />;
+        case 'mealPrep':
+          return <MealPrepController />;
       // Additional cases for future views can be added here
       default:
         return <ScheduleController />; // Default view
@@ -88,6 +91,26 @@ function Dashboard() {
               height={28}
             />
           </button>
+          {/* Meal prep button*/}
+          <button
+            className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
+            onClick={() => {
+            setCurrentView('mealPrep');
+            refreshUserState(); // Refresh user state when switching to the to-do list view
+          }}
+        >
+            <Image
+              src="/meal.svg"
+              alt="Meal Prep Icon"
+              width={28}
+              height={28}
+            />
+          </button>
+
+
+
+
+
         </div>
 
         {/* Main content area */}
