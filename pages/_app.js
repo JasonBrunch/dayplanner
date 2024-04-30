@@ -17,7 +17,7 @@ const ComponentWithUser = ({ Component, ...props }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:3001/refresh", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/refresh`, {
           method: "GET",
           credentials: "include", // Necessary to include cookies
         });

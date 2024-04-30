@@ -98,6 +98,7 @@ function RegisterPage() {
               Login here
           </p>
         </form>
+        {/*}
         <div className="h-full md:py-6 flex items-center relative">
           <img
             src="https://readymadeui.com/photo.webp"
@@ -105,6 +106,7 @@ function RegisterPage() {
             alt="Dining Experience"
           />
         </div>
+        */}
       </div>
     </div>
   );

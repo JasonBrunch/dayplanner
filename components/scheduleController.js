@@ -188,7 +188,7 @@ function ScheduleController() {
 
     if (user) {
       try {
-        const response = await fetch("http://localhost:3001/addActivity", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addActivity`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -247,7 +247,7 @@ function ScheduleController() {
     const activityId = activityToRemove._id.toString();
 
     try {
-      const response = await fetch("http://localhost:3001/removeActivity", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/removeActivity`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

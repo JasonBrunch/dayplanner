@@ -116,7 +116,7 @@ function MealPrepController() {
     }
 
     try {
-        const response = await fetch("http://localhost:3001/updateMealEntries", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/updateMealEntries`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -147,6 +147,11 @@ function MealPrepController() {
       <button onClick={handleOpenModal}>NEW MEAL</button>
       <h2>Meals for {date.toDateString()}</h2>
       <div className="flex">
+  <div className="w-1/2 flex flex-col">
+          <MealTotal meals={dailyMeals} />
+        </div>
+
+
         <div className="w-1/2 flex flex-col">
           {dailyMeals.length > 0 ? (
             dailyMeals.map((meal, index) => (
@@ -156,9 +161,7 @@ function MealPrepController() {
             <p>No meals found for this date.</p>
           )}
         </div>
-        <div className="w-1/2 flex flex-col">
-          <MealTotal meals={dailyMeals} />
-        </div>
+      
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="flex flex-col">

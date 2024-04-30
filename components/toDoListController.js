@@ -113,7 +113,7 @@ function ToDoListController() {
   
     try {
       // Make a POST request to the backend with the updated to-do lists
-      const response = await fetch("http://localhost:3001/replaceToDoLists", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -158,7 +158,7 @@ function ToDoListController() {
   
     try {
       // Send the updated lists to the backend
-      const response = await fetch('http://localhost:3001/replaceToDoLists', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -220,7 +220,7 @@ function ToDoListController() {
   
     try {
       // Send the updated lists to the backend
-      const response = await fetch("http://localhost:3001/replaceToDoLists", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -249,7 +249,7 @@ function ToDoListController() {
   
     try {
       // Send the updated lists to the backend
-      const response = await fetch("http://localhost:3001/replaceToDoLists", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

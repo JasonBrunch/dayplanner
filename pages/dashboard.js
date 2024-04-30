@@ -11,7 +11,7 @@ function Dashboard() {
 
   const refreshUserState = async () => {
     try {
-      const res = await fetch("http://localhost:3001/refresh", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/refresh`, {
         method: "GET",
         credentials: "include",
       });
@@ -28,7 +28,7 @@ function Dashboard() {
   };
   // Construct the user icon path with the backend URL to ensure it's correct
   const userIcon = user
-    ? `http://localhost:3001${user.userIcon}` // Use absolute URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}${user.userIcon}` // Use absolute URL
     : '/defaultUser.png'; // Default fallback icon
 
   // Function to determine which view to show based on the current state
