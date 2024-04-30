@@ -10,7 +10,7 @@ function CalorieProgress({ totalCalories, targetCalories }) {
     const percentage = Math.min(100, (totalCalories / targetCalories) * 100);
 
     return (
-        <div className="w-full h-full  relative"> 
+        <div className="w-full h-full p-6 relative"> 
             <CircularProgressbarWithChildren
                 value={percentage}
                 styles={buildStyles({
@@ -23,7 +23,7 @@ function CalorieProgress({ totalCalories, targetCalories }) {
                 })}
             >
                 <div className="absolute w-full text-center top-1/2 transform -translate-y-1/2">
-                    <div className="text-lg font-semibold">{totalCalories}</div>
+                    <div className="heading1 font-semibold">{totalCalories}</div>
                     <div className="text-sm text-gray-500">calories</div>
                 </div>
             </CircularProgressbarWithChildren>
@@ -54,11 +54,11 @@ function MealTotal({ meals }) {
     const totalFats = calculateTotal(meals, 'fats');
 
     return (
-        <div className="flex w-full rounded shadow-lg bg-white">
-            <div className="flex flex-col justify-center items-center w-1/2 ">
+        <div className="flex w-full rounded shadow-lg bg-white  ">
+            <div className="flex flex-col justify-center items-center bg-purple-300 w-4/6">
                 <CalorieProgress totalCalories={totalCalories} targetCalories={targetCalories} />
             </div>
-            <div className="flex flex-col justify-around items-center w-1/2">
+            <div className="flex flex-col justify-around items-center ml-8 2/6">
                 <div className="flex items-center">
                     <NutrientProgress value={totalProtein} maxValue={100} color="#4caf50" />
                     <div className="ml-2">

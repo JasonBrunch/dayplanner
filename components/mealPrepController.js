@@ -17,7 +17,7 @@ function MealPrepController() {
   const [mealCarbohydrates, setMealCarbohydrates] = useState(0);
   const [mealFat, setMealFat] = useState(0);
 
-  
+
   useEffect(() => {
     if (user && user.mealEntries) {
       setMealData(user.mealEntries);
@@ -111,48 +111,74 @@ function MealPrepController() {
   }
   const updateMealEntries = async (updatedMealData) => {
     if (!user) {
-        console.error("No user logged in.");
-        return;
+      console.error("No user logged in.");
+      return;
     }
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/updateMealEntries`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                userId: user.id,
-                mealEntries: updatedMealData,
-            }),
-        });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/updateMealEntries`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          mealEntries: updatedMealData,
+        }),
+      });
 
-        if (!response.ok) {
-            const errorData = await response.text();  // Getting response as text to avoid JSON parsing error
-            console.error("Failed to update meal entries:", errorData);
-            throw new Error(`Failed to update: ${response.status} ${errorData}`);
-        }
+      if (!response.ok) {
+        const errorData = await response.text();  // Getting response as text to avoid JSON parsing error
+        console.error("Failed to update meal entries:", errorData);
+        throw new Error(`Failed to update: ${response.status} ${errorData}`);
+      }
 
-        const data = await response.json(); // Assuming the server responds with JSON on success
-        console.log("Meal entries updated successfully:", data);
+      const data = await response.json(); // Assuming the server responds with JSON on success
+      console.log("Meal entries updated successfully:", data);
     } catch (error) {
-        console.error("Error updating meal entries:", error.message);
+      console.error("Error updating meal entries:", error.message);
     }
-};
+  };
+
+
+  const displayDate = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize the time portion to ensure accurate comparison
+
+    const displayDate = new Date(date);
+    displayDate.setHours(0, 0, 0, 0); // Normalize this date as well
+
+    if (displayDate.getTime() === today.getTime()) {
+      return "TODAY";
+    }
+    return displayDate.toDateString();
+  }
 
   return (
-    <>
-      <button onClick={handleDecrementDate}>Previous Day</button>
-      <button onClick={handleIncrementDate}>Next Day</button>
-      <button onClick={handleOpenModal}>NEW MEAL</button>
-      <h2>Meals for {date.toDateString()}</h2>
-      <div className="flex">
-  <div className="w-1/2 flex flex-col">
+    <div className="flex">
+
+      <div className="flex flex-col justify-start w-1/6 bg-gray-200 h-screen pt-28">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleDecrementDate}>Previous Day
+        </button>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleIncrementDate}>Next Day</button>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleOpenModal}>NEW MEAL</button>
+      </div>
+
+      <div className="flex flex-col w-1/2">
+
+        <div className="heading1 w-4/6 justify-center flex bg-blue-200">{displayDate()}</div>
+
+        <div className="">
           <MealTotal meals={dailyMeals} />
         </div>
 
-
-        <div className="w-1/2 flex flex-col">
+</div>
+        <div className="w-1/2">
           {dailyMeals.length > 0 ? (
             dailyMeals.map((meal, index) => (
               <MealCard key={index} meal={meal} />
@@ -161,8 +187,8 @@ function MealPrepController() {
             <p>No meals found for this date.</p>
           )}
         </div>
+
       
-      </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="flex flex-col">
           <div>Name</div>
@@ -215,7 +241,7 @@ function MealPrepController() {
           </button>
         </div>
       </Modal>
-    </>
+    </div>
   );
 }
 

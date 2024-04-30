@@ -4,53 +4,6 @@ import { useUser } from "@/context/userContext";
 import Modal from "./modal";
 
 
-
-const dummyData = 
-[
-    {
-      "listId": 0,
-      "listName": "Daily Tasks",
-      "tasks": [
-        {
-          "id": 0,
-          "name": "Morning Exercise",
-          "dateAdded": "2024-04-01T08:00:00Z",  // Example date
-          "dateCompleted": null,  // Not completed
-          "completed": false  // Task completion status
-        },
-        {
-          "id": 1,
-          "name": "Breakfast",
-          "dateAdded": "2024-04-01T08:30:00Z",
-          "dateCompleted": "2024-04-01T09:00:00Z",
-          "completed": true  // Task completed
-        }
-      ]
-    },
-    {
-      "listId": 1,
-      "listName": "Work Projects",
-      "tasks": [
-        {
-          "id": 2,
-          "name": "Team Meeting",
-          "dateAdded": "2024-04-01T10:00:00Z",
-          "dateCompleted": null,  // Not completed
-          "completed": false
-        },
-        {
-          "id": 3,
-          "name": "Complete Report",
-          "dateAdded": "2024-04-01T11:00:00Z",
-          "dateCompleted": null,
-          "completed": false
-        }
-      ]
-    }
-  ]
-
-
-
 function ToDoListController() {
   const { user } = useUser();
   const [lists, setLists] = useState([]); 

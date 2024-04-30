@@ -186,6 +186,14 @@ function ScheduleController() {
       return;
     }
 
+    console.log("Attempting to add activity for user:", user?.id); // Log user ID
+    console.log("Activity data:", newActivity); // Log activity data being sent
+  
+    if (!user?.id) {
+      console.error("User ID is undefined.");
+      return; // Stop the function if user ID isn't available
+    }
+
     if (user) {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addActivity`, {
