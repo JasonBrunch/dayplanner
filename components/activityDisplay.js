@@ -24,7 +24,7 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
 
   return (
     <div>
-      <h2 className="heading2">Activities</h2>
+      <h2 className="heading1">Activities</h2>
       <ul>
         {sortedActivities.map((activity, index) => {
           const isOpen = openCardIndex === index;

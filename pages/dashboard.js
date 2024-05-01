@@ -47,11 +47,11 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex h-screen w-screen ">
       {/* Main content with a sidebar on the left and variable content on the right */}
-      <div className="flex flex-row flex-grow">
+  
         {/* Sidebar with user icon and buttons */}
-        <div className=" px-4 py-8 w-20 bg-gray-800 flex flex-col items-center gap-3">
+        <div className="flex-shrink-0 px-4 py-8 w-20 sidebar flex flex-col items-center gap-3 h-screen">
           {/* User icon */}
           <Image
             src={userIcon} // Use the absolute URL
@@ -114,10 +114,10 @@ function Dashboard() {
         </div>
 
         {/* Main content area */}
-        <div className="flex-grow bg-gray-100">
+        <div className="background w-screen h-screen">
           {renderView()} {/* Render the current view */}
         </div>
-      </div>
+     
     </div>
   );
 }

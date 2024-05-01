@@ -38,6 +38,18 @@ font-size: large;
    border: 1px solid #33e4ff; /* Optional: adds a border around the highlighted slot */
  }
 
+.background {
+   background-color: #ffae00; /* Choose a color that fits your UI theme */
+ }
+ .panel {
+   background-color: #ff00c3; /* Choose a color that fits your UI theme */
+
+ }
+ .sidebar {
+   background-color: #2d3748; /* Choose a color that fits your UI theme */
+ }
+
+
 /* Other Font Styles */
 
 /* Articulat CF Normal */

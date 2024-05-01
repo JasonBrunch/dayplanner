@@ -295,45 +295,26 @@ function ScheduleController() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row background">
       
-    
+        {/* Inputs and Button Container */}
+      <div className=" shadow panel ">
 
 
 
-
-
-
-      {/* Main Schedule Container */}
-      <div className="flex flex-col w-full md:w-3/4 p-4 md:p-8 bg-gray-200">
-        {/*heading*/}
-        <div className="flex justify-between items-end pb-1 pt-4">
-          <h1 className=" heading1">{"TODAY'S SCHEDULE"}</h1>
-          <h2>{currentDate}</h2>
-        </div>
-
-        {/*schedule*/}
-        <ScheduleDisplay
-          daySchedule={daySchedule}
-          activities={activities}
-          isWithinAwakeHours={isWithinAwakeHours}
-        />
-      </div>
-
-      {/* Inputs and Button Container */}
-      <div className="w-full md:w-1/4 shadow ">
-        <div className="w-full h-10 bg-customBlue flex items-center px-10 "></div>
+        
 
         {/* Open Modals */}
+        <div className="flex justify-end">
         <button
-          className="mx-auto my-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+          className="  px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
           onClick={openActivityModal}
         >
           Add Activity
         </button>
 
         <button
-          className="mx-auto my-4 px-4 py-2 text-white bg-green-500 rounded hover:bg-green-700"
+          className=" px-4 py-2 text-white bg-green-500 rounded hover:bg-green-700"
           onClick={openWakeTimeModal}
         >
           Set Wake Time
@@ -353,16 +334,48 @@ function ScheduleController() {
             handleSleepTimeChange={(e) => setSleepTime(e.target.value)}
           />
         </Modal>
+</div>
+
+
+      {/* Main Schedule Container */}
+      <div className="flex flex-col w-full bg-gray-200">
+        {/*heading*/}
+        <div className="flex justify-between items-end pb-1 pt-4">
+          <h1 className=" heading1">{"TODAY'S SCHEDULE"}</h1>
+          <h2>{currentDate}</h2>
+        </div>
+
+        {/*schedule*/}
+        <ScheduleDisplay
+          daySchedule={daySchedule}
+          activities={activities}
+          isWithinAwakeHours={isWithinAwakeHours}
+        />
+      </div>
+
+
+
+
+</div>
+
 
         {/* Container for displaying activities */}
-        <div className="flex flex-col">
-          <hr className="border-t border-gray-400 my-4" />
+        <div className="flex flex-col panel">
+          
           <ActivityDisplay
             activities={activities}
             handleRemoveActivity={handleRemoveActivity}
           />
         </div>
-      </div>
+      
+
+
+
+
+
+
+
+  
     </div>
   );
 }
