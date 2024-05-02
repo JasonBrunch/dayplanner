@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ToDoList from "./toDoList"; // Import the ToDoList component
 import { useUser } from "@/context/userContext";
 import Modal from "./modal";
+import ButtonMain from "./buttonMain";
 
 
 function ToDoListController() {
@@ -228,12 +229,12 @@ function ToDoListController() {
 
   return (
     <div>
-    <button
-    className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700"
+    <div className="heading1">CREATE A LIST ...</div>
+    <ButtonMain
     onClick={handleOpenModal}
-    >
-      Add New List
-    </button>
+    text="Add New List"
+  />
+ 
 
     <div className="flex p-4 gap-4">
     {lists.map((list) => (

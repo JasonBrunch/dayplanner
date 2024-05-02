@@ -24,7 +24,7 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
 
   return (
     <div>
-      <h2 className="heading1">Activities</h2>
+      
       <ul>
         {sortedActivities.map((activity, index) => {
           const isOpen = openCardIndex === index;
@@ -33,7 +33,7 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
             <li
               key={index}
               onClick={() => toggleCard(index)}
-              className={`bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 flex justify-between items-center ${
+              className={`panel shadow-md rounded px-2 pt-2 pb-3 mb-2 flex justify-between items-center ${
                 isOpen ? "flex-col" : "flex-row"
               }`}
             >

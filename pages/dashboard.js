@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import ScheduleController from '@/components/scheduleController';
-import ToDoListController from '@/components/toDoListController';
-import { useUser } from '@/context/userContext';
-import Image from 'next/image';
-import MealPrepController from '@/components/mealPrepController';
+import React, { useState } from "react";
+import ScheduleController from "@/components/scheduleController";
+import ToDoListController from "@/components/toDoListController";
+import { useUser } from "@/context/userContext";
+import Image from "next/image";
+import MealPrepController from "@/components/mealPrepController";
 
 function Dashboard() {
   const { user, login } = useUser(); // Get the current user context
-  const [currentView, setCurrentView] = useState('schedule'); // Default to the Schedule view
+  const [currentView, setCurrentView] = useState("schedule"); // Default to the Schedule view
 
   const refreshUserState = async () => {
     try {
@@ -28,18 +28,18 @@ function Dashboard() {
   };
   // Construct the user icon path with the backend URL to ensure it's correct
   const userIcon = user
-  ? `${process.env.NEXT_PUBLIC_API_URL}${user.userIcon}` // Use absolute URL
-    : '/defaultUser.png'; // Default fallback icon
+    ? `${process.env.NEXT_PUBLIC_API_URL}${user.userIcon}` // Use absolute URL
+    : "/defaultUser.png"; // Default fallback icon
 
   // Function to determine which view to show based on the current state
   const renderView = () => {
     switch (currentView) {
-      case 'schedule':
+      case "schedule":
         return <ScheduleController />;
-      case 'toDoList':
+      case "toDoList":
         return <ToDoListController />;
-        case 'mealPrep':
-          return <MealPrepController />;
+      case "mealPrep":
+        return <MealPrepController />;
       // Additional cases for future views can be added here
       default:
         return <ScheduleController />; // Default view
@@ -47,77 +47,66 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen w-screen ">
+    <div className="flex h-screen w-full overflow-hidden">
       {/* Main content with a sidebar on the left and variable content on the right */}
-  
-        {/* Sidebar with user icon and buttons */}
-        <div className="flex-shrink-0 px-4 py-8 w-20 sidebar flex flex-col items-center gap-3 h-screen">
-          {/* User icon */}
-          <Image
-            src={userIcon} // Use the absolute URL
-            alt="User Icon"
-            width={40}
-            height={40}
-          />
-          <hr className='w-full mb-5 mt-4'/>
-          {/* Schedule button */}
-          <button
-            className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
-            onClick={() => {
-            setCurrentView('schedule'); 
+
+      {/* Sidebar with user icon and buttons */}
+      <div className="flex-shrink-0 px-4 py-8 w-20 sidebar flex flex-col items-center gap-3 h-full">
+        {/* User icon */}
+        <Image
+          src={userIcon} // Use the absolute URL
+          alt="User Icon"
+          width={40}
+          height={40}
+        />
+        <hr className="w-full mb-5 mt-4" />
+        {/* Schedule button */}
+        <button
+          className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
+          onClick={() => {
+            setCurrentView("schedule");
             refreshUserState(); // Refresh user state when switching to the schedule view
           }}
         >
-            <Image
-              src="/scheduleIcon.svg"
-              alt="Schedule Icon"
-              width={28}
-              height={28}
-            />
-          </button>
+          <Image
+            src="/scheduleIcon.svg"
+            alt="Schedule Icon"
+            width={28}
+            height={28}
+          />
+        </button>
 
-          {/* To Do List button */}
-          <button
-            className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
-            onClick={() => {
-            setCurrentView('toDoList');
+        {/* To Do List button */}
+        <button
+          className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
+          onClick={() => {
+            setCurrentView("toDoList");
             refreshUserState(); // Refresh user state when switching to the to-do list view
           }}
         >
-            <Image
-              src="/toDoListIcon.svg"
-              alt="To Do List Icon"
-              width={28}
-              height={28}
-            />
-          </button>
-          {/* Meal prep button*/}
-          <button
-            className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
-            onClick={() => {
-            setCurrentView('mealPrep');
+          <Image
+            src="/toDoListIcon.svg"
+            alt="To Do List Icon"
+            width={28}
+            height={28}
+          />
+        </button>
+        {/* Meal prep button*/}
+        <button
+          className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
+          onClick={() => {
+            setCurrentView("mealPrep");
             refreshUserState(); // Refresh user state when switching to the to-do list view
           }}
         >
-            <Image
-              src="/meal.svg"
-              alt="Meal Prep Icon"
-              width={28}
-              height={28}
-            />
-          </button>
+          <Image src="/meal.svg" alt="Meal Prep Icon" width={28} height={28} />
+        </button>
+      </div>
 
-
-
-
-
-        </div>
-
-        {/* Main content area */}
-        <div className="background w-screen h-screen">
-          {renderView()} {/* Render the current view */}
-        </div>
-     
+      {/* Main content area */}
+      <div className="background  h-full overflow-auto flex-grow">
+        {renderView()} 
+      </div>
     </div>
   );
 }

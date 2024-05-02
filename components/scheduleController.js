@@ -5,8 +5,8 @@ import ActivityDisplay from "@/components/activityDisplay";
 import AddActivityUI from "@/components/addActivityUI";
 import WakeTimeUI from "@/components/wakeTimeUI";
 import ScheduleDisplay from "@/components/scheduleDisplay";
-import { currentDate } from "@/utilities/utilities";
-
+import { getCurrentDateDisplay } from "@/utilities/utilities";
+import ButtonMain from "./buttonMain";
 
 function ScheduleController() {
   const { user } = useUser(); // Retrieve the user object from the User Context
@@ -32,43 +32,44 @@ function ScheduleController() {
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
-  
+
       // Only update the current minute in the schedule without reinitializing it entirely
       setDaySchedule((prevSchedule) => {
         return prevSchedule.map((slot) => ({
           ...slot,
-          currentMinute: slot.hour === currentHour && slot.minute === currentMinute,
+          currentMinute:
+            slot.hour === currentHour && slot.minute === currentMinute,
         }));
       });
     };
-  
+
     // Update the current minute on load
     updateCurrentMinute();
-  
+
     // Update every minute
     const interval = setInterval(updateCurrentMinute, 60000);
-  
+
     // Cleanup interval on unmount to prevent memory leaks
     return () => clearInterval(interval);
   }, []); // No dependencies, so it only sets up once
 
   function initializeScheduleWithCurrentTime(activities) {
     const schedule = [];
-  
+
     // Current time variables
     const now = new Date();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
     const currentSlotIndex = currentHour * 60 + currentMinute;
-  
+
     // Initialize the schedule and set the current time slot
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute++) {
-        const isCurrentMinute = (hour * 60 + minute) === currentSlotIndex;
+        const isCurrentMinute = hour * 60 + minute === currentSlotIndex;
         schedule.push(createTimeSlot(hour, minute, null, isCurrentMinute));
       }
     }
-  
+
     // Map activities to the schedule
     schedule.forEach((slot) => {
       const activity = activities.find((act) => {
@@ -77,17 +78,22 @@ function ScheduleController() {
         const slotIndex = slot.hour * 60 + slot.minute;
         const activityStartIndex = startHour * 60 + startMinute;
         const activityEndIndex = endHour * 60 + endMinute;
-  
+
         return slotIndex >= activityStartIndex && slotIndex < activityEndIndex;
       });
-  
+
       slot.activity = activity || null; // Assign the activity to the slot
     });
-  
+
     return schedule;
   }
-  
-  function createTimeSlot(hour, minute, activity = null, isCurrentMinute = false) {
+
+  function createTimeSlot(
+    hour,
+    minute,
+    activity = null,
+    isCurrentMinute = false
+  ) {
     return {
       hour,
       minute,
@@ -96,59 +102,40 @@ function ScheduleController() {
     };
   }
 
-
-
-
   function createActivity(startTime, endTime, title, color, description) {
     return {
       startTime: startTime,
       endTime: endTime,
       title: title,
       color: color,
-      description: description
+      description: description,
     };
   }
 
   function updateActivity(schedule, activity) {
     let updatedSchedule = [...schedule];
-  
-    const [startHour, startMinute] = activity.startTime.split(':').map(Number);
-    const [endHour, endMinute] = activity.endTime.split(':').map(Number);
+
+    const [startHour, startMinute] = activity.startTime.split(":").map(Number);
+    const [endHour, endMinute] = activity.endTime.split(":").map(Number);
     let startIndex = startHour * 60 + startMinute;
     let endIndex = endHour * 60 + endMinute;
-  
+
     for (let i = 0; i < updatedSchedule.length; i++) {
       let slotHour = updatedSchedule[i].hour;
       let slotMinute = updatedSchedule[i].minute;
       let slotIndex = slotHour * 60 + slotMinute;
-  
+
       if (slotIndex >= startIndex && slotIndex < endIndex) {
         // Preserve currentMinute flag while updating the slot with new activity
         updatedSchedule[i] = {
           ...createTimeSlot(slotHour, slotMinute, activity),
-          currentMinute: updatedSchedule[i].currentMinute
+          currentMinute: updatedSchedule[i].currentMinute,
         };
       }
     }
-  
+
     return updatedSchedule;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
- 
 
   // Functions to control modals
   const openActivityModal = () => setActivityModalOpen(true);
@@ -156,9 +143,14 @@ function ScheduleController() {
   const openWakeTimeModal = () => setWakeTimeModalOpen(true);
   const closeWakeTimeModal = () => setWakeTimeModalOpen(false);
 
-
   const handleAddActivity = async (activityData) => {
-    const { startTime, endTime, activityTitle, activityColor, activityDescription } = activityData;
+    const {
+      startTime,
+      endTime,
+      activityTitle,
+      activityColor,
+      activityDescription,
+    } = activityData;
     const newActivity = createActivity(
       startTime,
       endTime,
@@ -188,7 +180,7 @@ function ScheduleController() {
 
     console.log("Attempting to add activity for user:", user?.id); // Log user ID
     console.log("Activity data:", newActivity); // Log activity data being sent
-  
+
     if (!user?.id) {
       console.error("User ID is undefined.");
       return; // Stop the function if user ID isn't available
@@ -196,16 +188,19 @@ function ScheduleController() {
 
     if (user) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addActivity`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            activity: newActivity,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/addActivity`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: user.id,
+              activity: newActivity,
+            }),
+          }
+        );
 
         const result = await response.json();
 
@@ -255,16 +250,19 @@ function ScheduleController() {
     const activityId = activityToRemove._id.toString();
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/removeActivity`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          activityId,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/removeActivity`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            activityId,
+          }),
+        }
+      );
 
       const result = await response.json();
 
@@ -295,88 +293,52 @@ function ScheduleController() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row background">
-      
-        {/* Inputs and Button Container */}
-      <div className=" shadow panel ">
+    <div className="py-5 px-7">
+      <h1 className=" heading1">{"DAY PLANNER"}</h1>
+     
+        {/*main container for both columns*/}
+        <div className="flex flex-row gap-8 w-full">
+          <div className="flex flex-col w-3/5 ">
+            <div className="flex flex-row gap-4 mb-2">
+              <ButtonMain onClick={openActivityModal} text="Add Activity" />
+              <ButtonMain onClick={openWakeTimeModal} text="Set Wake Time" />
+            </div>
+            {/*schedule column*/}
+            <ScheduleDisplay
+              daySchedule={daySchedule}
+              activities={activities}
+              isWithinAwakeHours={isWithinAwakeHours}
+            />
+          </div>
 
+          {/* activities column */}
+          <div className="flex flex-col w-2/5  ">
+            <div className="h-10 mb-2 text-4xl">{getCurrentDateDisplay()}</div>
+            {/* Open Modals */}
+            <div>
+              <ActivityDisplay
+                activities={activities}
+                handleRemoveActivity={handleRemoveActivity}
+              />
+            </div>
+          </div>
+          {/* Activity Modal */}
+          <Modal isOpen={activityModalOpen} onClose={closeActivityModal}>
+            <AddActivityUI handleAddActivity={handleAddActivity} />
+          </Modal>
 
-
-        
-
-        {/* Open Modals */}
-        <div className="flex justify-end">
-        <button
-          className="  px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-          onClick={openActivityModal}
-        >
-          Add Activity
-        </button>
-
-        <button
-          className=" px-4 py-2 text-white bg-green-500 rounded hover:bg-green-700"
-          onClick={openWakeTimeModal}
-        >
-          Set Wake Time
-        </button>
-
-        {/* Activity Modal */}
-        <Modal isOpen={activityModalOpen} onClose={closeActivityModal}>
-          <AddActivityUI handleAddActivity={handleAddActivity} />
-        </Modal>
-
-        {/* Wake Time Modal */}
-        <Modal isOpen={wakeTimeModalOpen} onClose={closeWakeTimeModal}>
-          <WakeTimeUI
-            wakeTime={wakeTime}
-            sleepTime={sleepTime}
-            handleWakeTimeChange={(e) => setWakeTime(e.target.value)}
-            handleSleepTimeChange={(e) => setSleepTime(e.target.value)}
-          />
-        </Modal>
-</div>
-
-
-      {/* Main Schedule Container */}
-      <div className="flex flex-col w-full bg-gray-200">
-        {/*heading*/}
-        <div className="flex justify-between items-end pb-1 pt-4">
-          <h1 className=" heading1">{"TODAY'S SCHEDULE"}</h1>
-          <h2>{currentDate}</h2>
+          {/* Wake Time Modal */}
+          <Modal isOpen={wakeTimeModalOpen} onClose={closeWakeTimeModal}>
+            <WakeTimeUI
+              wakeTime={wakeTime}
+              sleepTime={sleepTime}
+              handleWakeTimeChange={(e) => setWakeTime(e.target.value)}
+              handleSleepTimeChange={(e) => setSleepTime(e.target.value)}
+            />
+          </Modal>
         </div>
-
-        {/*schedule*/}
-        <ScheduleDisplay
-          daySchedule={daySchedule}
-          activities={activities}
-          isWithinAwakeHours={isWithinAwakeHours}
-        />
       </div>
 
-
-
-
-</div>
-
-
-        {/* Container for displaying activities */}
-        <div className="flex flex-col panel">
-          
-          <ActivityDisplay
-            activities={activities}
-            handleRemoveActivity={handleRemoveActivity}
-          />
-        </div>
-      
-
-
-
-
-
-
-
-  
-    </div>
   );
 }
 
