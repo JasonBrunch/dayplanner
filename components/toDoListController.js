@@ -7,21 +7,21 @@ import ButtonMain from "./buttonMain";
 
 function ToDoListController() {
   const { user } = useUser();
-  const [lists, setLists] = useState([]); 
+  const [lists, setLists] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);  // State for modal open/close
   const [newListName, setNewListName] = useState("");  // State for the new list name
 
   const [newTaskNames, setNewTaskNames] = useState({});  // State for new task names, with each key being the list ID
-  
-  
-  
+
+
+
   // Initialize lists when the component mounts or when user changes
   useEffect(() => {
     if (user) {
       setLists(user.toDoLists || []); // Initialize lists with user.toDoLists
     }
   }, [user]); // Re-run effect if user changes
-  
+
 
   const handleOpenModal = () => {
     setIsModalOpen(true);  // Open the modal
@@ -39,10 +39,10 @@ function ToDoListController() {
       console.error("Task name cannot be empty.");
       return;
     }
-  
+
     // Generate a unique ID for the new task
     const newTaskId = Date.now(); // Using a date-based unique ID to avoid collisions
-  
+
     // Create a new task object
     const newTask = {
       id: newTaskId,
@@ -50,7 +50,7 @@ function ToDoListController() {
       dateAdded: new Date(),
       completed: false,
     };
-  
+
     // Create an updated list structure with the new task
     const updatedLists = lists.map((list) => {
       if (list.listId === listId) {
@@ -61,10 +61,10 @@ function ToDoListController() {
       }
       return list;
     });
-  
+
     // Update the state with the new list structure
     setLists(updatedLists);
-  
+
     try {
       // Make a POST request to the backend with the updated to-do lists
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
@@ -77,7 +77,7 @@ function ToDoListController() {
           newToDoLists: updatedLists,
         }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setLists(data.toDoLists); // Update the state with the backend data
@@ -96,20 +96,20 @@ function ToDoListController() {
       console.error("List name cannot be empty.");  // Log an error if the list name is invalid
       return;  // Prevent further execution if list name is empty
     }
-  
+
     // Generate a unique ID for the new list
     const newListId = lists.length ? Math.max(...lists.map((list) => list.listId)) + 1 : 0;
-  
+
     // Create a new list object
     const newList = {
       listId: newListId,
       listName: newListName,
       tasks: [],  // Start with an empty task array
     };
-  
+
     // Update the state with the new list
     const updatedLists = [...lists, newList];  // Add the new list to the existing lists
-  
+
     try {
       // Send the updated lists to the backend
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
@@ -122,7 +122,7 @@ function ToDoListController() {
           newToDoLists: updatedLists,  // The updated to-do lists
         }),
       });
-  
+
       if (response.ok) {  // If the POST request is successful
         const data = await response.json();  // Parse the response data
         setLists(data.toDoLists);  // Update the component's state with the new data
@@ -157,10 +157,10 @@ function ToDoListController() {
     setLists(updatedLists);
   };
 
-  
+
 
   const handleRemoveTask = async (listId, taskId) => {
-    console.log(`Removing task. List ID: ${listId}, Task ID: ${taskId}`); 
+    console.log(`Removing task. List ID: ${listId}, Task ID: ${taskId}`);
     // Create updated lists with the specified task removed
     const updatedLists = lists.map((list) => {
       if (list.listId === listId) {
@@ -169,9 +169,9 @@ function ToDoListController() {
       }
       return list;
     });
-  
+
     setLists(updatedLists); // Update the state with the new list structure
-  
+
     try {
       // Send the updated lists to the backend
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
@@ -184,7 +184,7 @@ function ToDoListController() {
           newToDoLists: updatedLists,
         }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setLists(data.toDoLists); // Update state with the backend response
@@ -200,7 +200,7 @@ function ToDoListController() {
   const handleRemoveCategory = async (listId) => {
     // Filter out the list with the given listId
     const updatedLists = lists.filter((list) => list.listId !== listId);
-  
+
     try {
       // Send the updated lists to the backend
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
@@ -213,7 +213,7 @@ function ToDoListController() {
           newToDoLists: updatedLists,  // The new list structure without the removed list
         }),
       });
-  
+
       if (response.ok) {  // If the POST request is successful
         const data = await response.json();  // Parse the response data
         setLists(data.toDoLists);  // Update the state with the new data
@@ -225,34 +225,36 @@ function ToDoListController() {
     }
   };
 
-  
+
 
   return (
-    <div>
-    <div className="heading1">CREATE A LIST ...</div>
-    <ButtonMain
-    onClick={handleOpenModal}
-    text="Add New List"
-  />
- 
+    <div className="p-8">
+      {lists.length === 0 && (
+        <div className="heading1">CREATE A LIST ...</div>
+      )}
+      <ButtonMain
+        onClick={handleOpenModal}
+        text="Add New List"
+      />
 
-    <div className="flex p-4 gap-4">
-    {lists.map((list) => (
-  <ToDoList
-    key={list.listId}
-    listId={list.listId} // Ensure `listId` is passed
-    listName={list.listName}
-    listData={list.tasks}
-    handleItemClick={(taskId) => handleItemClick(list.listId, taskId)}
-    handleAddTask={(listId, taskName) => handleAddTask(list.listId, taskName)} // Pass `listId` and `taskName`
-    handleRemoveTask={(listId, taskId) => handleRemoveTask(list.listId, taskId)}
-    handleRemoveCategory={() => handleRemoveCategory(list.listId)}
-  />
-))}
+
+      <div className="flex pt-4  gap-4">
+        {lists.map((list) => (
+          <ToDoList
+            key={list.listId}
+            listId={list.listId} // Ensure `listId` is passed
+            listName={list.listName}
+            listData={list.tasks}
+            handleItemClick={(taskId) => handleItemClick(list.listId, taskId)}
+            handleAddTask={(listId, taskName) => handleAddTask(list.listId, taskName)} // Pass `listId` and `taskName`
+            handleRemoveTask={(listId, taskId) => handleRemoveTask(list.listId, taskId)}
+            handleRemoveCategory={() => handleRemoveCategory(list.listId)}
+          />
+        ))}
       </div>
 
-       {/* Modal to create a new list */}
-       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+      {/* Modal to create a new list */}
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2 className="text-xl font-semibold">Create New List</h2>
         <input
           type="text"

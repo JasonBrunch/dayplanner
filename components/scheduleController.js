@@ -293,11 +293,11 @@ function ScheduleController() {
   };
 
   return (
-    <div className="py-5 px-7">
+    <div className="py-5 px-9 mt-4">
       <h1 className=" heading1">{"DAY PLANNER"}</h1>
      
         {/*main container for both columns*/}
-        <div className="flex flex-row gap-8 w-full">
+        <div className="flex flex-row gap-6 w-full">
           <div className="flex flex-col w-3/5 ">
             <div className="flex flex-row gap-4 mb-2">
               <ButtonMain onClick={openActivityModal} text="Add Activity" />
@@ -312,9 +312,9 @@ function ScheduleController() {
           </div>
 
           {/* activities column */}
-          <div className="flex flex-col w-2/5  ">
-            <div className="h-10 mb-2 text-4xl">{getCurrentDateDisplay()}</div>
-            {/* Open Modals */}
+          <div className="flex flex-col w-2/5  mr-10  ">
+            <div className="h-10 mb-2 text-4xl heading1 justify-center  flex">{getCurrentDateDisplay()}</div>
+           
             <div>
               <ActivityDisplay
                 activities={activities}

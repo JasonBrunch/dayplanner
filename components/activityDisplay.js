@@ -7,8 +7,13 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
     setOpenCardIndex(openCardIndex === index ? null : index); // Toggle card open/close
   };
 
+  // If there are no activities, display a prompt to add an activity
   if (activities.length === 0) {
-    return null; // No activities to display
+    return (
+      <div className="text-center heading2 p-4">
+        <p>Add an activity...</p>
+      </div>
+    );
   }
 
   // Sort activities by start time
@@ -37,7 +42,7 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
                 isOpen ? "flex-col" : "flex-row"
               }`}
             >
-              <div className="flex justify-between w-full">
+              <div className="flex justify-between w-full heading3">
                 <span>
                   {activity.title} - {activity.startTime} to {activity.endTime}
                 </span>
@@ -46,7 +51,7 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
                     e.stopPropagation(); // Prevent toggling when removing activity
                     handleRemoveActivity(activity);
                   }}
-                  className="text-red-500 hover:text-red-700"
+                  className="text-white hover:text-red-700"
                 >
                   X
                 </button>

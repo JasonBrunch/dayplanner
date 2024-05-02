@@ -3,6 +3,7 @@ import Modal from "./modal";
 import MealCard from "./mealCard";
 import MealTotal from "./mealTotal";
 import { useUser } from "../context/userContext";
+import ButtonMain from "./buttonMain";
 
 function MealPrepController() {
   const { user } = useUser();
@@ -155,30 +156,43 @@ function MealPrepController() {
   }
 
   return (
-    <div className="flex">
+    <div className="flex py-8 px-10 gap-5">
 
-      <div className="flex flex-col justify-start w-1/6 bg-gray-200 h-screen pt-28">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleDecrementDate}>Previous Day
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleIncrementDate}>Next Day</button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleOpenModal}>NEW MEAL</button>
+
+      <div className="w-4/6 ">
+        <div className="heading1 flex justify-center w-4/6 ">MEAL TRACKER</div>
+        <MealTotal meals={dailyMeals} />
       </div>
 
-      <div className="flex flex-col w-1/2">
 
-        <div className="heading1 w-4/6 justify-center flex bg-blue-200">{displayDate()}</div>
 
-        <div className="">
-          <MealTotal meals={dailyMeals} />
+
+      <div className="flex flex-col w-2/6 mr-4">
+        <div className="heading1  flex justify-center ">{displayDate()}</div>
+
+
+
+        <div className="flex gap-2 mb-3 ">
+          <ButtonMain
+            text="NEW MEAL"
+            onClick={handleOpenModal}
+          />
+
+          <ButtonMain
+            text="PREVIOUS DAY"
+            onClick={handleDecrementDate}
+          />
+          <ButtonMain
+            text="NEXT DAY"
+            onClick={handleIncrementDate}
+
+          />
+
+
+
         </div>
 
-</div>
-        <div className="w-1/2">
+        <div className="w-full flex flex-col gap-2">
           {dailyMeals.length > 0 ? (
             dailyMeals.map((meal, index) => (
               <MealCard key={index} meal={meal} />
@@ -188,7 +202,19 @@ function MealPrepController() {
           )}
         </div>
 
-      
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="flex flex-col">
           <div>Name</div>

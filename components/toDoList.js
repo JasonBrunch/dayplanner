@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ButtonMain from "./buttonMain";
 
 function ToDoList({
   listId,
@@ -35,7 +36,7 @@ function ToDoList({
   return (
     <div className="w-80 min-h-80 relative flex flex-col rounded px-6 py-3 panel h-full shadow-lg">
       <div className="relative">
-        <h1 className="text-center heading1 pb-2 mt-4">{listName}</h1>
+        <h1 className="text-center heading2 pb-2 mt-2">{listName}</h1>
         <button
           className="absolute top-0 right-0 text-red-300 hover:text-red-700"
           onClick={() => handleRemoveCategory(listId)}  // Pass listId
@@ -55,14 +56,12 @@ function ToDoList({
             setTaskName(e.target.value);
         
             } }
-            className="appearance-none bg-transparent border-b-2 border-gray-400 w-full py-2 text-gray-700" // Border only at the bottom
+            className="appearance-none bg-transparent border-b-2 border-white w-full py-2 heading3"
         />
-        <button
-          className="ml-4 bg-transparent border border-gray-700 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-100"
-          onClick={() => handleAddTask(listId, taskName)}  // Pass listId and taskName
-        >
-          Save
-        </button>
+        <ButtonMain
+          onClick={() => handleAddTask(listId, taskName)}
+          text="SAVE"/>
+
       </div>
     </div>
   );

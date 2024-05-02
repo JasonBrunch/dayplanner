@@ -23,8 +23,8 @@ function CalorieProgress({ totalCalories, targetCalories }) {
                 })}
             >
                 <div className="absolute w-full text-center top-1/2 transform -translate-y-1/2">
-                    <div className="heading1 font-semibold">{totalCalories}</div>
-                    <div className="text-sm text-gray-500">calories</div>
+                    <div className=" heading1">{totalCalories}</div>
+                    <div className="heading3">CALORIES</div>
                 </div>
             </CircularProgressbarWithChildren>
         </div>
@@ -34,7 +34,7 @@ function CalorieProgress({ totalCalories, targetCalories }) {
 function NutrientProgress({ value, maxValue, color }) {
     const percentage = Math.min(100, (value / maxValue) * 100);
     return (
-        <div className="w-16 h-16"> 
+        <div className="w-28 h-28"> 
             <CircularProgressbar
                 value={percentage}
                 styles={buildStyles({
@@ -54,30 +54,31 @@ function MealTotal({ meals }) {
     const totalFats = calculateTotal(meals, 'fats');
 
     return (
-        <div className="flex w-full rounded shadow-lg bg-white  ">
-            <div className="flex flex-col justify-center items-center bg-purple-300 w-4/6">
+        <div className="flex w-full   ">
+            <div className="flex flex-col justify-center items-center  w-4/6  px-8">
                 <CalorieProgress totalCalories={totalCalories} targetCalories={targetCalories} />
             </div>
-            <div className="flex flex-col justify-around items-center ml-8 2/6">
-                <div className="flex items-center">
+
+            <div className="flex flex-col  items-center ml-6 justify-center gap-8 2/6">
+                <div className="flex items-center w-full">
                     <NutrientProgress value={totalProtein} maxValue={100} color="#4caf50" />
-                    <div className="ml-2">
-                        <div className="text-lg font-semibold">{totalProtein}g</div>
-                        <div className="text-sm text-gray-500">PROTEIN</div>
+                    <div className="ml-2 flex flex-col justify-center items-center">
+                        <div className="heading2">{totalProtein}g</div>
+                        <div className="heading3">PROTEIN</div>
                     </div>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center w-full">
                     <NutrientProgress value={totalCarbs} maxValue={300} color="#ff9800" />
-                    <div className="ml-2">
-                        <div className="text-lg font-semibold">{totalCarbs}g</div>
-                        <div className="text-sm text-gray-500">CARBS</div>
+                    <div className="ml-2 flex flex-col justify-center items-center">
+                        <div className="heading2">{totalCarbs}g</div>
+                        <div className="heading3">CARBS</div>
                     </div>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center w-full">
                     <NutrientProgress value={totalFats} maxValue={70} color="#f44336" />
-                    <div className="ml-2">
-                        <div className="text-lg font-semibold">{totalFats}g</div>
-                        <div className="text-sm text-gray-500">FATS</div>
+                    <div className="ml-2 flex flex-col justify-center items-center">
+                        <div className="heading2">{totalFats}g</div>
+                        <div className="heading3">FATS</div>
                     </div>
                 </div>
             </div>

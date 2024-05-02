@@ -80,8 +80,8 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
       });
 
       return (
-        <div key={hour} className="flex w-full border-t border-black">
-          <div className="py-2 text-center border-r border-gray-500 w-36">
+        <div key={hour} className="flex w-full border-t border-white border-b border-r border-l">
+          <div className="py-2 text-center border-r border-white w-36 heading3">
             {hourFormatted}
           </div>
           <div className="flex flex-1 relative">
@@ -94,7 +94,7 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full panel2">
   
       {renderSchedule()}
     </div>

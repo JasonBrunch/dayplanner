@@ -2,29 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.heading1 {
-   font-family: "highgate", sans-serif;
-   font-weight: 200;
+@font-face {
+   font-family: "Eras Demi ITC";
+   src: url('/fonts/ERASDEMI.TTF') format('truetype');
+   font-weight: normal;
    font-style: normal;
-  color:rgb(20, 20, 20);
-  font-size:  42px;
+}
+.heading1 {
+   font-family: "Eras Demi ITC", sans-serif;
+   font-weight: normal;
+   font-style: normal;
+  color:rgb(224, 224, 224);
+  font-size:  60px;
+  letter-spacing: 2px;
 }
 
 .heading2{
-font-family: "articulat-cf", sans-serif;
-font-weight: 800;
+font-family: "Eras Demi ITC", sans-serif;
+font-weight: normal;
 font-style: normal;
-color:rgb(34, 34, 34);
-font-size: large;
+color:rgb(225, 225, 225);
+font-size: 40px;
 }
 .heading3{
-    font-family: "articulat-cf", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    color:rgb(78, 78, 78);
-    font-size:small
-}
+   font-family: "Eras Demi ITC", sans-serif;
+   font-weight: normal;
+   font-style: normal;
+   color:rgb(243, 243, 243);
+   font-size: 20px;
+   }
 .activityText{
    font-family: "articulat-cf", sans-serif;
    font-weight: 400;
@@ -39,14 +45,18 @@ font-size: large;
  }
 
 .background {
-   background-color: #ffae00; /* Choose a color that fits your UI theme */
+   background-color: #282828; /* Choose a color that fits your UI theme */
  }
  .panel {
    background-color: #ff00c3; /* Choose a color that fits your UI theme */
 
  }
+ .panel2 {
+   background-color: #077cc0; /* Choose a color that fits your UI theme */
+
+ }
  .sidebar {
-   background-color: #2d3748; /* Choose a color that fits your UI theme */
+   background-color: #090c0f; /* Choose a color that fits your UI theme */
  }
 
 
