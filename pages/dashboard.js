@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import ScheduleController from "@/components/scheduleController";
 import ToDoListController from "@/components/toDoListController";
 import { useUser } from "@/context/userContext";
-import Image from "next/image";
+
 import MealPrepController from "@/components/mealPrepController";
+import Navbar from "@/components/navbar";
 
 function Dashboard() {
   const { user, login } = useUser(); // Get the current user context
@@ -47,65 +48,16 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
-      {/* Main content with a sidebar on the left and variable content on the right */}
+
+    <div className="flex flex-col-reverse sm:flex-row h-screen w-full overflow-hidden">
+
 
       {/* Sidebar with user icon and buttons */}
-      <div className="flex-shrink-0 px-4 py-8 w-20 sidebar flex flex-col items-center gap-3 h-full">
-        {/* User icon */}
-        <Image
-          src={userIcon} // Use the absolute URL
-          alt="User Icon"
-          width={40}
-          height={40}
-        />
-        <hr className="w-full mb-5 mt-4" />
-        {/* Schedule button */}
-        <button
-          className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
-          onClick={() => {
-            setCurrentView("schedule");
-            refreshUserState(); // Refresh user state when switching to the schedule view
-          }}
-        >
-          <Image
-            src="/scheduleIcon.svg"
-            alt="Schedule Icon"
-            width={28}
-            height={28}
-          />
-        </button>
-
-        {/* To Do List button */}
-        <button
-          className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
-          onClick={() => {
-            setCurrentView("toDoList");
-            refreshUserState(); // Refresh user state when switching to the to-do list view
-          }}
-        >
-          <Image
-            src="/toDoListIcon.svg"
-            alt="To Do List Icon"
-            width={28}
-            height={28}
-          />
-        </button>
-        {/* Meal prep button*/}
-        <button
-          className="hover:bg-gray-300  rounded shadow  w-full h-11 flex justify-center items-center"
-          onClick={() => {
-            setCurrentView("mealPrep");
-            refreshUserState(); // Refresh user state when switching to the to-do list view
-          }}
-        >
-          <Image src="/meal.svg" alt="Meal Prep Icon" width={28} height={28} />
-        </button>
-      </div>
+      <Navbar userIcon={userIcon} setCurrentView={setCurrentView} refreshUserState={refreshUserState} />
 
       {/* Main content area */}
-      <div className="background  h-full overflow-auto flex-grow">
-        {renderView()} 
+      <div className="background  h-full  flex-grow">
+        {renderView()}
       </div>
     </div>
   );

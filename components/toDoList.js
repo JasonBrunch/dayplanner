@@ -34,7 +34,7 @@ function ToDoList({
   ));
 
   return (
-    <div className="w-80 min-h-80 relative flex flex-col rounded px-6 py-3 panel h-full shadow-lg">
+    <div className="w-full sm:w-80 min-h-80 relative flex flex-col rounded px-6 py-3 panel h-full shadow-lg">
       <div className="relative">
         <h1 className="text-center heading2 pb-2 mt-2">{listName}</h1>
         <button

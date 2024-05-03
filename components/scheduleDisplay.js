@@ -94,7 +94,7 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full panel2">
+    <div className="flex flex-col items-center w-full panel2 ">
   
       {renderSchedule()}
     </div>

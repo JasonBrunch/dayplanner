@@ -8,56 +8,99 @@
    font-weight: normal;
    font-style: normal;
 }
-.heading1 {
-   font-family: "Eras Demi ITC", sans-serif;
-   font-weight: normal;
-   font-style: normal;
-  color:rgb(224, 224, 224);
-  font-size:  60px;
-  letter-spacing: 2px;
+
+
+
+:root {
+   --font-size-heading1: 60px;
+   --font-size-heading2: 40px;
+   --font-size-heading3: 20px;
 }
 
-.heading2{
-font-family: "Eras Demi ITC", sans-serif;
-font-weight: normal;
-font-style: normal;
-color:rgb(225, 225, 225);
-font-size: 40px;
+/* Adjustments for medium screens */
+@media (max-width: 768px) {
+   :root {
+      --font-size-heading1: 48px;
+      --font-size-heading2: 32px;
+      --font-size-heading3: 16px;
+   }
 }
-.heading3{
+
+/* Adjustments for small screens */
+@media (max-width: 480px) {
+   :root {
+      --font-size-heading1: 36px;
+      --font-size-heading2: 24px;
+      --font-size-heading3: 14px;
+   }
+}
+
+.heading1 {
+   font-size: var(--font-size-heading1);
+   color: rgb(224, 224, 224);
+
+
    font-family: "Eras Demi ITC", sans-serif;
    font-weight: normal;
    font-style: normal;
-   color:rgb(243, 243, 243);
+
+
+   letter-spacing: 2px;
+}
+
+.heading2 {
+   font-family: "Eras Demi ITC", sans-serif;
+   font-weight: normal;
+   font-style: normal;
+   color: rgb(225, 225, 225);
+   font-size: 40px;
+}
+
+.heading3 {
+   font-family: "Eras Demi ITC", sans-serif;
+   font-weight: normal;
+   font-style: normal;
+   color: rgb(243, 243, 243);
    font-size: 20px;
-   }
-.activityText{
+}
+
+.activityText {
    font-family: "articulat-cf", sans-serif;
    font-weight: 400;
    font-style: normal;
-    color:rgb(4, 4, 4);
-    font-size:medium;
+   color: rgb(4, 4, 4);
+   font-size: medium;
 
 }
+
 .highlight {
-   background-color: #000000; /* Choose a color that fits your UI theme */
-   border: 1px solid #33e4ff; /* Optional: adds a border around the highlighted slot */
- }
+   background-color: #000000;
+   /* Choose a color that fits your UI theme */
+   border: 1px solid #33e4ff;
+   /* Optional: adds a border around the highlighted slot */
+}
 
 .background {
-   background-color: #282828; /* Choose a color that fits your UI theme */
- }
- .panel {
-   background-color: #ff00c3; /* Choose a color that fits your UI theme */
+   background-color: #282828;
+   /* Choose a color that fits your UI theme */
+}
 
- }
- .panel2 {
-   background-color: #077cc0; /* Choose a color that fits your UI theme */
+.panel {
+   background-color: #ff00c3;
+   /* Choose a color that fits your UI theme */
 
- }
- .sidebar {
-   background-color: #090c0f; /* Choose a color that fits your UI theme */
- }
+}
+
+.panel2 {
+   background-color: #077cc0;
+   /* Choose a color that fits your UI theme */
+
+}
+
+.sidebar {
+   background-color: #090c0f;
+   /* Choose a color that fits your UI theme */
+}
 
 
 /* Other Font Styles */
@@ -86,5 +129,5 @@ font-size: 40px;
    font-weight: 900; 
    font-style: italic; */
 
-   /*font-family: "rocinante-titling-variable", sans-serif;
+/*font-family: "rocinante-titling-variable", sans-serif;
 font-variation-settings: "slnt" 0, "wght" 613;*/

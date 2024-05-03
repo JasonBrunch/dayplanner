@@ -293,51 +293,55 @@ function ScheduleController() {
   };
 
   return (
-    <div className="py-5 px-9 mt-4">
+    <div className="py-5 sm:px-9 mt-4">
       <h1 className=" heading1">{"DAY PLANNER"}</h1>
-     
-        {/*main container for both columns*/}
-        <div className="flex flex-row gap-6 w-full">
-          <div className="flex flex-col w-3/5 ">
-            <div className="flex flex-row gap-4 mb-2">
-              <ButtonMain onClick={openActivityModal} text="Add Activity" />
-              <ButtonMain onClick={openWakeTimeModal} text="Set Wake Time" />
-            </div>
-            {/*schedule column*/}
-            <ScheduleDisplay
-              daySchedule={daySchedule}
-              activities={activities}
-              isWithinAwakeHours={isWithinAwakeHours}
-            />
-          </div>
 
-          {/* activities column */}
-          <div className="flex flex-col w-2/5  mr-10  ">
-            <div className="h-10 mb-2 text-4xl heading1 justify-center  flex">{getCurrentDateDisplay()}</div>
-           
-            <div>
-              <ActivityDisplay
-                activities={activities}
-                handleRemoveActivity={handleRemoveActivity}
-              />
-            </div>
-          </div>
-          {/* Activity Modal */}
-          <Modal isOpen={activityModalOpen} onClose={closeActivityModal}>
-            <AddActivityUI handleAddActivity={handleAddActivity} />
-          </Modal>
+      {/*main container for both columns*/}
+      <div className="flex flex-col sm:flex-row gap-10 w-full ">
 
-          {/* Wake Time Modal */}
-          <Modal isOpen={wakeTimeModalOpen} onClose={closeWakeTimeModal}>
-            <WakeTimeUI
-              wakeTime={wakeTime}
-              sleepTime={sleepTime}
-              handleWakeTimeChange={(e) => setWakeTime(e.target.value)}
-              handleSleepTimeChange={(e) => setSleepTime(e.target.value)}
-            />
-          </Modal>
+
+        <div className="flex flex-col w-screen sm:w-3/5    ">
+
+<div className="h-10 mb-2 text-4xl heading2 justify-start  flex">{getCurrentDateDisplay()}</div>
+          <div className="flex flex-row gap-4 mb-2">
+            <ButtonMain onClick={openActivityModal} text="Add Activity" />
+            <ButtonMain onClick={openWakeTimeModal} text="Set Wake Time" />
+          </div>
+          {/*schedule column*/}
+          <ScheduleDisplay
+            daySchedule={daySchedule}
+            activities={activities}
+            isWithinAwakeHours={isWithinAwakeHours}
+          />
         </div>
+
+        {/* activities column */}
+        <div className="flex flex-col w-2/5  mr-10  ">
+          <div className="h-10 mb-2 text-4xl heading2 justify-center  flex">ACTIVITIES</div>
+
+          <div>
+            <ActivityDisplay
+              activities={activities}
+              handleRemoveActivity={handleRemoveActivity}
+            />
+          </div>
+        </div>
+        {/* Activity Modal */}
+        <Modal isOpen={activityModalOpen} onClose={closeActivityModal}>
+          <AddActivityUI handleAddActivity={handleAddActivity} />
+        </Modal>
+
+        {/* Wake Time Modal */}
+        <Modal isOpen={wakeTimeModalOpen} onClose={closeWakeTimeModal}>
+          <WakeTimeUI
+            wakeTime={wakeTime}
+            sleepTime={sleepTime}
+            handleWakeTimeChange={(e) => setWakeTime(e.target.value)}
+            handleSleepTimeChange={(e) => setSleepTime(e.target.value)}
+          />
+        </Modal>
       </div>
+    </div>
 
   );
 }

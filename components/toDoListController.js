@@ -228,7 +228,7 @@ function ToDoListController() {
 
 
   return (
-    <div className="p-8">
+    <div className="p-8  h-full">
       {lists.length === 0 && (
         <div className="heading1">CREATE A LIST ...</div>
       )}
@@ -238,7 +238,7 @@ function ToDoListController() {
       />
 
 
-      <div className="flex pt-4  gap-4">
+      <div className="flex flex-col sm:flex-row pt-4  gap-4">
         {lists.map((list) => (
           <ToDoList
             key={list.listId}
