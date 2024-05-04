@@ -156,11 +156,11 @@ function MealPrepController() {
   }
 
   return (
-    <div className="flex py-8 px-10 gap-5">
+    <div className="flex flex-col sm:flex-row sm:py-8 sm:px-10 sm:gap-5">
 
 
-      <div className="w-4/6 ">
-        <div className="heading1 flex justify-center w-4/6 ">MEAL TRACKER</div>
+      <div className="w-full sm:w-4/6  ">
+        <div className="heading1 flex justify-center w-full sm:w-4/6 ">MEAL TRACKER</div>
         <MealTotal meals={dailyMeals} />
       </div>
 
@@ -198,7 +198,7 @@ function MealPrepController() {
               <MealCard key={index} meal={meal} />
             ))
           ) : (
-            <p>No meals found for this date.</p>
+            <div className="heading3">No meals found for this date.</div>
           )}
         </div>
 

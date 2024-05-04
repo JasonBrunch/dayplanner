@@ -30,18 +30,17 @@ function LoginPage() {
     }
   };
   return (
-    <div className="font-sans text-gray-800 max-w-7xl mx-auto h-screen">
-      <div className="grid md:grid-cols-2 items-center gap-8 h-full">
+    <div className="background font-sans text-white w-full mx-auto h-screen">
+      <div className="grid md:grid-cols-2 items-center  h-full">
         <form className="max-w-lg mx-auto w-full p-6" onSubmit={handleLogin}>
           <div className="mb-10">
             <h3 className="text-4xl font-extrabold">Sign in</h3>
-            <p className="text-sm mt-6">
-              Immerse yourself in a hassle-free login journey with our
-              intuitively designed login form. Effortlessly access your account.
+            <p className="text-sm mt-6 text-gray-100">
+              Please sign in to continue.
             </p>
           </div>
           <div>
-            <label className="text-lg mb-3 block" htmlFor="email">
+            <label className="text-gray-100 text-lg mb-3 block" htmlFor="email">
               Email
             </label>
             <input
@@ -49,12 +48,12 @@ function LoginPage() {
               name="email"
               type="text"
               required
-              className="w-full text-sm bg-gray-100 px-4 py-4 rounded-md outline-blue-600"
+              className="w-full text-white text-sm bg-gray-700 px-4 py-4 rounded-md outline-blue-600"
               placeholder="Enter email"
             />
           </div>
           <div className="mt-6">
-            <label className="text-lg mb-3 block" htmlFor="password">
+            <label className="text-gray-100 text-lg mb-3 block" htmlFor="password">
               Password
             </label>
             <input
@@ -62,7 +61,7 @@ function LoginPage() {
               name="password"
               type="password"
               required
-              className="w-full text-sm bg-gray-100 px-4 py-4 rounded-md outline-blue-600"
+              className="w-full text-sm bg-gray-700 px-4 py-4 rounded-md outline-blue-600"
               placeholder="Enter password"
             />
           </div>
@@ -84,8 +83,8 @@ function LoginPage() {
             </Link>
           </p>
         </form>
-        <div className="mx-auto max-w-md overflow-hidden">
-        {/*
+        <div className="hidden md:block mx-auto max-w-md ">
+        
           <Image
             src="/photo.webp"
             alt="Dining Experience"
@@ -93,7 +92,7 @@ function LoginPage() {
             height={1080} // Original height of the image for high quality
             priority
           />
-          */}
+          
         </div>
       </div>
     </div>

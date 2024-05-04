@@ -81,7 +81,7 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
 
       return (
         <div key={hour} className="flex w-full border-t border-white border-b border-r border-l">
-          <div className="py-2 text-center border-r border-white w-36 heading3">
+          <div className="py-2 text-center border-r border-white w-24 md:w-36 text-gray-50">
             {hourFormatted}
           </div>
           <div className="flex flex-1 relative">

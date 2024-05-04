@@ -48,15 +48,16 @@ function Dashboard() {
   };
 
   return (
-
-    <div className="flex flex-col-reverse sm:flex-row h-screen w-full overflow-hidden">
-
-
+    <div className="flex flex-col-reverse sm:flex-row h-screen w-full ">
       {/* Sidebar with user icon and buttons */}
-      <Navbar userIcon={userIcon} setCurrentView={setCurrentView} refreshUserState={refreshUserState} />
+      <Navbar
+        userIcon={userIcon}
+        setCurrentView={setCurrentView}
+        refreshUserState={refreshUserState}
+      />
 
       {/* Main content area */}
-      <div className="background  h-full  flex-grow">
+      <div className="background  h-full  flex-grow overflow-y-auto overflow-x-hidden">
         {renderView()}
       </div>
     </div>

@@ -52,7 +52,7 @@
    font-family: "Eras Demi ITC", sans-serif;
    font-weight: normal;
    font-style: normal;
-   color: rgb(225, 225, 225);
+   color: rgb(255, 255, 255);
    font-size: 40px;
 }
 
@@ -86,13 +86,13 @@
 }
 
 .panel {
-   background-color: #ff00c3;
+   background-color: #7fddff;
    /* Choose a color that fits your UI theme */
 
 }
 
 .panel2 {
-   background-color: #077cc0;
+   background-color: #ff771d;
    /* Choose a color that fits your UI theme */
 
 }

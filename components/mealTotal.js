@@ -10,7 +10,7 @@ function CalorieProgress({ totalCalories, targetCalories }) {
     const percentage = Math.min(100, (totalCalories / targetCalories) * 100);
 
     return (
-        <div className="w-full h-full p-6 relative"> 
+        <div className="w-full h-full p-6 relative "> 
             <CircularProgressbarWithChildren
                 value={percentage}
                 styles={buildStyles({
@@ -55,7 +55,7 @@ function MealTotal({ meals }) {
 
     return (
         <div className="flex w-full   ">
-            <div className="flex flex-col justify-center items-center  w-4/6  px-8">
+            <div className="flex flex-col justify-center items-center  w-4/6  px-8 ">
                 <CalorieProgress totalCalories={totalCalories} targetCalories={targetCalories} />
             </div>
 

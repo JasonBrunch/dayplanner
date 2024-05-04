@@ -56,7 +56,7 @@ function ToDoList({
             setTaskName(e.target.value);
         
             } }
-            className="appearance-none bg-transparent border-b-2 border-white w-full py-2 heading3"
+            className="appearance-none bg-transparent border-b-2 border-white w-full py-2 text-white"
         />
         <ButtonMain
           onClick={() => handleAddTask(listId, taskName)}

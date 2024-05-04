@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { registerUser } from '@/managers/loginManager'; // Ensure this is correctly imported
 import Link from "next/link";
+import Image from "next/image";
 
 function RegisterPage() {
   const router = useRouter();
@@ -47,35 +48,35 @@ function RegisterPage() {
 };
 
   return (
-    <div className="font-sans text-gray-800 max-w-7xl mx-auto h-screen">
+    <div className="font-sans background max-w-7xl mx-auto h-screen">
       <div className="grid md:grid-cols-2 items-center gap-8 h-full">
         <form onSubmit={handleRegister} className="max-w-lg mx-auto w-full p-6">
           <div className="mb-10">
-            <h3 className="text-4xl font-extrabold">Register</h3>
-            <p className="text-sm mt-6">
+            <h3 className="text-4xl font-extrabold text-gray-50">Register</h3>
+            <p className="text-sm mt-6 text-gray-50">
               Create your account. Its free and only takes a minute.
             </p>
           </div>
           <div>
-            <label className="text-lg mb-3 block" htmlFor="email">Email</label>
+            <label className="text-lg mb-3 block text-gray-50" htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full text-sm bg-gray-100 px-4 py-4 rounded-md outline-blue-600"
+              className="w-full text-sm bg-gray-600 px-4 py-4 rounded-md outline-blue-600"
               placeholder="Enter your email"
             />
             {errors.email && <p className="text-red-500 text-xs mt-2">{errors.email}</p>}
           </div>
           <div className="mt-6">
-            <label className="text-lg mb-3 block" htmlFor="password">Password</label>
+            <label className="text-lg mb-3 block text-gray-50" htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full text-sm bg-gray-100 px-4 py-4 rounded-md outline-blue-600"
+              className="w-full text-sm bg-gray-600 px-4 py-4 rounded-md outline-blue-600"
               placeholder="Create a password"
             />
             {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password}</p>}
@@ -88,25 +89,29 @@ function RegisterPage() {
               Register
             </button>
           </div>
-          <p className="text-sm mt-10 text-center">
+          <p className="text-sm mt-10 text-center text-gray-50">
             Already have an account?{" "}
             <Link
              href="/loginPage"
             className="text-blue-600 font-semibold hover:underline ml-1">
-                Register here
+                Login here.
             </Link>
-              Login here
+             
           </p>
         </form>
-        {/*}
-        <div className="h-full md:py-6 flex items-center relative">
-          <img
-            src="https://readymadeui.com/photo.webp"
-            className="rounded-md lg:w-4/5 md:w-11/12 z-50 relative"
-            alt="Dining Experience"
-          />
-        </div>
-        */}
+     
+        <div className="hidden md:block mx-auto max-w-md ">
+        
+        <Image
+          src="/photo.webp"
+          alt="Dining Experience"
+          width={1920} // Original width of the image for high quality
+          height={1080} // Original height of the image for high quality
+          priority
+        />
+        
+      </div>
+    
       </div>
     </div>
   );

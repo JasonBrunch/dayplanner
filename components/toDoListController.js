@@ -3,6 +3,7 @@ import ToDoList from "./toDoList"; // Import the ToDoList component
 import { useUser } from "@/context/userContext";
 import Modal from "./modal";
 import ButtonMain from "./buttonMain";
+import { v4 as uuidv4 } from "uuid";
 
 
 function ToDoListController() {
@@ -41,7 +42,7 @@ function ToDoListController() {
     }
 
     // Generate a unique ID for the new task
-    const newTaskId = Date.now(); // Using a date-based unique ID to avoid collisions
+    const newTaskId = uuidv4();  // Generates a unique UUID
 
     // Create a new task object
     const newTask = {
