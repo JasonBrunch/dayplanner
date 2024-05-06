@@ -11,6 +11,7 @@ function Dashboard() {
   const [currentView, setCurrentView] = useState("schedule"); // Default to the Schedule view
 
   const refreshUserState = async () => {
+    console.log("Refreshing user state");
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/refresh`, {
         method: "GET",
