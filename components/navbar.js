@@ -46,9 +46,6 @@ const Navbar = ({ userIcon, setCurrentView, refreshUserState }) => {
           refreshUserState(); // Refresh user state when switching to the meal prep view
         }}
       >
-      {/*
-        <Image src="/meal.svg" alt="Meal Prep Icon" width={28} height={28} />
-      */}
       <img src="/meal.svg" alt="Meal Prep Icon" style={{ width: 28, height: 28 }} />
       
       </button>
