@@ -50,6 +50,7 @@ function Dashboard() {
   return (
     <div className="flex flex-col-reverse sm:flex-row h-screen w-full ">
       {/* Sidebar with user icon and buttons */}
+      
       <Navbar
         userIcon={userIcon}
         setCurrentView={setCurrentView}

@@ -3,13 +3,11 @@ export function getCurrentDateDisplay() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  // Log both date objects to see their values
-  console.log("Now:", now);
-  console.log("Today (midnight):", today);
+
 
   // Check if 'now' is the same as 'today' (ignores the time component)
   if (now.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) {
-      console.log("Date is today.");
+   
       return "TODAY";
   } else {
       console.log("Date is not today.");

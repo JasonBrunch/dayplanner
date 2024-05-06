@@ -12,12 +12,13 @@ const Navbar = ({ userIcon, setCurrentView, refreshUserState }) => {
           refreshUserState(); // Refresh user state when switching to the schedule view
         }}
       >
-        <Image
+     
+        <img
           src="/scheduleIcon.svg"
           alt="Schedule Icon"
-          width={28}
-          height={28}
+          style={{ width: 28, height: 28 }}
         />
+   
       </button>
 
       {/* To Do List button */}
@@ -28,12 +29,13 @@ const Navbar = ({ userIcon, setCurrentView, refreshUserState }) => {
           refreshUserState(); // Refresh user state when switching to the to-do list view
         }}
       >
-        <Image
+        
+        <img
           src="/toDoListIcon.svg"
           alt="To Do List Icon"
-          width={28}
-          height={28}
+          style={{ width: 28, height: 28 }}
         />
+        
       </button>
 
       {/* Meal prep button*/}
@@ -44,19 +46,24 @@ const Navbar = ({ userIcon, setCurrentView, refreshUserState }) => {
           refreshUserState(); // Refresh user state when switching to the meal prep view
         }}
       >
+      {/*
         <Image src="/meal.svg" alt="Meal Prep Icon" width={28} height={28} />
+      */}
+      <img src="/meal.svg" alt="Meal Prep Icon" style={{ width: 28, height: 28 }} />
+      
       </button>
 
       {/* User icon */}
+
       <div className="w-full h-11 flex justify-center items-center order-last sm:order-none">
-        <Image
+
+        <img
           src={userIcon} // Use the absolute URL
           alt="User Icon"
-          width={40}
-          height={40}
+          style={{ width: 40, height: 40 }}
         />
       </div>
-      
+
       <hr className="hidden sm:block w-full mb-5 mt-4" />
     </div>
   );
