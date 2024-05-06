@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { registerUser } from '@/managers/loginManager'; // Ensure this is correctly imported
 import Link from "next/link";
-import Image from "next/image";
+import { useUser } from "@/context/userContext";
+
 
 function RegisterPage() {
+  const { login } = useUser();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +37,7 @@ function RegisterPage() {
     try {
         const result = await registerUser(email, password);
         if (result.success) {
-          
+          login(result.data);
             router.push("/dashboard");  // Redirect to dashboard after registration
         } else {
             console.error("Registration Error: ", result.message);
@@ -48,9 +50,9 @@ function RegisterPage() {
 };
 
   return (
-    <div className="font-sans background max-w-7xl mx-auto h-screen">
-      <div className="grid md:grid-cols-2 items-center gap-8 h-full">
-        <form onSubmit={handleRegister} className="max-w-lg mx-auto w-full p-6">
+<div className="px-4 md:px-0 w-full  h-screen flex flex-row background font-sans text-white">
+      <div className="flex w-full  justify-center items-center">
+        <form onSubmit={handleRegister} className="max-w-lg mx-auto w-full ">
           <div className="mb-10">
             <h3 className="text-4xl font-extrabold text-gray-50">Register</h3>
             <p className="text-sm mt-6 text-gray-50">
@@ -99,20 +101,18 @@ function RegisterPage() {
              
           </p>
         </form>
-     
-        <div className="hidden md:block mx-auto max-w-md ">
-        
-        <Image
-          src="/photo.webp"
-          alt="Dining Experience"
-          width={1920} // Original width of the image for high quality
-          height={1080} // Original height of the image for high quality
-          priority
-        />
-        
+     </div>
+     <div className="hidden md:flex w-2/5  overflow-hidden">
+        <div style={{
+          width: '100%',
+          height: '100%',
+          backgroundImage: 'url(/loginPic.jpg)',
+          backgroundPosition: 'center',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat'
+        }} />
       </div>
-    
-      </div>
+
     </div>
   );
 }

@@ -18,11 +18,11 @@ function LoginPage() {
     const password = event.target.password.value;
 
     const response = await loginUser(email, password);
-    console.log("Login response:", response); 
+    console.log("Login response:", response);
     if (response.success) {
       console.log("ATTEMPTING TO LOGIN WITH THIS OBJECT:", response.data);
       login(response.data); // Store user data in context
-      
+
       router.push("/dashboard");
     } else {
       console.error("Login Error: ", response.message);
@@ -30,17 +30,17 @@ function LoginPage() {
     }
   };
   return (
-    <div className="background font-sans text-white w-full mx-auto h-screen">
-      <div className="grid md:grid-cols-2 items-center  h-full">
-        <form className="max-w-lg mx-auto w-full p-6" onSubmit={handleLogin}>
+    <div className="px-4 md:px-0 w-full  h-screen flex flex-row background font-sans text-white">
+      <div className="flex w-full  justify-center items-center">
+        <form className=" max-w-lg mx-auto w-full" onSubmit={handleLogin}>
           <div className="mb-10">
             <h3 className="text-4xl font-extrabold">Sign in</h3>
-            <p className="text-sm mt-6 text-gray-100">
+            <p className="text-sm mt-6 text-gray-50">
               Please sign in to continue.
             </p>
           </div>
           <div>
-            <label className="text-gray-100 text-lg mb-3 block" htmlFor="email">
+            <label className="text-gray-50 text-lg mb-3 block" htmlFor="email">
               Email
             </label>
             <input
@@ -48,12 +48,15 @@ function LoginPage() {
               name="email"
               type="text"
               required
-              className="w-full text-white text-sm bg-gray-700 px-4 py-4 rounded-md outline-blue-600"
+              className="w-full text-white text-sm bg-gray-600 px-4 py-4 rounded-md outline-blue-600"
               placeholder="Enter email"
             />
           </div>
           <div className="mt-6">
-            <label className="text-gray-100 text-lg mb-3 block" htmlFor="password">
+            <label
+              className="text-gray-100 text-lg mb-3 block"
+              htmlFor="password"
+            >
               Password
             </label>
             <input
@@ -61,7 +64,7 @@ function LoginPage() {
               name="password"
               type="password"
               required
-              className="w-full text-sm bg-gray-700 px-4 py-4 rounded-md outline-blue-600"
+              className="w-full text-sm bg-gray-600 px-4 py-4 rounded-md outline-blue-600"
               placeholder="Enter password"
             />
           </div>
@@ -83,18 +86,18 @@ function LoginPage() {
             </Link>
           </p>
         </form>
-        <div className="hidden md:block mx-auto max-w-md ">
-        
-          <Image
-            src="/photo.webp"
-            alt="Dining Experience"
-            width={1920} // Original width of the image for high quality
-            height={1080} // Original height of the image for high quality
-            priority
-          />
-          
-        </div>
       </div>
+      <div className="hidden md:flex w-2/5  overflow-hidden">
+        <div style={{
+          width: '100%',
+          height: '100%',
+          backgroundImage: 'url(/loginPic.jpg)',
+          backgroundPosition: 'center',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat'
+        }} />
+      </div>
+
     </div>
   );
 }
