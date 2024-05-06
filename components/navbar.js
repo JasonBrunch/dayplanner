@@ -31,7 +31,7 @@ const Navbar = ({ userIcon, setCurrentView, refreshUserState }) => {
       >
         
         <img
-          src="/toDoListIcon.svg"
+          src="/todolistIcon.svg"
           alt="To Do List Icon"
           style={{ width: 28, height: 28 }}
         />
