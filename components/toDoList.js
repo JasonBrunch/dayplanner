@@ -21,25 +21,21 @@ function ToDoList({
         {item.name}
       </div>
       <button
-  onClick={() => {
-     //console.log(`Remove task clicked. List ID: ${listId}, Task ID: ${item.id}`); // Use the correct variable name
-    handleRemoveTask(listId, item.id); // Pass the correct listId and taskId
-   
-  }}  // Handler to remove task
-  className="text-red-500 hover:text-red-700"
->
-  X
-</button>
+        onClick={() => handleRemoveTask(listId, item.id)}
+        className="text-red-500 hover:text-red-700"
+      >
+        X
+      </button>
     </div>
   ));
 
   return (
-    <div className="w-full sm:w-80 min-h-80 relative flex flex-col rounded px-6 py-3 panel h-full shadow-lg">
+    <div className="w-full sm:min-w-[320px] sm:w-80 min-h-80 relative flex flex-col rounded px-6 py-3 panel h-full shadow-lg">
       <div className="relative">
         <h1 className="text-center panelHeading pb-2 mt-2">{listName}</h1>
         <button
-          className="absolute top-0 right-0  hover:text-red-700"
-          onClick={() => handleRemoveCategory(listId)}  
+          className="absolute top-0 right-0 hover:text-red-700"
+          onClick={() => handleRemoveCategory(listId)}
         >
           <img src="/remove-circle.svg" alt="Delete list" />
         </button>
@@ -51,21 +47,17 @@ function ToDoList({
         <input
           type="text"
           placeholder="Enter new task"
-          value={taskName} // Bind to the state
-          onChange={(e) => {
-            setTaskName(e.target.value);
-        
-            } }
-            className="appearance-none bg-transparent border-b-2 border-white w-full py-2 text-white"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+          className="appearance-none bg-transparent border-b-2 border-white w-full py-2 text-white"
         />
         <ButtonMain
-  onClick={() => {
-    handleAddTask(listId, taskName); // Save the task
-    setTaskName(''); // Clear the input field after saving
-  }}
-  text="SAVE"
-/>
-
+          onClick={() => {
+            handleAddTask(listId, taskName);
+            setTaskName('');
+          }}
+          text="SAVE"
+        />
       </div>
     </div>
   );

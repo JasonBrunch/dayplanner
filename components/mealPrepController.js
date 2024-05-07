@@ -18,7 +18,6 @@ function MealPrepController() {
   const [mealCarbohydrates, setMealCarbohydrates] = useState(0);
   const [mealFat, setMealFat] = useState(0);
 
-
   useEffect(() => {
     if (user && user.mealEntries) {
       setMealData(user.mealEntries);
@@ -117,19 +116,22 @@ function MealPrepController() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/updateMealEntries`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          mealEntries: updatedMealData,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/updateMealEntries`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            mealEntries: updatedMealData,
+          }),
+        }
+      );
 
       if (!response.ok) {
-        const errorData = await response.text();  // Getting response as text to avoid JSON parsing error
+        const errorData = await response.text(); // Getting response as text to avoid JSON parsing error
         console.error("Failed to update meal entries:", errorData);
         throw new Error(`Failed to update: ${response.status} ${errorData}`);
       }
@@ -140,7 +142,6 @@ function MealPrepController() {
       console.error("Error updating meal entries:", error.message);
     }
   };
-
 
   const displayDate = () => {
     const today = new Date();
@@ -153,67 +154,37 @@ function MealPrepController() {
       return "TODAY";
     }
     return displayDate.toDateString();
-  }
+  };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:py-8 sm:px-10 sm:gap-5">
-
-
-      <div className="w-full sm:w-4/6  ">
-        <div className="heading1 flex justify-center w-full sm:w-4/6 ">MEAL TRACKER</div>
+    <div className="flex flex-col sm:flex-row sm:py-8 sm:px-10 sm:gap-5 ">
+      <div className="w-full md:w-1/2 ">
+        <div className="heading1 flex justify-center w-full  ">
+          MEAL TRACKER
+        </div>
         <MealTotal meals={dailyMeals} />
       </div>
 
-
-
-
-      <div className="flex flex-col w-2/6 mr-4">
+      <div className="flex flex-col w-full md:w-1/2 ">
         <div className="heading1  flex justify-center ">{displayDate()}</div>
 
+        <div className="flex gap-2 mb-3 justify-center">
+          <ButtonMain text="NEW MEAL" onClick={handleOpenModal} />
 
-
-        <div className="flex gap-2 mb-3 ">
-          <ButtonMain
-            text="NEW MEAL"
-            onClick={handleOpenModal}
-          />
-
-          <ButtonMain
-            text="PREVIOUS DAY"
-            onClick={handleDecrementDate}
-          />
-          <ButtonMain
-            text="NEXT DAY"
-            onClick={handleIncrementDate}
-
-          />
-
-
-
+          <ButtonMain text="PREVIOUS DAY" onClick={handleDecrementDate} />
+          <ButtonMain text="NEXT DAY" onClick={handleIncrementDate} />
         </div>
 
-        <div className="w-full flex flex-col gap-2">
+        <div className="w-full flex flex-col gap-2 justify-center">
           {dailyMeals.length > 0 ? (
             dailyMeals.map((meal, index) => (
               <MealCard key={index} meal={meal} />
             ))
           ) : (
-            <div className="heading3">No meals found for this date.</div>
+            <div className="flex justify-center heading3">No meals found for this date.</div>
           )}
         </div>
-
-
-
       </div>
-
-
-
-
-
-
-
-
-
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="flex flex-col">

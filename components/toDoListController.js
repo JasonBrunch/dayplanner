@@ -238,7 +238,7 @@ function ToDoListController() {
       />
 
 
-      <div className="flex flex-col sm:flex-row pt-4  gap-4">
+      <div className="flex flex-col sm:flex-row flex-wrap pt-4  gap-4">
         {lists.map((list) => (
           <ToDoList
             key={list.listId}
