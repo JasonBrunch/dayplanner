@@ -22,13 +22,13 @@ function ToDoList({
       </div>
       <button
   onClick={() => {
-     console.log(`Remove task clicked. List ID: ${listId}, Task ID: ${item.id}`); // Use the correct variable name
+     //console.log(`Remove task clicked. List ID: ${listId}, Task ID: ${item.id}`); // Use the correct variable name
     handleRemoveTask(listId, item.id); // Pass the correct listId and taskId
    
   }}  // Handler to remove task
   className="text-red-500 hover:text-red-700"
 >
-  Remove
+  X
 </button>
     </div>
   ));
@@ -36,12 +36,12 @@ function ToDoList({
   return (
     <div className="w-full sm:w-80 min-h-80 relative flex flex-col rounded px-6 py-3 panel h-full shadow-lg">
       <div className="relative">
-        <h1 className="text-center heading2 pb-2 mt-2">{listName}</h1>
+        <h1 className="text-center panelHeading pb-2 mt-2">{listName}</h1>
         <button
-          className="absolute top-0 right-0 text-red-300 hover:text-red-700"
-          onClick={() => handleRemoveCategory(listId)}  // Pass listId
+          className="absolute top-0 right-0  hover:text-red-700"
+          onClick={() => handleRemoveCategory(listId)}  
         >
-          X
+          <img src="/remove-circle.svg" alt="Delete list" />
         </button>
       </div>
 
@@ -59,8 +59,12 @@ function ToDoList({
             className="appearance-none bg-transparent border-b-2 border-white w-full py-2 text-white"
         />
         <ButtonMain
-          onClick={() => handleAddTask(listId, taskName)}
-          text="SAVE"/>
+  onClick={() => {
+    handleAddTask(listId, taskName); // Save the task
+    setTaskName(''); // Clear the input field after saving
+  }}
+  text="SAVE"
+/>
 
       </div>
     </div>

@@ -33,8 +33,7 @@ function ToDoListController() {
   };
 
   const handleAddTask = async (listId, taskName) => {
-    console.log(`Task name is: ${taskName}`);  // Check taskName
-    console.log(`List ID is: ${listId}`);  // Check listId
+
     // Ensure the task name is valid
     if (!taskName || taskName.trim() === "") {
       console.error("Task name cannot be empty.");
@@ -161,7 +160,7 @@ function ToDoListController() {
 
 
   const handleRemoveTask = async (listId, taskId) => {
-    console.log(`Removing task. List ID: ${listId}, Task ID: ${taskId}`);
+   
     // Create updated lists with the specified task removed
     const updatedLists = lists.map((list) => {
       if (list.listId === listId) {
@@ -229,7 +228,7 @@ function ToDoListController() {
 
 
   return (
-    <div className="p-8  h-full">
+    <div className="p-1 md:p-8  h-full">
       {lists.length === 0 && (
         <div className="heading1">CREATE A LIST ...</div>
       )}
@@ -256,13 +255,13 @@ function ToDoListController() {
 
       {/* Modal to create a new list */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <h2 className="text-xl font-semibold">Create New List</h2>
+        <h2 className="text-slate-50 font-semibold">Create New List</h2>
         <input
           type="text"
           value={newListName}  // Bind to state
           onChange={(e) => setNewListName(e.target.value)}  // Update state on change
           placeholder="Enter list name"
-          className="border border-gray-300 rounded py-2 px-4 w-full mt-4"
+          className="border bg-transparent text-white border-gray-300 rounded py-2 px-4 w-full mt-4"
         />
         <button
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-blue-700"

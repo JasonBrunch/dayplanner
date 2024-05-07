@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Navbar = ({ userIcon, setCurrentView, refreshUserState }) => {
   return (
-    <div className="flex-shrink-0 sm:px-4 py-2 sm:py-8 sm:w-20 sidebar flex flex-row sm:flex-col items-center sm:gap-3 sm:h-full">
+    <div className="flex-shrink-0 sm:px-4 py-2 sm:py-8 sm:w-20 sidebar flex flex-row sm:flex-col items-center sm:gap-3 sm:h-full sticky top-0 sm:top-auto sm:bottom-0  z-50">
       {/* Schedule button */}
       <button
         className="hover:bg-gray-300 rounded shadow w-full h-11 flex justify-center items-center order-1"

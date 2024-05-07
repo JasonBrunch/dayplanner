@@ -22,7 +22,7 @@ const Modal = ({ isOpen, onClose, children }) => {
       onClick={onClose} // Close the modal when clicking the backdrop
     >
       <div
-        className="bg-white rounded-lg p-6 relative max-w-md w-full mx-4"
+        className="modalBackground rounded-lg p-6 relative max-w-md w-full mx-4"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
         <button
