@@ -187,7 +187,7 @@ function MealPrepController() {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div className="flex flex-col">
+        <div className="flex flex-col modalText">
           <div>Name</div>
           <input
             type="text"

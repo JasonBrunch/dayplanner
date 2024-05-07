@@ -65,29 +65,29 @@ function MealTotal({ meals }) {
         targetCalories={targetCalories}
       />
 </div>
-      <div className="flex sm:flex-col">
+      <div className="flex sm:flex-col justify-center items-center">
         <div className="flex flex-col sm:flex-row  items-center w-full">
           <NutrientProgress
             value={totalProtein}
             maxValue={100}
             color="#4caf50"
           />
-          <div className="ml-2 flex flex-col  justify-center items-center">
+          <div className="ml-2 min-w-20  flex flex-col  justify-center items-center">
             <div className="heading2">{totalProtein}g</div>
             <div className="heading3">PROTEIN</div>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row  items-center w-full">
           <NutrientProgress value={totalCarbs} maxValue={300} color="#ff9800" />
-          <div className="ml-2 flex flex-col justify-center items-center">
+          <div className="ml-2 flex min-w-20  flex-col justify-center items-center">
             <div className="heading2">{totalCarbs}g</div>
             <div className="heading3">CARBS</div>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row  items-center w-full">
           <NutrientProgress value={totalFats} maxValue={70} color="#f44336" />
-          <div className="ml-2 flex flex-col justify-center items-center">
-            <div className="heading2">{totalFats}g</div>
+          <div className="ml-2 flex min-w-20  flex-col justify-center items-center">
+            <div className=" heading2">{totalFats}g</div>
             <div className="heading3">FATS</div>
           </div>
         </div>
