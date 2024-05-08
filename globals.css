@@ -20,7 +20,15 @@
    --font-size-heading1: 60px;
    --font-size-heading2: 40px;
    --font-size-heading3: 20px;
+
+   --surface-color: #121212; 
+   --overlay-color: rgba(255, 255, 255, 0.1); 
+   --primary-color: #BB86FC;
+   --secondary-color: #03DAC5;
+   --error-color: #CF6679;
+   --inactive-color: white;
 }
+
 
 /* Adjustments for medium screens */
 @media (max-width: 768px) {
@@ -39,10 +47,27 @@
       --font-size-heading3: 14px;
    }
 }
-
+.background {
+   background-color: var(--surface-color); 
+}
+.panel {
+   background-color: var(--surface-color);
+   background-image: linear-gradient(var(--overlay-color), var(--overlay-color)); /* Using a stronger white overlay */
+   background-blend-mode: lighten; /* Switching to 'lighten' to brighten the dark surface */
+   color: white; /* Ensuring text is visible on dark backgrounds */
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.152);
+}
+.backgroundText{
+   color: white;
+}
+.panelText{
+   color: white;
+}
+.primary {
+   color: var(--primary-color);
+}
 .heading1 {
    font-size: var(--font-size-heading1);
-   color: rgb(235, 235, 235);
    font-family: "Eras Demi ITC", sans-serif;
    font-weight: normal;
    font-style: normal;
@@ -81,70 +106,13 @@
 
 }
 
-.highlight {
-   background-color: #000000;
-
-   border: 1px solid #33e4ff;
-  
+.icon-primary {
+   fill: var(--primary-color);
 }
 
-.background {
-   background-color: #22323c;
-
-}
-.modalBackground {
-   background-color: #1d1d1d;
- 
-}
-.modalText{
-   color: white;
-}
-
-.panel {
-   background-color: #1e2634;
-   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-   
-  
-
-}
-.panelText{
-   color: white;
-
+.icon-inactive {
+   fill: var(--inactive-color);
 }
 
 
 
-.sidebar {
-   background-color: #1e2634;
-   /* Choose a color that fits your UI theme */
-}
-
-
-/* Other Font Styles */
-
-/* Articulat CF Normal */
-/* Use this for standard text styling */
-/* font-family: "articulat-cf", sans-serif;
-   font-weight: 400; 
-   font-style: normal; */
-
-/* Articulat CF Normal Oblique */
-/* Use this for italicized text styling */
-/* font-family: "articulat-cf", sans-serif;
-   font-weight: 400; 
-   font-style: italic; */
-
-/* Articulat CF Heavy */
-/* Use this for heavy emphasis text styling */
-/* font-family: "articulat-heavy-cf", sans-serif;
-   font-weight: 900; 
-   font-style: normal; */
-
-/* Articulat CF Heavy Oblique */
-/* Use this for heavy emphasis italicized text styling */
-/* font-family: "articulat-heavy-cf", sans-serif;
-   font-weight: 900; 
-   font-style: italic; */
-
-/*font-family: "rocinante-titling-variable", sans-serif;
-font-variation-settings: "slnt" 0, "wght" 613;*/

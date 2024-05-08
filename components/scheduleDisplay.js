@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
+const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours, currentDate }) => {
   
   const getDisplayTitle = (activity) => {
     const { startTime, endTime, title } = activity;
@@ -80,11 +80,11 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
       });
 
       return (
-        <div key={hour} className="flex w-full border-t border-white border-b border-r border-l">
-          <div className="py-2 text-center border-r border-white w-24 md:w-36 text-gray-50">
+        <div key={hour} className="flex w-full">
+          <div className="py-2 text-center   w-24 text-gray-50 ">
             {hourFormatted}
           </div>
-          <div className="flex flex-1 relative">
+          <div className="flex flex-1 relative border-b">
             {timeSlots}
             {activityLabels}
           </div>
@@ -94,7 +94,8 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full panel rounded-lg">
+    <div className="flex flex-col  w-full panel rounded-lg px-6 pr-8 py-4 pb-6">
+      <div className='border-b ml-24   heading2'>{currentDate}</div>
       {renderSchedule()}
     </div>
   );

@@ -158,15 +158,15 @@ function MealPrepController() {
 
   return (
     <div className="flex flex-col sm:flex-row sm:py-8 sm:px-10 sm:gap-5 ">
-      <div className="w-full md:w-1/2 ">
-        <div className="heading1 flex justify-center w-full  ">
+      <div className="w-full md:w-1/2  ">
+        <div className="heading1 flex justify-center w-full backgroundText  ">
           MEAL TRACKER
         </div>
         <MealTotal meals={dailyMeals} />
       </div>
 
       <div className="flex flex-col w-full md:w-1/2 ">
-        <div className="heading1  flex justify-center ">{displayDate()}</div>
+        <div className="heading1 backgroundText  flex justify-center ">{displayDate()}</div>
 
         <div className="flex gap-2 mb-3 justify-center">
           <ButtonMain text="NEW MEAL" onClick={handleOpenModal} />
@@ -187,7 +187,7 @@ function MealPrepController() {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div className="flex flex-col modalText">
+        <div className="flex flex-col panelText">
           <div>Name</div>
           <input
             type="text"

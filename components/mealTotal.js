@@ -58,14 +58,14 @@ function MealTotal({ meals }) {
   const totalFats = calculateTotal(meals, "fats");
 
   return (
-    <div className="flex flex-col w-full sm:flex-row   ">
-    <div className="min-w-80 ">
-      <CalorieProgress
-        totalCalories={totalCalories}
-        targetCalories={targetCalories}
-      />
-</div>
-      <div className="flex sm:flex-col justify-center items-center">
+    <div className="flex flex-col justify-center w-full sm:flex-row   ">
+      <div className="min-w-80 ">
+        <CalorieProgress
+          totalCalories={totalCalories}
+          targetCalories={targetCalories}
+        />
+      </div>
+      <div className="flex sm:flex-col justify-center items-center ">
         <div className="flex flex-col sm:flex-row  items-center w-full">
           <NutrientProgress
             value={totalProtein}

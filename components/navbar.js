@@ -10,7 +10,7 @@ const Navbar = ({
   currentView,
 }) => {
   return (
-    <div className="flex-shrink-0 sm:px-4 py-2 sm:py-8 sm:w-20 sidebar flex flex-row sm:flex-col items-center sm:gap-5 h-16 sm:h-full sticky top-0 sm:top-auto sm:bottom-0  z-50">
+    <div className="flex-shrink-0 sm:px-4 py-2 sm:py-8 sm:w-20 panel flex flex-row sm:flex-col items-center  sm:gap-7 h-16 sm:h-full sticky top-0 sm:top-auto sm:bottom-0  z-50">
       {/* Schedule button */}
       <button
         className=" shadow w-full  flex justify-center items-center order-1"
@@ -50,7 +50,7 @@ const Navbar = ({
       <img src={userIcon} alt="User Icon" className="w-10 h-10" />
       </div>
 
-      <hr className="hidden sm:block w-full mb-5 mt-4" />
+      <hr className="hidden sm:block w-full mb-3 mt-3" />
     </div>
   );
 };

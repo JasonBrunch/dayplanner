@@ -5,8 +5,7 @@ const ToDoIcon = ({ isActive }) => {
     <svg 
     xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 512 512"     
-    fill={isActive ? "#007bff" : "white"}
-    className="w-8 h-8"
+    className={`w-8 h-8 ${isActive ? 'icon-primary' : 'icon-inactive'}`}
     >
       <path
         className="cls-1"
