@@ -56,6 +56,7 @@ function Dashboard() {
         userIcon={userIcon}
         setCurrentView={setCurrentView}
         refreshUserState={refreshUserState}
+        currentView={currentView}
       />
 
       {/* Main content area */}

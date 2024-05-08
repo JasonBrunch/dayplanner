@@ -1,64 +1,53 @@
 import React from "react";
-import Image from "next/image";
+import ScheduleIcon from "./icons/scheduleIcon";
+import MealIcon from "./icons/mealIcon";
+import ToDoIcon from "./icons/todoIcon";
 
-const Navbar = ({ userIcon, setCurrentView, refreshUserState }) => {
+const Navbar = ({
+  userIcon,
+  setCurrentView,
+  refreshUserState,
+  currentView,
+}) => {
   return (
-    <div className="flex-shrink-0 sm:px-4 py-2 sm:py-8 sm:w-20 sidebar flex flex-row sm:flex-col items-center sm:gap-3 sm:h-full sticky top-0 sm:top-auto sm:bottom-0  z-50">
+    <div className="flex-shrink-0 sm:px-4 py-2 sm:py-8 sm:w-20 sidebar flex flex-row sm:flex-col items-center sm:gap-3 h-16 sm:h-full sticky top-0 sm:top-auto sm:bottom-0  z-50">
       {/* Schedule button */}
       <button
-        className="hover:bg-gray-300 rounded shadow w-full h-11 flex justify-center items-center order-1"
+        className=" shadow w-full  flex justify-center items-center order-1"
         onClick={() => {
           setCurrentView("schedule");
-          refreshUserState(); // Refresh user state when switching to the schedule view
+          refreshUserState();
         }}
       >
-     
-        <img
-          src="/scheduleIcon.svg"
-          alt="Schedule Icon"
-          style={{ width: 28, height: 28 }}
-        />
-   
+        <ScheduleIcon isActive={currentView === "schedule"} />
       </button>
 
       {/* To Do List button */}
       <button
-        className="hover:bg-gray-300 rounded shadow w-full h-11 flex justify-center items-center order-2"
+        className=" shadow w-full  flex justify-center items-center order-2"
         onClick={() => {
           setCurrentView("toDoList");
-          refreshUserState(); // Refresh user state when switching to the to-do list view
+          refreshUserState();
         }}
       >
-        
-        <img
-          src="/todolistIcon.svg"
-          alt="To Do List Icon"
-          style={{ width: 28, height: 28 }}
-        />
-        
+        <ToDoIcon isActive={currentView === "toDoList"} />
       </button>
 
       {/* Meal prep button*/}
       <button
-        className="hover:bg-gray-300 rounded shadow w-full h-11 flex justify-center items-center order-3"
+        className=" shadow w-full flex justify-center items-center order-3"
         onClick={() => {
           setCurrentView("mealPrep");
-          refreshUserState(); // Refresh user state when switching to the meal prep view
+          refreshUserState();
         }}
       >
-      <img src="/meal.svg" alt="Meal Prep Icon" style={{ width: 28, height: 28 }} />
-      
+        <MealIcon isActive={currentView === "mealPrep"} />
       </button>
 
       {/* User icon */}
 
-      <div className="w-full h-11 flex justify-center items-center order-last sm:order-none">
-
-        <img
-          src={userIcon} // Use the absolute URL
-          alt="User Icon"
-          style={{ width: 40, height: 40 }}
-        />
+      <div className=" shadow w-full  flex justify-center items-center order-last sm:order-none">
+      <img src={userIcon} alt="User Icon" className="w-10 h-10" />
       </div>
 
       <hr className="hidden sm:block w-full mb-5 mt-4" />
