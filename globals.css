@@ -8,6 +8,11 @@
    font-weight: normal;
    font-style: normal;
 }
+@font-face {
+   font-family: "Lato-Regular";
+   src: url('/fonts/Lato-Regular.ttf') format('truetype');
+ 
+}
 
 
 
@@ -45,7 +50,7 @@
 }
 
 .heading2 {
-   font-family: "Eras Demi ITC", sans-serif;
+   font-family: "anek-latin-variable", sans-serif;
    font-weight: normal;
    font-style: normal;
    color: rgb(235, 235, 235);
@@ -53,7 +58,7 @@
 }
 
 .heading3 {
-   font-family: "Eras Demi ITC", sans-serif;
+   font-family: "Lato-Regular", sans-serif;
    font-weight: normal;
    font-style: normal;
    color: rgb(243, 243, 243);
@@ -84,7 +89,7 @@
 }
 
 .background {
-   background-color: #383838;
+   background-color: #22323c;
 
 }
 .modalBackground {
@@ -96,19 +101,21 @@
 }
 
 .panel {
-   background-color: #85c8f8;
+   background-color: #1e2634;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+   
   
 
 }
-
-.panel2 {
-   background-color: #ff771d;
-   /* Choose a color that fits your UI theme */
+.panelText{
+   color: white;
 
 }
 
+
+
 .sidebar {
-   background-color: #090c0f;
+   background-color: #1e2634;
    /* Choose a color that fits your UI theme */
 }
 

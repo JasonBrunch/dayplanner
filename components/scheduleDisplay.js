@@ -20,10 +20,10 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
     const isPM = hour >= 12 && hour < 24;
     hour = hour % 12;
     hour = hour === 0 ? 12 : hour; // Convert 0 hour to 12 for 12-hour format
-
-    return `${hour.toString().padStart(2, "0")}:${minute
-      .toString()
-      .padStart(2, "0")} ${isPM ? "PM" : "AM"}`;
+  
+    // Directly convert hour and minute to string without padding
+    // and construct the time string with AM/PM
+    return `${hour}:${minute.toString().padStart(2, "0")} ${isPM ? "PM" : "AM"}`;
   }
   // Render each hour if it's within the defined awake hours
   const renderSchedule = () => {
@@ -94,8 +94,7 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full panel2 ">
-  
+    <div className="flex flex-col items-center w-full panel rounded-lg">
       {renderSchedule()}
     </div>
   );
