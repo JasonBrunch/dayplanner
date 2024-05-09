@@ -5,6 +5,7 @@ import MealTotal from "./mealTotal";
 import { useUser } from "../context/userContext";
 import ButtonMain from "./buttonMain";
 
+
 function MealPrepController() {
   const { user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -151,93 +152,102 @@ function MealPrepController() {
     displayDate.setHours(0, 0, 0, 0); // Normalize this date as well
 
     if (displayDate.getTime() === today.getTime()) {
-      return "TODAY";
+      return "TODAY (" + displayDate.toDateString() + ")";
     }
     return displayDate.toDateString();
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:py-8 sm:px-10 sm:gap-5 ">
-      <div className="w-full md:w-1/2  ">
-        <div className="heading1 flex justify-center w-full backgroundText  ">
-          MEAL TRACKER
-        </div>
-        <MealTotal meals={dailyMeals} />
+    <div className="flex flex-col p-4">
+      <div className="heading1 flex  w-full backgroundText  ">
+        MEAL TRACKER
       </div>
+      <div className="flex flex-col sm:flex-row md:gap-5 ">
 
-      <div className="flex flex-col w-full md:w-1/2 ">
-        <div className="heading1 backgroundText  flex justify-center ">{displayDate()}</div>
+       
 
-        <div className="flex gap-2 mb-3 justify-center">
-          <ButtonMain text="NEW MEAL" onClick={handleOpenModal} />
+        <div className="flex flex-col w-full md:w-1/3 panel p-2">
+          <div className="heading2 backgroundText  ">{displayDate()}</div>
 
-          <ButtonMain text="PREVIOUS DAY" onClick={handleDecrementDate} />
-          <ButtonMain text="NEXT DAY" onClick={handleIncrementDate} />
+          <div className="flex gap-2 mb-3 ">
+            <ButtonMain text="NEW MEAL" onClick={handleOpenModal} />
+
+            <ButtonMain text="PREVIOUS DAY" onClick={handleDecrementDate} />
+            <ButtonMain text="NEXT DAY" onClick={handleIncrementDate} />
+          </div>
+
+          <div className="w-full flex flex-col gap-2 justify-center ">
+            {dailyMeals.length > 0 ? (
+              dailyMeals.map((meal, index) => (
+                <MealCard key={index} meal={meal} />
+              ))
+            ) : (
+              <div className="flex justify-center heading3">No meals found for this date.</div>
+            )}
+          </div>
         </div>
 
-        <div className="w-full flex flex-col gap-2 justify-center">
-          {dailyMeals.length > 0 ? (
-            dailyMeals.map((meal, index) => (
-              <MealCard key={index} meal={meal} />
-            ))
-          ) : (
-            <div className="flex justify-center heading3">No meals found for this date.</div>
-          )}
+ <div className="w-full md:w-1/3 panel ">
+          <MealTotal meals={dailyMeals} />
         </div>
+
+
+
+
+
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+          <div className="flex flex-col panelText">
+            <div>Name</div>
+            <input
+              type="text"
+              value={mealName}
+              onChange={(e) => setMealName(e.target.value)}
+              className="border border-gray-400 p-2 rounded-lg"
+            />
+            <div>Calories</div>
+            <input
+              type="number"
+              value={mealCalories}
+              onChange={(e) => setMealCalories(Number(e.target.value))}
+              className="border border-gray-400 p-2 rounded-lg"
+            />
+            <div>Protein</div>
+            <input
+              type="number"
+              value={mealProtein}
+              onChange={(e) => setMealProtein(Number(e.target.value))}
+              className="border border-gray-400 p-2 rounded-lg"
+            />
+            <div>Carbohydrates</div>
+            <input
+              type="number"
+              value={mealCarbohydrates}
+              onChange={(e) => setMealCarbohydrates(Number(e.target.value))}
+              className="border border-gray-400 p-2 rounded-lg"
+            />
+            <div>Fat</div>
+            <input
+              type="number"
+              value={mealFat}
+              onChange={(e) => setMealFat(Number(e.target.value))}
+              className="border border-gray-400 p-2 rounded-lg"
+            />
+            <button
+              onClick={() =>
+                createNewMealEntry(
+                  mealName,
+                  mealCalories,
+                  mealProtein,
+                  mealCarbohydrates,
+                  mealFat
+                )
+              }
+            >
+              SAVE
+            </button>
+          </div>
+        </Modal>
       </div>
-
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div className="flex flex-col panelText">
-          <div>Name</div>
-          <input
-            type="text"
-            value={mealName}
-            onChange={(e) => setMealName(e.target.value)}
-            className="border border-gray-400 p-2 rounded-lg"
-          />
-          <div>Calories</div>
-          <input
-            type="number"
-            value={mealCalories}
-            onChange={(e) => setMealCalories(Number(e.target.value))}
-            className="border border-gray-400 p-2 rounded-lg"
-          />
-          <div>Protein</div>
-          <input
-            type="number"
-            value={mealProtein}
-            onChange={(e) => setMealProtein(Number(e.target.value))}
-            className="border border-gray-400 p-2 rounded-lg"
-          />
-          <div>Carbohydrates</div>
-          <input
-            type="number"
-            value={mealCarbohydrates}
-            onChange={(e) => setMealCarbohydrates(Number(e.target.value))}
-            className="border border-gray-400 p-2 rounded-lg"
-          />
-          <div>Fat</div>
-          <input
-            type="number"
-            value={mealFat}
-            onChange={(e) => setMealFat(Number(e.target.value))}
-            className="border border-gray-400 p-2 rounded-lg"
-          />
-          <button
-            onClick={() =>
-              createNewMealEntry(
-                mealName,
-                mealCalories,
-                mealProtein,
-                mealCarbohydrates,
-                mealFat
-              )
-            }
-          >
-            SAVE
-          </button>
-        </div>
-      </Modal>
     </div>
   );
 }
