@@ -7,6 +7,7 @@ import WakeTimeUI from "@/components/wakeTimeUI";
 import ScheduleDisplay from "@/components/scheduleDisplay";
 import { getCurrentDateDisplay } from "@/utilities/utilities";
 import ButtonMain from "./buttonMain";
+import ButtonHighlight from "./buttonHighlight";
 
 function ScheduleController() {
   const { user } = useUser(); // Retrieve the user object from the User Context
@@ -304,7 +305,7 @@ function ScheduleController() {
 
 
           <div className="flex flex-row gap-4 mb-2">
-            <ButtonMain onClick={openActivityModal} text="Add Activity" />
+            <ButtonHighlight onClick={openActivityModal} text="Add Activity" />
             <ButtonMain onClick={openWakeTimeModal} text="Set Wake Time" />
           </div>
           {/*schedule column*/}

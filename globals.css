@@ -64,7 +64,8 @@
    color: white;
 }
 .primary {
-   color: var(--primary-color);
+   background-color: var(--primary-color);
+ 
 }
 .heading1 {
    font-size: var(--font-size-heading1);

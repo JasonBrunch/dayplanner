@@ -40,7 +40,7 @@ function AddActivityUI({ handleAddActivity }) {
             type="text"
             value={activityTitle}
             onChange={(e) => setActivityTitle(e.target.value)}
-            className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+            className="bg-gray-600 shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
             placeholder="Enter activity title"
           />
         </div>
@@ -69,7 +69,7 @@ function AddActivityUI({ handleAddActivity }) {
             type="text"
             value={activityDescription}
             onChange={(e) => setActivityDescription(e.target.value)}
-            className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+            className=" shadow-md bg-gray-600 rounded px-2 pt-2 pb-3 mb-4 w-full"
             placeholder="Enter activity description"
           />
         </div>
@@ -84,7 +84,7 @@ function AddActivityUI({ handleAddActivity }) {
             type="time"
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
-            className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+            className="bg-gray-600 shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
           />
         </div>
         <div className="w-1/2">
@@ -93,14 +93,14 @@ function AddActivityUI({ handleAddActivity }) {
             type="time"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
-            className="bg-white shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
+            className="bg-gray-600 shadow-md rounded px-2 pt-2 pb-3 mb-4 w-full"
           />
         </div>
       </div>
 
       <button
         onClick={handleSubmit} // Use a custom function to call `handleAddActivity`
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md mt-4"
+        className="primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md mt-4"
       >
         Add Activity
       </button>

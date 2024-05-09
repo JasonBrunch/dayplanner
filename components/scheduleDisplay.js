@@ -94,7 +94,7 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours, currentD
   };
 
   return (
-    <div className="flex flex-col  w-full panel rounded-lg px-6 pr-8 py-4 pb-6">
+    <div className="flex flex-col  w-full panel rounded-lg pl-4 pr-8 py-4 pb-6">
       <div className='border-b ml-24   heading2'>{currentDate}</div>
       {renderSchedule()}
     </div>
