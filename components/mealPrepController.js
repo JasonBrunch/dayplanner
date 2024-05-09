@@ -4,6 +4,7 @@ import MealCard from "./mealCard";
 import MealTotal from "./mealTotal";
 import { useUser } from "../context/userContext";
 import ButtonMain from "./buttonMain";
+import ButtonHighlight from "./buttonHighlight";
 
 
 function MealPrepController() {
@@ -164,13 +165,13 @@ function MealPrepController() {
       </div>
       <div className="flex flex-col sm:flex-row md:gap-5 ">
 
-       
+
 
         <div className="flex flex-col w-full md:w-1/3 panel p-2">
           <div className="heading2 backgroundText  ">{displayDate()}</div>
 
           <div className="flex gap-2 mb-3 ">
-            <ButtonMain text="NEW MEAL" onClick={handleOpenModal} />
+            <ButtonHighlight text="NEW MEAL" onClick={handleOpenModal} />
 
             <ButtonMain text="PREVIOUS DAY" onClick={handleDecrementDate} />
             <ButtonMain text="NEXT DAY" onClick={handleIncrementDate} />
@@ -187,7 +188,7 @@ function MealPrepController() {
           </div>
         </div>
 
- <div className="w-full md:w-1/3 panel ">
+        <div className="w-full md:w-1/3 panel ">
           <MealTotal meals={dailyMeals} />
         </div>
 
@@ -196,56 +197,65 @@ function MealPrepController() {
 
 
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-          <div className="flex flex-col panelText">
-            <div>Name</div>
-            <input
-              type="text"
-              value={mealName}
-              onChange={(e) => setMealName(e.target.value)}
-              className="border border-gray-400 p-2 rounded-lg"
-            />
+          <div className="flex flex-col panelText gap-2">
+            <div>
+              <div>Name</div>
+              <input
+                type="text"
+                value={mealName}
+                onChange={(e) => setMealName(e.target.value)}
+                className="p-2 rounded-lg panel2 w-full"
+              /></div>
+              <div>
             <div>Calories</div>
             <input
               type="number"
               value={mealCalories}
               onChange={(e) => setMealCalories(Number(e.target.value))}
-              className="border border-gray-400 p-2 rounded-lg"
-            />
+              className="p-2 rounded-lg panel2 w-full"
+            /></div>
+            <div>
             <div>Protein</div>
             <input
               type="number"
               value={mealProtein}
               onChange={(e) => setMealProtein(Number(e.target.value))}
-              className="border border-gray-400 p-2 rounded-lg"
-            />
+              className="p-2 rounded-lg panel2 w-full"
+            /></div>
+            <div>
             <div>Carbohydrates</div>
             <input
               type="number"
               value={mealCarbohydrates}
               onChange={(e) => setMealCarbohydrates(Number(e.target.value))}
-              className="border border-gray-400 p-2 rounded-lg"
-            />
+              className="p-2 rounded-lg panel2 w-full"
+            /></div>
+            <div>
             <div>Fat</div>
             <input
               type="number"
               value={mealFat}
               onChange={(e) => setMealFat(Number(e.target.value))}
-              className="border border-gray-400 p-2 rounded-lg"
-            />
-            <button
-              onClick={() =>
-                createNewMealEntry(
-                  mealName,
-                  mealCalories,
-                  mealProtein,
-                  mealCarbohydrates,
-                  mealFat
-                )
-              }
-            >
-              SAVE
-            </button>
-          </div>
+              className="p-2 rounded-lg panel2 w-full"
+            /></div>
+            <div>
+              <ButtonHighlight
+                onClick={() =>
+                  {
+
+                  handleCloseModal();
+                  createNewMealEntry(
+                    mealName,
+                    mealCalories,
+                    mealProtein,
+                    mealCarbohydrates,
+                    mealFat
+                  )
+                }}
+                text="SAVE"
+              />
+
+            </div></div>
         </Modal>
       </div>
     </div>
