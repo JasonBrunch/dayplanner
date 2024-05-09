@@ -23,6 +23,7 @@
 
    --surface-color: #121212; 
    --overlay-color: rgba(255, 255, 255, 0.1); 
+   --overlay-color2: rgba(255, 255, 255, 0.224); 
    --primary-color: #BB86FC;
    --secondary-color: #03DAC5;
    --error-color: #CF6679;
@@ -53,6 +54,13 @@
 .panel {
    background-color: var(--surface-color);
    background-image: linear-gradient(var(--overlay-color), var(--overlay-color)); /* Using a stronger white overlay */
+   background-blend-mode: lighten; /* Switching to 'lighten' to brighten the dark surface */
+   color: white; /* Ensuring text is visible on dark backgrounds */
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.152);
+}
+.panel2 {
+   background-color: var(--surface-color);
+   background-image: linear-gradient(var(--overlay-color2), var(--overlay-color2)); /* Using a stronger white overlay */
    background-blend-mode: lighten; /* Switching to 'lighten' to brighten the dark surface */
    color: white; /* Ensuring text is visible on dark backgrounds */
    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.152);
