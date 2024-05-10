@@ -122,6 +122,10 @@
 .icon-inactive {
    fill: var(--inactive-color);
 }
+.radial-gradient-button {
+   background: radial-gradient(circle,   rgba(0,191,255,1) 0%,  rgba(138,43,226,1) 100% );
+ 
+}
 
 
 
