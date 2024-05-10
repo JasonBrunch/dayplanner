@@ -1,6 +1,7 @@
 import React from "react";
 import LoginForm from "@/components/loginForm";
-import { loginUser } from "@/managers/loginManager";
+import { loginGuest, loginUser } from "@/managers/loginManager";
+
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -29,76 +30,94 @@ function LoginPage() {
       setLoginError(response.message);
     }
   };
+
+  const handleGuestRegister = async () => {
+    const response = await loginGuest();
+    if (response.success) {
+      login(response.data); // Log in the guest user
+      router.push("/dashboard"); // Redirect to the dashboard
+    } else {
+      setLoginError(response.message);
+    }
+  };
+
   return (
-    <div className="px-4 md:px-0 w-full  h-screen flex flex-row background font-sans text-white">
-      <div className="flex w-full  justify-center items-center">
-        <form className=" max-w-lg mx-auto w-full" onSubmit={handleLogin}>
-          <div className="mb-10">
-            <h3 className="text-4xl font-extrabold">Sign in</h3>
-            <p className="text-sm mt-6 text-gray-50">
-              Please sign in to continue.
-            </p>
-          </div>
+    <div className="flex justify-end items-center h-screen w-full bg-no-repeat bg-cover bg-center"
+      style={{ backgroundImage: `url('/dayforge.jpg')` }}>
+      
+      <div className="w-full max-w-lg p-12 lg:mr-52 sm:border sm:border-gray-50 rounded-2xl sm:outline sm:outline-gray-100 sm:outline-2 shadow-lg">
+        <form className="space-y-6" onSubmit={handleLogin}>
+
+          <h3 className="text-4xl font-bold text-gray-50">Sign in</h3>
           <div>
-            <label className="text-gray-50 text-lg mb-3 block" htmlFor="email">
-              Email
-            </label>
+
             <input
               id="email"
               name="email"
               type="text"
               required
-              className="w-full text-white text-sm bg-gray-600 px-4 py-4 rounded-md outline-blue-600"
+              className="w-full text-black text-sm bg-gray-300 px-4 py-4 rounded-3xl"
               placeholder="Enter email"
             />
           </div>
           <div className="mt-6">
-            <label
-              className="text-gray-100 text-lg mb-3 block"
-              htmlFor="password"
-            >
-              Password
-            </label>
+
             <input
               id="password"
               name="password"
               type="password"
               required
-              className="w-full text-sm bg-gray-600 px-4 py-4 rounded-md outline-blue-600"
+              className="w-full text-black text-sm bg-gray-300 px-4 py-4 rounded-3xl"
               placeholder="Enter password"
             />
           </div>
           <div className="mt-10">
             <button
               type="submit"
-              className="w-full shadow-xl py-3 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+              className="w-full shadow-xl py-3 px-4 text-md font-bold rounded text-white radial-gradient-button rounded-3xl"
             >
               Log in
             </button>
+          </div><div>
+            <p className="text-sm mt-10 text-center text-white">
+              Dont have an account?
+              <Link
+                href="/registerPage"
+                className="text-blue-300 font-semibold hover:underline ml-1"
+              >
+                Register here
+              </Link>
+            </p>
+
+            
+
+
+
           </div>
-          <p className="text-sm mt-10 text-center">
-            Dont have an account?
-            <Link
-              href="/registerPage"
-              className="text-blue-600 font-semibold hover:underline ml-1"
-            >
-              Register here
-            </Link>
-          </p>
         </form>
-      </div>
-      <div className="hidden md:flex w-2/5  overflow-hidden">
-        <div style={{
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'url(/loginPic.jpg)',
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat'
-        }} />
-      </div>
+        <div className="text-sm mt-4 text-center text-white">
+              Want to try it out?
+
+              <button
+                onClick={handleGuestRegister}
+                className="text-blue-300 font-semibold hover:underline ml-1"
+              >
+                Login as Guest
+              </button>   
+              </div>
+        </div>
+
+
+
+
+
+
+
+
 
     </div>
+
+
   );
 }
 
