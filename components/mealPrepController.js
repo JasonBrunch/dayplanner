@@ -95,14 +95,16 @@ function MealPrepController() {
   };
 
   const handleUpdateEntry = (index, updatedEntry) => {
+    // This could also check if updatedEntry.meals.length is 0 then do something different if needed
     const updatedMealData = [
       ...mealData.slice(0, index),
       updatedEntry,
-      ...mealData.slice(index + 1),
+      ...mealData.slice(index + 1)
     ];
+
     setMealData(updatedMealData);
     updateMealEntries(updatedMealData);
-  };
+};
 
   function areDatesEqual(date1, date2) {
     return (
@@ -158,6 +160,26 @@ function MealPrepController() {
     return displayDate.toDateString();
   };
 
+
+  const removeMealEntry = (mealIndex) => {
+    const activeDate = new Date(date);
+    activeDate.setHours(0, 0, 0, 0);
+
+    const entryIndex = mealData.findIndex(entry =>
+      areDatesEqual(new Date(entry.entryDate), activeDate)
+    );
+
+    if (entryIndex !== -1) {
+      const updatedMeals = [
+        ...mealData[entryIndex].meals.slice(0, mealIndex),
+        ...mealData[entryIndex].meals.slice(mealIndex + 1)
+      ];
+
+      const updatedEntry = { ...mealData[entryIndex], meals: updatedMeals };
+      handleUpdateEntry(entryIndex, updatedEntry);
+    }
+};
+
   return (
     <div className="flex flex-col p-4">
       <div className="heading1 flex  w-full backgroundText  ">
@@ -180,7 +202,11 @@ function MealPrepController() {
           <div className="w-full flex flex-col gap-2 justify-center ">
             {dailyMeals.length > 0 ? (
               dailyMeals.map((meal, index) => (
-                <MealCard key={index} meal={meal} />
+                <MealCard
+                key={index}
+                meal={meal}
+                removeMeal={() => removeMealEntry(index)}
+              />
               ))
             ) : (
               <div className="flex justify-center heading3">No meals found for this date.</div>

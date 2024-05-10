@@ -21,8 +21,8 @@ function CalorieProgress({ totalCalories, targetCalories }) {
           rotation: 0.0,
           strokeLinecap: "round",
           pathTransitionDuration: 0.5,
-          pathColor: `rgba(62, 152, 199, ${percentage / 100})`,
-          trailColor: "#d6d6d6",
+          pathColor: "#BB86FC",
+          trailColor: "#121212",
           backgroundColor: "#3e98c7",
         })}
       >
@@ -38,12 +38,12 @@ function CalorieProgress({ totalCalories, targetCalories }) {
 function NutrientProgress({ value, maxValue, color }) {
   const percentage = Math.min(100, (value / maxValue) * 100);
   return (
-    <div className="w-28 h-28">
+    <div className="w-24 h-24">
       <CircularProgressbar
         value={percentage}
         styles={buildStyles({
-          pathColor: color,
-          trailColor: "#ddd",
+          pathColor: "#BB86FC",
+          trailColor: "#121212",
         })}
       />
     </div>
@@ -65,12 +65,11 @@ function MealTotal({ meals }) {
           targetCalories={targetCalories}
         />
       </div>
-      <div className="flex sm:flex-col justify-center items-center ">
+      <div className="flex sm:flex-col justify-center items-center gap-2">
         <div className="flex flex-col sm:flex-row  items-center w-full">
           <NutrientProgress
             value={totalProtein}
             maxValue={100}
-            color="#4caf50"
           />
           <div className="ml-2 min-w-20  flex flex-col  justify-center items-center">
             <div className="heading2">{totalProtein}g</div>

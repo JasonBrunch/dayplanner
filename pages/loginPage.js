@@ -93,7 +93,7 @@ function LoginPage() {
           height: '100%',
           backgroundImage: 'url(/loginPic.jpg)',
           backgroundPosition: 'center',
-          backgroundSize: 'contain',
+          backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat'
         }} />
       </div>
