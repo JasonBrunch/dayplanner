@@ -5,16 +5,27 @@ function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Assuming you have a way to check authentication status
-    // Redirect if not authenticated:
     router.push('/loginPage');
-    //router.push('/dashboard');
   }, [router]);
 
   return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      {/* If authenticated, show home page content here */}
+    <div className="flex items-center justify-center h-screen">
+      <div className="text-center">
+        <h1 className="mb-4">Welcome to the Home Page</h1>
+        <div className="w-64 h-2 bg-gray-300 overflow-hidden">
+          <div className="bg-blue-500 h-2 w-full animate-pulse"></div>
+        </div>
+      </div>
+      <style jsx>{`
+        @keyframes load {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+      `}</style>
     </div>
   );
 }

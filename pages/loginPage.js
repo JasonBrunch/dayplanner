@@ -4,7 +4,7 @@ import { loginGuest, loginUser } from "@/managers/loginManager";
 
 import { useRouter } from "next/router";
 import Link from "next/link";
-import Image from "next/image";
+
 
 import { useUser } from "@/context/userContext";
 
