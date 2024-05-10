@@ -29,15 +29,37 @@ function LoginPage() {
             setLoginError(response.message);
         }
     };
+
+    const handleGuestRegister = async () => {
+        try {
+            const response = await fetch('/api/guest-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const result = await response.json();
+            if (response.ok) {
+                console.log("Guest login successful: ", result);
+                login(result.user); // Log in the guest user
+                router.push("/dashboard"); // Redirect to the dashboard
+            } else {
+                console.error("Guest Login Error: ", result.message);
+                setLoginError(result.message);
+            }
+        } catch (error) {
+            console.error("Network Error on Guest Login: ", error);
+            setLoginError(error.message || 'Failed to login as guest');
+        }
+    };
+
     return (
         <div className="flex justify-end items-center h-screen w-full bg-no-repeat bg-cover bg-center"
             style={{ backgroundImage: `url('/dayforge.jpg')` }}>
-            <div className="w-full max-w-lg p-12 lg:mr-52 border rounded-xl">
+            <div className="w-full max-w-lg p-12 lg:mr-52 border border-gray-50 rounded-2xl outline outline-gray-100 outline-2 shadow-lg">
                 <form className="space-y-6" onSubmit={handleLogin}>
-                   
-                        <h3 className="text-4xl font-bold text-gray-50">Sign in</h3>
+
+                    <h3 className="text-4xl font-bold text-gray-50">Sign in</h3>
                     <div>
-              
+
                         <input
                             id="email"
                             name="email"
@@ -48,7 +70,7 @@ function LoginPage() {
                         />
                     </div>
                     <div className="mt-6">
-   
+
                         <input
                             id="password"
                             name="password"
@@ -65,16 +87,30 @@ function LoginPage() {
                         >
                             Log in
                         </button>
-                    </div>
-                    <p className="text-sm mt-10 text-center text-white">
-                        Dont have an account?
-                        <Link
-                            href="/registerPage"
-                            className="text-blue-300 font-semibold hover:underline ml-1"
-                        >
-                            Register here
-                        </Link>
-                    </p>
+                    </div><div>
+                        <p className="text-sm mt-10 text-center text-white">
+                            Dont have an account?
+                            <Link
+                                href="/registerPage"
+                                className="text-blue-300 font-semibold hover:underline ml-1"
+                            >
+                                Register here
+                            </Link>
+                        </p>
+                        
+                        <div className="text-sm mt-4 text-center text-white">
+                            Want to try it out?
+                     
+                        <button
+                        onClick={handleGuestRegister}
+                        className="text-blue-300 font-semibold hover:underline ml-1"
+                            >
+                                Login as Guest
+                            </button>   </div>
+                        
+                        
+                        
+                        </div>
                 </form></div>
 
 

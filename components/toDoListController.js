@@ -3,6 +3,7 @@ import ToDoList from "./toDoList"; // Import the ToDoList component
 import { useUser } from "@/context/userContext";
 import Modal from "./modal";
 import ButtonMain from "./buttonMain";
+import ButtonHighlight from "./buttonHighlight";
 import { v4 as uuidv4 } from "uuid";
 
 
@@ -230,9 +231,9 @@ function ToDoListController() {
   return (
     <div className="p-1 md:p-8  h-full">
       {lists.length === 0 && (
-        <div className="heading1">CREATE A LIST ...</div>
+        <div className="heading1 backgroundText">CREATE A LIST ...</div>
       )}
-      <ButtonMain
+      <ButtonHighlight
         onClick={handleOpenModal}
         text="Add New List"
       />
