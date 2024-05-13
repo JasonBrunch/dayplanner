@@ -21,7 +21,7 @@
    --font-size-heading2: 40px;
    --font-size-heading3: 20px;
 
-   --surface-color: #121212; 
+   --surface-color: #141314; 
    --overlay-color: rgba(255, 255, 255, 0.1); 
    --overlay-color2: rgba(255, 255, 255, 0.224); 
    --primary-color: #BB86FC;
@@ -128,6 +128,9 @@
 }
 .highlight {
    background: var(--primary-color);
+}
+.errorColor {
+   color: var(--error-color);
 }
 
 

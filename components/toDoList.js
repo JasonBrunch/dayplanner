@@ -30,7 +30,7 @@ function ToDoList({
   ));
 
   return (
-    <div className="w-full sm:min-w-[320px] sm:w-80 min-h-80 relative flex flex-col rounded px-6 py-3 panel h-full shadow-lg">
+    <div className="w-full sm:min-w-[320px] sm:w-80 min-h-80 relative flex flex-col rounded px-4 py-3 panel h-full shadow-lg">
       <div className="relative">
         <h1 className="text-center panelText pb-2 mt-2 panelText">{listName}</h1>
         <button
@@ -51,13 +51,15 @@ function ToDoList({
           onChange={(e) => setTaskName(e.target.value)}
           className="appearance-none bg-transparent border-b-2 border-white w-full py-2 text-white"
         />
+        <div className="ml-2">
         <ButtonMain
           onClick={() => {
             handleAddTask(listId, taskName);
             setTaskName('');
           }}
           text="SAVE"
-        />
+          
+        /></div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { registerUser } from "@/managers/loginManager"; // Ensure this is correctly imported
 import Link from "next/link";
 import { useUser } from "@/context/userContext";
+import { loginGuest } from "@/managers/loginManager";
 
 function RegisterPage() {
   const { login } = useUser();
@@ -48,6 +49,15 @@ function RegisterPage() {
         ...prevErrors,
         form: error.message || "Registration failed",
       }));
+    }
+  };
+  const handleGuestRegister = async () => {
+    const response = await loginGuest();
+    if (response.success) {
+      login(response.data); // Log in the guest user
+      router.push("/dashboard"); // Redirect to the dashboard
+    } else {
+      setLoginError(response.message);
     }
   };
 
@@ -112,7 +122,18 @@ function RegisterPage() {
               Login here.
             </Link>
           </p>
+          
         </form>
+        <div className="text-sm mt-4 text-center text-white">
+              Want to try it out?
+
+              <button
+                onClick={handleGuestRegister}
+                className="text-blue-300 font-semibold hover:underline ml-1"
+              >
+                Login as Guest
+              </button>   
+              </div>
       </div>
     </div>
   );
