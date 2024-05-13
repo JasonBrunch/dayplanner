@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { registerUser } from '@/managers/loginManager'; // Ensure this is correctly imported
+import { registerUser } from "@/managers/loginManager"; // Ensure this is correctly imported
 import Link from "next/link";
 import { useUser } from "@/context/userContext";
-
 
 function RegisterPage() {
   const { login } = useUser();
@@ -35,58 +34,71 @@ function RegisterPage() {
     if (!validateForm()) return; // Prevent form submission if validation fails
 
     try {
-        const result = await registerUser(email, password);
-        if (result.success) {
-          login(result.data);
-            router.push("/dashboard");  // Redirect to dashboard after registration
-        } else {
-            console.error("Registration Error: ", result.message);
-            setErrors(prevErrors => ({ ...prevErrors, form: result.message }));
-        }
+      const result = await registerUser(email, password);
+      if (result.success) {
+        login(result.data);
+        router.push("/dashboard"); // Redirect to dashboard after registration
+      } else {
+        console.error("Registration Error: ", result.message);
+        setErrors((prevErrors) => ({ ...prevErrors, form: result.message }));
+      }
     } catch (error) {
-        console.error("Registration Error: ", error);
-        setErrors(prevErrors => ({ ...prevErrors, form: error.message || 'Registration failed' }));
+      console.error("Registration Error: ", error);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        form: error.message || "Registration failed",
+      }));
     }
-};
+  };
 
   return (
-<div className="px-4 md:px-0 w-full  h-screen flex flex-row background font-sans text-white">
-      <div className="flex w-full  justify-center items-center">
+    <div
+      className="flex justify-end items-center h-screen w-full bg-no-repeat bg-cover bg-center"
+      style={{ backgroundImage: `url('/dayforge.jpg')` }}
+    >
+      <div className="w-full max-w-lg p-12 lg:mr-52 sm:border sm:border-gray-50 rounded-2xl sm:outline sm:outline-gray-100 sm:outline-2 shadow-lg">
         <form onSubmit={handleRegister} className="max-w-lg mx-auto w-full ">
-          <div className="mb-10">
-            <h3 className="text-4xl font-extrabold text-gray-50">Register</h3>
-            <p className="text-sm mt-6 text-gray-50">
-              Create your account. Its free and only takes a minute.
-            </p>
-          </div>
-          <div>
-            <label className="text-lg mb-3 block text-gray-50" htmlFor="email">Email</label>
+          <h3 className="text-4xl font-bold text-gray-50">Register</h3>
+
+          <div className=" py-4">
+            <label className="text-lg mb-1 block text-gray-50" htmlFor="email">
+              Email:
+            </label>
             <input
               id="email"
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full text-sm bg-gray-600 px-4 py-4 rounded-md outline-blue-600"
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full text-black text-sm bg-gray-300 px-4 py-4 rounded-3xl"
               placeholder="Enter your email"
             />
-            {errors.email && <p className="text-red-500 text-xs mt-2">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-2">{errors.email}</p>
+            )}
           </div>
-          <div className="mt-6">
-            <label className="text-lg mb-3 block text-gray-50" htmlFor="password">Password</label>
+          <div className="mt-3">
+            <label
+              className="text-lg mb-1 block text-gray-50"
+              htmlFor="password"
+            >
+              Password
+            </label>
             <input
               id="password"
               type="password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full text-sm bg-gray-600 px-4 py-4 rounded-md outline-blue-600"
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full text-black text-sm bg-gray-300 px-4 py-4 rounded-3xl"
               placeholder="Create a password"
             />
-            {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-2">{errors.password}</p>
+            )}
           </div>
           <div className="mt-10">
             <button
               type="submit"
-              className="w-full shadow-xl py-3 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+              className="w-full shadow-xl py-3 px-4 text-sm font-semibold rounded text-white highlight hover:bg-blue-700 focus:outline-none rounded-3xl"
             >
               Register
             </button>
@@ -94,25 +106,14 @@ function RegisterPage() {
           <p className="text-sm mt-10 text-center text-gray-50">
             Already have an account?{" "}
             <Link
-             href="/loginPage"
-            className="text-blue-600 font-semibold hover:underline ml-1">
-                Login here.
+              href="/loginPage"
+              className="text-blue-300 font-semibold hover:underline ml-1"
+            >
+              Login here.
             </Link>
-             
           </p>
         </form>
-     </div>
-     <div className="hidden md:flex w-2/5  overflow-hidden">
-        <div style={{
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'url(/loginPic.jpg)',
-          backgroundPosition: 'center',
-          backgroundSize: 'contain',
-          backgroundRepeat: 'no-repeat'
-        }} />
       </div>
-
     </div>
   );
 }
