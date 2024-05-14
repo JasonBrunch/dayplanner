@@ -5,7 +5,7 @@ const MealIcon = ({ isActive }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 122.88 122.88"
-      className={`w-8 h-8 ${isActive ? 'icon-primary' : 'icon-inactive'}`}
+      className={`w-7 h-7 ${isActive ? 'icon-primary' : 'icon-inactive'}`}
       
     >
       <title>meal-food</title>

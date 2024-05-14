@@ -19,7 +19,7 @@
 :root {
    --font-size-heading1: 60px;
    --font-size-heading2: 40px;
-   --font-size-heading3: 20px;
+   --font-size-heading3: 18px;
 
    --surface-color: #141314; 
    --overlay-color: rgba(255, 255, 255, 0.1); 
@@ -28,7 +28,7 @@
    --primary-color: #BB86FC;
    --secondary-color: #03DAC5;
    --error-color: #CF6679;
-   --inactive-color: white;
+   --inactive-color: rgba(220, 220, 220, 0.668);
 }
 
 
@@ -37,7 +37,7 @@
    :root {
       --font-size-heading1: 48px;
       --font-size-heading2: 32px;
-      --font-size-heading3: 16px;
+      --font-size-heading3: 12px;
    }
 }
 
@@ -46,7 +46,7 @@
    :root {
       --font-size-heading1: 36px;
       --font-size-heading2: 24px;
-      --font-size-heading3: 14px;
+      --font-size-heading3: 12px;
    }
 }
 .background {
@@ -124,7 +124,8 @@
 }
 
 .icon-primary {
-   fill: var(--primary-color);
+   fill: #b87dff;
+   stroke: #ffffff;
 }
 
 .icon-inactive {

@@ -214,7 +214,7 @@ function MealPrepController() {
           </div>
         </div>
 
-        <div className="w-full md:w-1/3 panel ">
+        <div className="w-full p-2 md:w-1/3 panel ">
           <MealTotal meals={dailyMeals} />
         </div>
 
