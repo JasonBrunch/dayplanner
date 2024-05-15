@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ButtonMain from "./buttonMain";
 
 function ActivityDisplay({ activities, handleRemoveActivity }) {
   const [openCardIndex, setOpenCardIndex] = useState(null);
@@ -29,7 +30,6 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
 
   return (
     <div>
-      
       <ul>
         {sortedActivities.map((activity, index) => {
           const isOpen = openCardIndex === index;
@@ -38,14 +38,23 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
             <li
               key={index}
               onClick={() => toggleCard(index)}
-              className={`panel shadow-md rounded px-2 pt-2 pb-3 mb-2 flex justify-between items-center ${
-                isOpen ? "flex-col" : "flex-row"
-              }`}
+              className={`panel shadow-md rounded p-2 mb-2 flex flex-col `}
             >
-              <div className="flex justify-between w-full heading3">
-                <span>
-                  {activity.title} - {activity.startTime} to {activity.endTime}
-                </span>
+              <div className="flex  w-full">
+                <div className="bg-red-100 w-11 h-11 rounded-full mr-4 ml-2"></div>
+                <div>
+                  <div className="heading3 mb-0 leading-tight">
+                    {activity.title}
+                  </div>
+                  <div className="heading4 mt-0 mb-0 leading-tight">
+                    {activity.startTime} - {activity.endTime}
+                  </div>
+                  {isOpen && (
+                    <div className=" w-full mt-2 leading-tight">
+                      <p>Description: {activity.description}</p>
+                    </div>
+                  )}
+                </div>
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent toggling when removing activity
@@ -57,10 +66,8 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
                 </button>
               </div>
               {isOpen && (
-                <div className="mt-4 w-full">
-                  <p>
-                    Description: {activity.description}
-                  </p>
+                <div className=" flex justify-end ">
+                  <ButtonMain text="Delete" />
                 </div>
               )}
             </li>

@@ -294,11 +294,11 @@ function ScheduleController() {
   };
 
   return (
-    <div className="sm:py-5 px-1 md:px-9 mt-4">
+    <div className="sm:py-5 px-1 md:px-5 mt-4">
       <h1 className=" heading1 backgroundText">{"DAY PLANNER"}</h1>
 
       {/*main container for both columns*/}
-      <div className="flex flex-col md:flex-row gap-10 w-full ">
+      <div className="flex flex-col md:flex-row gap-5 w-full ">
 
 
         <div className="flex flex-col w-screen md:w-3/5    ">
@@ -318,7 +318,7 @@ function ScheduleController() {
         </div>
 
         {/* activities column */}
-        <div className="flex flex-col w-full md:w-2/5  mr-10  ">
+        <div className="flex flex-col w-full md:w-2/5  ">
           <div className="h-10 mb-2 text-4xl heading2 justify-center  flex">ACTIVITIES</div>
 
           <div>
