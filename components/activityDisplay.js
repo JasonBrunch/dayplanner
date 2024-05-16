@@ -38,10 +38,10 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
             <li
               key={index}
               onClick={() => toggleCard(index)}
-              className={`panel shadow-md rounded p-2 mb-2 flex flex-col `}
+              className={`panel shadow-md rounded p-3 mb-2 flex flex-col `}
             >
               <div className="flex  w-full">
-                <div className="bg-red-100 w-11 h-11 rounded-full mr-4 ml-2"></div>
+                <div className="bg-red-100 w-11 h-11 rounded-full mr-4 ml-1"></div>
                 <div>
                   <div className="heading3 mb-0 leading-tight">
                     {activity.title}
@@ -55,19 +55,13 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
                     </div>
                   )}
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent toggling when removing activity
-                    handleRemoveActivity(activity);
-                  }}
-                  className="text-white hover:text-red-700"
-                >
-                  X
-                </button>
+
               </div>
               {isOpen && (
                 <div className=" flex justify-end ">
-                  <ButtonMain text="Delete" />
+                  <ButtonMain 
+                  text="Delete"
+                  onClick={() => handleRemoveActivity(activity)} />
                 </div>
               )}
             </li>

@@ -20,7 +20,7 @@
    --font-size-heading1: 60px;
    --font-size-heading2: 40px;
    --font-size-heading3: 18px;
-   --font-size-heading4: 16px;
+   --font-size-heading4: 13px;
    --surface-color: #141314; 
    --overlay-color: rgba(255, 255, 255, 0.1); 
    --overlay-color2: rgba(255, 255, 255, 0.224); 
@@ -38,7 +38,7 @@
       --font-size-heading1: 48px;
       --font-size-heading2: 32px;
       --font-size-heading3: 12px;
-      --font-size-heading4: 10px;
+      --font-size-heading4: 8px;
    }
 }
 
