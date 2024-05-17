@@ -141,7 +141,7 @@ function MealPrepController() {
       }
 
       const data = await response.json(); // Assuming the server responds with JSON on success
-      console.log("Meal entries updated successfully:", data);
+    
     } catch (error) {
       console.error("Error updating meal entries:", error.message);
     }

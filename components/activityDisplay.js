@@ -33,6 +33,7 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
       <ul>
         {sortedActivities.map((activity, index) => {
           const isOpen = openCardIndex === index;
+          console.log("Activity:", activity.color);
 
           return (
             <li
@@ -41,7 +42,7 @@ function ActivityDisplay({ activities, handleRemoveActivity }) {
               className={`panel shadow-md rounded p-3 mb-2 flex flex-col `}
             >
               <div className="flex  w-full">
-                <div className="bg-red-100 w-11 h-11 rounded-full mr-4 ml-1"></div>
+                <div className="w-5 h-5 rounded-full mr-3 " style={{backgroundColor: activity.color}}></div>
                 <div>
                   <div className="heading3 mb-0 leading-tight">
                     {activity.title}

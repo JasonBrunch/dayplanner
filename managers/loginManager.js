@@ -12,7 +12,7 @@ export const loginUser = async (email, password) => {
     });
     const data = await response.json();  // Attempt to parse JSON
     if (response.ok) {
-      console.log('Login successful', data);
+    
       
       return { success: true, data: data.user };  // Return the complete user object
     } else {

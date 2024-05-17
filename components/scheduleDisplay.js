@@ -84,7 +84,7 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours, currentD
           <div className="py-2 text-center   w-24 text-gray-50 ">
             {hourFormatted}
           </div>
-          <div className="flex flex-1 relative border-b">
+          <div className="flex flex-1 relative border-b border-gray-500">
             {timeSlots}
             {activityLabels}
           </div>
@@ -94,8 +94,8 @@ const ScheduleDisplay = ({ daySchedule, activities, isWithinAwakeHours, currentD
   };
 
   return (
-    <div className="flex flex-col  w-full panel rounded-lg pl-4 pr-8 py-4 pb-6">
-      <div className='border-b ml-24   heading2'>{currentDate}</div>
+    <div className="flex flex-col  w-full panel rounded-lg md:pl-3 md:pr-7 lg:pl-4 lg:pr-8 py-4 pb-6">
+      <div className='border-b border-gray-500 ml-24   heading2'>{currentDate}</div>
       {renderSchedule()}
     </div>
   );
