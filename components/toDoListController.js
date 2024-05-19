@@ -137,7 +137,7 @@ function ToDoListController() {
     }
   };
 
-  const handleItemClick = (listId, taskId) => {
+  const handleItemClick = async (listId, taskId) => {
     const updatedLists = lists.map((list) => {
       if (list.listId === listId) {
         const updatedTasks = list.tasks.map((task) => {
@@ -155,8 +155,33 @@ function ToDoListController() {
       }
       return list;
     });
+
     setLists(updatedLists);
+
+    try {
+      // Make a POST request to the backend with the updated to-do lists
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/replaceToDoLists`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          newToDoLists: updatedLists,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setLists(data.toDoLists); // Update the state with the backend data
+      } else {
+        console.error("Failed to update task:", response.statusText); // Log error message if the request fails
+      }
+    } catch (error) {
+      console.error("Error while updating task:", error); // Log unexpected errors
+    }
   };
+
 
 
 
